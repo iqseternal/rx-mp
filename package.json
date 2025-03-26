@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "rsbuild dev",
     "test": "jest -o",
     "test-all": "jest",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --cache",
@@ -17,7 +18,7 @@
   "devDependencies": {
     "@rsbuild/core": "1.1.0",
     "@rsbuild/plugin-react": "^1.1.1",
-    "@rsbuild/plugin-sass": "^1.2.2",
+    "@rsbuild/plugin-sass": "^1.1.0",
     "@rsbuild/plugin-typed-css-modules": "^1.0.2",
     "@types/jest": "29.5.14",
     "@types/node": "^20.9.2",
