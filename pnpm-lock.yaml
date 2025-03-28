@@ -22,11 +22,14 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1(@rsbuild/core@1.1.0)
       '@rsbuild/plugin-sass':
-        specifier: ^1.2.2
-        version: 1.2.2(@rsbuild/core@1.1.0)
+        specifier: ^1.1.0
+        version: 1.1.0(@rsbuild/core@1.1.0)
       '@rsbuild/plugin-typed-css-modules':
         specifier: ^1.0.2
         version: 1.0.2(@rsbuild/core@1.1.0)
+      '@suey/rxp-meta':
+        specifier: 0.0.1
+        version: 0.0.1
       '@types/jest':
         specifier: 29.5.14
         version: 29.5.14
@@ -69,6 +72,9 @@ importers:
       ts-node:
         specifier: 10.9.2
         version: 10.9.2(@types/node@20.17.25)(typescript@5.8.2)
+      zustand:
+        specifier: 5.0.3
+        version: 5.0.3(@types/react@18.3.19)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.4.0(react@18.3.1))
 
   react-admin-design:
     dependencies:
@@ -1373,8 +1379,8 @@ packages:
     peerDependencies:
       '@rsbuild/core': 1.x
 
-  '@rsbuild/plugin-sass@1.2.2':
-    resolution: {integrity: sha512-vznLfxxPXDyFSPYW7JWTYf/6SJMx5DEgKParNd5lXo7FRa1IKsQOrJdf6F3Rm+T7jKoAvnCVXjM2IkxBW2yJSA==}
+  '@rsbuild/plugin-sass@1.1.0':
+    resolution: {integrity: sha512-7vF1Bygb3R8xd1jHOv1AourxQ/751fkh9gi/WGABVFMde/OxEpw5hDiAY4Wo+zsxLXOEPHB9eUuv/5P7udwFkg==}
     peerDependencies:
       '@rsbuild/core': 1.x
 
@@ -1469,6 +1475,9 @@ packages:
 
   '@sinonjs/fake-timers@8.1.0':
     resolution: {integrity: sha512-OAPJUAtgeINhh/TAlUID4QTs53Njm7xzddaVlEs/SXwgtiD1tW22zAB/W1wdqfrpmikgaWQ9Fw6Ws+hsiRm5Vg==}
+
+  '@suey/rxp-meta@0.0.1':
+    resolution: {integrity: sha512-Na1yrPJd6ZYtHQGL6T9awjijwJ7whwrQbPpOV9vdGRT/bbt5CyPndd9fe9GKkqHSjQzGqg7EVGmJFLCItohswg==}
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
@@ -7099,6 +7108,24 @@ packages:
   zrender@5.6.1:
     resolution: {integrity: sha512-OFXkDJKcrlx5su2XbzJvj/34Q3m6PvyCZkVPHGYpcCJ52ek4U/ymZyfuV1nKE23AyBJ51E/6Yr0mhZ7xGTO4ag==}
 
+  zustand@5.0.3:
+    resolution: {integrity: sha512-14fwWQtU3pH4dE0dOpdMiWjddcH+QzKIgk1cl8epwSE7yag43k/AD/m4L6+K7DytAOr9gGBe3/EXj9g7cdostg==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -8356,7 +8383,7 @@ snapshots:
       '@rspack/plugin-react-refresh': 1.0.1(react-refresh@0.16.0)
       react-refresh: 0.16.0
 
-  '@rsbuild/plugin-sass@1.2.2(@rsbuild/core@1.1.0)':
+  '@rsbuild/plugin-sass@1.1.0(@rsbuild/core@1.1.0)':
     dependencies:
       '@rsbuild/core': 1.1.0
       deepmerge: 4.3.1
@@ -8443,6 +8470,8 @@ snapshots:
   '@sinonjs/fake-timers@8.1.0':
     dependencies:
       '@sinonjs/commons': 1.8.6
+
+  '@suey/rxp-meta@0.0.1': {}
 
   '@swc/helpers@0.5.15':
     dependencies:
@@ -15405,5 +15434,12 @@ snapshots:
   zrender@5.6.1:
     dependencies:
       tslib: 2.3.0
+
+  zustand@5.0.3(@types/react@18.3.19)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.4.0(react@18.3.1)):
+    optionalDependencies:
+      '@types/react': 18.3.19
+      immer: 10.1.1
+      react: 18.3.1
+      use-sync-external-store: 1.4.0(react@18.3.1)
 
   zwitch@2.0.4: {}
