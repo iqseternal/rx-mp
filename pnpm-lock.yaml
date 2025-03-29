@@ -14,6 +14,9 @@ importers:
       '@suey/pkg-utils':
         specifier: 0.3.1
         version: 0.3.1(@angular/common@19.2.4(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))
+      '@suey/rxp-meta':
+        specifier: 0.0.1
+        version: 0.0.1
       ahooks:
         specifier: 3.8.4
         version: 3.8.4(react@18.3.1)
@@ -35,6 +38,9 @@ importers:
       react-router-dom:
         specifier: 7.4.1
         version: 7.4.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      zustand:
+        specifier: 5.0.3
+        version: 5.0.3(@types/react@18.3.19)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.4.0(react@18.3.1))
     devDependencies:
       '@rsbuild/core':
         specifier: 1.1.0
@@ -48,9 +54,6 @@ importers:
       '@rsbuild/plugin-typed-css-modules':
         specifier: ^1.0.2
         version: 1.0.2(@rsbuild/core@1.1.0)
-      '@suey/rxp-meta':
-        specifier: 0.0.1
-        version: 0.0.1
       '@types/jest':
         specifier: 29.5.14
         version: 29.5.14
@@ -93,9 +96,6 @@ importers:
       ts-node:
         specifier: 10.9.2
         version: 10.9.2(@types/node@20.17.25)(typescript@5.8.2)
-      zustand:
-        specifier: 5.0.3
-        version: 5.0.3(@types/react@18.3.19)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.4.0(react@18.3.1))
 
   react-admin-design:
     dependencies:
