@@ -8,13 +8,3 @@ export interface MetadataEntries {
 
 export const metadata = new MetadataManager<MetadataEntries>();
 
-export interface RXMPExtension extends Extension {
-  meta: {
-
-    header: string;
-
-    value: string;
-  }
-}
-
-export const extension = new ExtensionManager<RXMPExtension>();

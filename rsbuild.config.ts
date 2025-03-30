@@ -33,8 +33,23 @@ export default defineConfig(({ env, command, envMode }) => {
       entry: {
         index: join(__dirname, './src/index.tsx')
       },
-      alias: defineAlias(__dirname, tsconfigJson.compilerOptions.paths)
+      alias: defineAlias(__dirname, tsconfigJson.compilerOptions.paths),
+
     },
+    server: {
+      port: 8000,
+      proxy: {
+        '/rx': {
+          pathRewrite: (pathname) => {
+            if (pathname.startsWith('/rx')) return pathname.replace('/rx', '');
+            return pathname;
+          },
+          changeOrigin: true,
+          target: 'http://oupro.cn:3000',
+        }
+      }
+    },
+
     plugins: [
       pluginSass(),
       pluginTypedCSSModules(),
@@ -46,6 +61,7 @@ export default defineConfig(({ env, command, envMode }) => {
       },
       cleanDistPath: true,
     },
+
     tools: {
       postcss: {
         postcssOptions: {

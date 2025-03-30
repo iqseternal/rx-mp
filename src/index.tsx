@@ -1,5 +1,5 @@
 import { memo, StrictMode, useLayoutEffect } from 'react';
-import { extension, metadata } from './libs/rxp-meta';
+import { metadata } from './libs/rxp-meta';
 import { RXAppWrapper } from './app';
 
 import ReactDOM from 'react-dom/client';
