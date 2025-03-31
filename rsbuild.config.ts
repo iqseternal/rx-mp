@@ -38,10 +38,11 @@ export default defineConfig(({ env, command, envMode }) => {
     },
     server: {
       port: 8000,
+
       proxy: {
-        '/rx': {
+        '/rx-api/': {
           pathRewrite: (pathname) => {
-            if (pathname.startsWith('/rx')) return pathname.replace('/rx', '');
+            if (pathname.startsWith('/rx')) return pathname.replace('/rx-api', '');
             return pathname;
           },
           changeOrigin: true,

@@ -20,7 +20,6 @@ export const RXApp = memo(() => {
       getPopupContainer={() => document.body}
       getTargetContainer={() => window}
       iconPrefixCls={'anticon'}
-      // locale={{}}
       popupMatchSelectWidth={true}
       popupOverflow={'viewport'}
       prefixCls='ant'

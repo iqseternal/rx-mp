@@ -16,4 +16,6 @@ const RootLayout = memo(() => {
   return <Outlet />
 })
 
-export default RootLayout;
+const RootLayoutWrapper = memo(() => (<RootLayout />));
+
+export default RootLayoutWrapper;

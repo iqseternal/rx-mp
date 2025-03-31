@@ -89,7 +89,7 @@ const rxApiConfig: RequestConfig<RXApiHConfig> = {
   timeout: 5000,
 };
 
-const rxApiRequest = createApiRequest<RXApiHConfig, RXApiSuccessResponse, RXApiFailResponse>('/rx', rxApiConfig, {
+const rxApiRequest = createApiRequest<RXApiHConfig, RXApiSuccessResponse, RXApiFailResponse>('/rx-api', rxApiConfig, {
   async onFulfilled(config) {
 
   },
