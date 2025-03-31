@@ -8,6 +8,7 @@ import HeaderWrapper from '@/b-components/Header';
 import Widget from '@/components/Widget';
 import BreadCrumbsWrapper from './BreadCrumbs';
 import UserAvatar from './plats/UserAvatar';
+import NavigationMenuWidget from './NavigationMenuWidget';
 
 const RXPLayout = memo(() => {
 
@@ -68,13 +69,16 @@ const RXPLayout = memo(() => {
 const RXPLayoutWrapper = memo(() => {
 
   useLayoutEffect(() => {
+    metadata.defineMetadata('ui.layout.header.left.content', NavigationMenuWidget);
+
     metadata.defineMetadataInVector('rxp.ui.layout.vertical.nav.external', NavigationWrapper);
     metadata.defineMetadata('ui.layout.header.right.content', UserAvatar);
 
     return () => {
+      metadata.delMetadata('ui.layout.header.left.content');
+
       metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', NavigationWrapper);
       metadata.delMetadata('ui.layout.header.right.content');
-
     }
   }, []);
 
