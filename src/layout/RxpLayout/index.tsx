@@ -3,12 +3,12 @@ import { Outlet } from 'react-router-dom';
 import { metadata } from '@/libs/rxp-meta';
 import { Avatar } from 'antd';
 
-import NavigationWrapper from './Navigation';
+import NavigationWrapper from './plats/Navigation';
 import HeaderWrapper from '@/b-components/Header';
 import Widget from '@/components/Widget';
-import BreadCrumbsWrapper from './BreadCrumbs';
+import BreadCrumbsWrapper from './plats/BreadCrumbs';
 import UserAvatar from './plats/UserAvatar';
-import NavigationMenuWidget from './NavigationMenuWidget';
+import NavigationMenuWidget from './plats/NavigationMenuWidget';
 
 const RXPLayout = memo(() => {
 

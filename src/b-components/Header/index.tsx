@@ -37,7 +37,7 @@ export const Header = memo((props: HeaderProps) => {
   return (
     <div
       className={classnames(
-        'w-full flex flex-nowrap justify-between items-center max-w-full backdrop-blur-lg bg-white shadow-sm sticky top-0 z-30 pl-2 pr-6',
+        'w-full flex flex-nowrap justify-between items-center max-w-full backdrop-blur-lg bg-white shadow-sm sticky top-0 z-30 pl-2 pr-2',
         className
       )}
     >

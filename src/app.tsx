@@ -37,7 +37,7 @@ export const RXApp = memo(() => {
           }
         },
         cssVar: {
-          prefix: 'rapid-app'
+          prefix: 'rx'
         }
       }}
       button={{
@@ -81,10 +81,6 @@ export const RXApp = memo(() => {
 export const RXAppWrapper = memo(() => {
 
   return (
-    <div
-      className='w-full h-full'
-    >
-      <RXApp />
-    </div>
+    <RXApp />
   )
 })

@@ -3,15 +3,25 @@
 import type { FC, ReactElement, LazyExoticComponent, JSX, MemoExoticComponent } from 'react';
 import type { PathRouteProps } from 'react-router-dom';
 import type { RedirectProps } from '../Redirect';
+import type { IconKey } from '@/components/IconFont';
 
 /**
  * RouteMeta 用户表示一个路由对象的元数据
  */
 export interface RouteMeta {
   /**
-   * 这个路由对象完整的 fullPath, 不填写会自动生成
+   * 这个路由对象完整的 fullPath, 自动生成
    */
   fullPath?: string;
+
+  /**
+   * 父级的 fullPath, 自动生成
+   */
+  parentFullPath?: string;
+
+  title?: string;
+
+  icon?: IconKey;
 }
 
 /**

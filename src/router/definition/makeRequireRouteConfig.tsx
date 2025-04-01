@@ -4,7 +4,7 @@ import type { RouteMeta, RouteConfig } from './declare';
 /**
  * 补全后的 RouteMeta
  */
-export type CompleteRouteMeta = RouteMeta & Pick<Required<RouteMeta>, 'fullPath'>;
+export type CompleteRouteMeta = RouteMeta & Pick<Required<RouteMeta>, 'fullPath' | 'parentFullPath'>;
 
 /**
  * 补全后的 RouteConfig
@@ -30,6 +30,7 @@ const path = {
     return args.reduce((pre, cur) => path.joinTwo(pre, cur), '');
   }
 }
+const resolvedMap = new WeakMap<RouteConfig, boolean>();
 
 /**
  * 制作一个基础路由对象, 路由对象中的数据会被自动地按照上下级 补全
@@ -42,7 +43,8 @@ const path = {
  *     title: '首页'
  *   },
  *   component: lazy(() => import('@/views/home')),
- *   children: [
+ *   children: [import { Route } from 'react-router-dom';
+
  *     {
  *       path: 'user',
  *       meta: {
@@ -54,13 +56,30 @@ const path = {
  * @returns
  */
 export function makeRequireRouteConfig(route: RouteConfig, basePath = '', isRoot = true): CompleteRouteConfig<RouteConfig> {
+  if (resolvedMap.has(route)) return route as CompleteRouteConfig<RouteConfig>;
+
   if (!route.meta) route.meta = {} as RouteMeta;
 
   // path 是相对路径, 但是允许填写 /, 自动将这个 / 去除
-  if (route.path.startsWith('/') && !isRoot) route.path = route.path.substring(1);
+  if (route.path.startsWith('/') && !isRoot) {
+    if (!route.path.startsWith(basePath)) {
+      console.error(basePath, route);
+      throw new Error(`子路由必须由父级路径前缀开始, ${route.path}`);
+    }
+    // route.path = route.path.substring(1);
+  }
 
   // 如果没有处理 fullPath, 那么自动填充
-  if (!route.meta.fullPath) route.meta.fullPath = path.join(basePath, route.path);
+  if (!route.meta.fullPath) {
+    if (route.path.startsWith('/')) route.meta.fullPath = route.path;
+    else {
+      route.meta.fullPath = path.join(basePath, route.path);
+    }
+  }
+
+  if (!route.meta.parentFullPath) {
+    route.meta.parentFullPath = basePath;
+  }
 
   // 解决重定向
   if (route.redirect) {
@@ -90,6 +109,7 @@ export function makeRequireRouteConfig(route: RouteConfig, basePath = '', isRoot
     return makeRequireRouteConfig(child, route.meta?.fullPath, false);
   }) : [];
 
+  resolvedMap.set(route, true);
   return route as CompleteRouteConfig;
 }
 

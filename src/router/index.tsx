@@ -6,7 +6,7 @@ import { Skeleton } from 'antd';
 
 import * as presetRoutes from './modules';
 
-export const { retrieveRoutes, useRetrieveRoute } = reserveRoutes(presetRoutes);
+export const { retrieveRoutes, useRetrieveRoute, usePresentRoute, getRouteFromFullPath } = reserveRoutes(presetRoutes);
 
 export const RXRouterWrapper = memo(() => {
 

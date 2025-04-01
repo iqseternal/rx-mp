@@ -3,15 +3,19 @@ import { Suspense, isValidElement, useMemo } from 'react';
 import { isString } from '@suey/pkg-utils';
 import { Skeleton } from 'antd';
 import type { PathRouteProps } from 'react-router-dom';
-import { Route } from 'react-router-dom';
+import { Route, useLocation } from 'react-router-dom';
 import type { RedirectProps } from '../Redirect';
 import { Redirect } from '../Redirect';
 import { isReactClassComponent, isReactFC, isReactForwardFC, isReactLazyFC, isReactMemoFC } from '@/libs/common';
 import type { RouteMeta, RouteConfig } from './declare';
+import { useNormalState, useShallowReactive } from '@/libs/hooks';
+import type { CompleteRouteConfig } from './makeRequireRouteConfig';
 
 export type * from './declare';
 
 export * from './makeRequireRouteConfig';
+
+const routeMap = new Map<string, CompleteRouteConfig<RouteConfig>>();
 
 export interface CreateRoutesChildrenOptions {
   /**
@@ -26,9 +30,13 @@ export interface CreateRoutesChildrenOptions {
 /**
  * 通过路由表创建符合要求的 ReactDomRouter 子元素
  */
-export const createRoutesChildren = <RouteConfigArr extends RouteConfig[]>(routeArr: RouteConfigArr, options: CreateRoutesChildrenOptions) => {
+export const createRoutesChildren = <RouteConfigArr extends CompleteRouteConfig<RouteConfig>[]>(routeArr: RouteConfigArr, options: CreateRoutesChildrenOptions) => {
   return routeArr.map((route, index) => {
     const { redirect, meta, children = [], component, ...realRoute } = route;
+
+    if (route.meta?.fullPath) {
+      routeMap.set(route.meta.fullPath, route);
+    }
 
     // 渲染自定义组件
     let Component = component as FC<any>;
@@ -119,6 +127,35 @@ export const reserveRoutes = <Routes extends Record<string, any>,>(presetRoutes:
      */
     useRetrieveRoute: <RouteKey extends keyof Routes, RouteSelector extends (routes: Routes) => Routes[RouteKey]>(selector: RouteSelector) => {
       return useMemo(() => selector(runtimeContext.routes), []);
+    },
+
+    getRouteFromFullPath: (fullPath: string) => {
+      return routeMap.get(fullPath);
+    },
+
+    /**
+     * 获取当前活跃的 route 对象
+     */
+    usePresentRoute: () => {
+      const location = useLocation();
+
+      const [normalState] = useNormalState(() => ({
+        currentFullPath: location.pathname
+      }))
+
+      const [shallowState] = useShallowReactive(() => ({
+        current: routeMap.get(normalState.currentFullPath)
+      }))
+
+      if (normalState.currentFullPath !== location.pathname) {
+        shallowState.current = routeMap.get(normalState.currentFullPath);
+      }
+
+      type UseRouteCurrent = {
+        readonly current: CompleteRouteConfig<RouteConfig> | undefined;
+      }
+
+      return shallowState as UseRouteCurrent;
     }
   }
 }
