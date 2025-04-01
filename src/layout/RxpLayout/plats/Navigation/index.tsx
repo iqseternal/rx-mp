@@ -63,7 +63,10 @@ export const Navigation = memo(() => {
     if (shallowMenuState.selectedKeys[0] !== presentRoute.current.meta.fullPath) {
       shallowMenuState.selectedKeys = [presentRoute.current.meta.fullPath];
     }
-    generateOpenKeys(presentRoute.current.meta.parentFullPath);
+
+    if (!useRXPLayoutStore.getState().status.rxpNavigationCollapsed) {
+      generateOpenKeys(presentRoute.current.meta.parentFullPath);
+    }
 
     shallowMenuState.openKeys = openKeys;
   }, [presentRoute.current]);
