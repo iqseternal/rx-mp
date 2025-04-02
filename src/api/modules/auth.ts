@@ -1,5 +1,7 @@
 
+import { loGet } from '@suey/pkg-web';
 import { rxApiPost, rxRequest } from '../definition'
+import { getRefreshToken } from '@/storage/token';
 
 export interface RXGetAccessTokenApiPayload {
 
@@ -10,15 +12,16 @@ export interface RXGetAccessTokenApiResponse {
 }
 
 export const rxGetAccessTokenApi = (payload: RXGetAccessTokenApiPayload) => {
+  const refreshToken = getRefreshToken();
 
   return rxRequest<RXGetAccessTokenApiResponse, {}>({
-    url: '/api/v1/auth/get_access_token',
+    url: '/api/auth/get_access_token',
     hConfig: {
       needAuth: false
     },
     headers: {
-      'Authorization': 'Bearer ' + 'saasadsa'
-    }
+      'Authorization': `Bearer ${refreshToken}`
+    },
   });
 }
 
@@ -34,14 +37,16 @@ export interface RXUpdateAccessTokenApiResponse {
 }
 
 export const rxUpdateAccessTokenApi = (payload: RXUpdateAccessTokenApiPayload) => {
-  return rxRequest<RXUpdateAccessTokenApiResponse, {}>({
-    url: '/api/v1/auth/update_access_token',
+  const refreshToken = getRefreshToken();
+
+  return rxRequest<string, {}>({
+    url: '/api/auth/update_access_token',
     hConfig: {
       needAuth: false
     },
-    method: 'PUT',
+    method: 'POST',
     headers: {
-      'Authorization': 'Bearer'+ 'asdasdasd'
+      'Authorization': `Bearer ${refreshToken}`
     },
   });
 }

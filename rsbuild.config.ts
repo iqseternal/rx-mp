@@ -46,7 +46,8 @@ export default defineConfig(({ env, command, envMode }) => {
             return pathname;
           },
           changeOrigin: true,
-          target: 'http://oupro.cn:3000',
+          // target: 'http://oupro.cn:3000',
+          target: 'http://localhost:3000',
         }
       }
     },

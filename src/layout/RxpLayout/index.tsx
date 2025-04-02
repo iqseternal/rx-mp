@@ -2,6 +2,11 @@ import { memo, useLayoutEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { metadata } from '@/libs/rxp-meta';
 import { Avatar } from 'antd';
+import { toNil } from '@suey/pkg-utils';
+import { useAsyncEffect } from '@/libs/hooks';
+import { rApis } from '@/api';
+import { setAccessToken, setRefreshToken, setTokens } from '@/storage/token';
+import { ckSet, loSet } from '@suey/pkg-web';
 
 import NavigationWrapper from './plats/Navigation';
 import HeaderWrapper from '@/b-components/Header';
@@ -9,6 +14,7 @@ import Widget from '@/components/Widget';
 import BreadCrumbsWrapper from './plats/BreadCrumbs';
 import UserAvatar from './plats/UserAvatar';
 import NavigationMenuWidget from './plats/NavigationMenuWidget';
+
 
 const RXPLayout = memo(() => {
 
@@ -80,6 +86,31 @@ const RXPLayoutWrapper = memo(() => {
       metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', NavigationWrapper);
       metadata.delMetadata('ui.layout.header.right.content');
     }
+  }, []);
+
+  useAsyncEffect(async () => {
+    const [err, res] = await toNil(rApis.loginApi({
+      email: 'sueyeternal@163.com',
+      password: 'asdadasdas'
+    }))
+
+    if (err) {
+      console.error(err.reason.message);
+      return;
+    }
+
+    setTokens({
+      accessToken: res.data.tokens.access_token,
+      refreshToken: res.data.tokens.refresh_token,
+    })
+
+    const [err2, res2] = await toNil(rApis.userinfoApi({}));
+    if (err2) {
+      console.error(err2.reason.message);
+      return;
+    }
+
+    console.log('用户信息', res2.data);
   }, []);
 
   return (

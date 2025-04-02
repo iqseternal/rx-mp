@@ -1,9 +1,8 @@
 
 
 
-import * as rApi from './modules';
+import * as rApis from './modules';
 
-export { rApi }
+export { rApis }
 
 export * from './definition';
-

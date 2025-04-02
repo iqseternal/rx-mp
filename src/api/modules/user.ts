@@ -39,6 +39,23 @@ export const loginApi = (payload: LoginApiPayload) => {
   });
 }
 
+
+// ==================================================================================
+export interface UserinfoResponse {
+
+}
+
+export interface UserinfoApiPayload {
+
+}
+
+export type UserInfoApiPromise = RApiPromiseLike<UserinfoResponse, null>;
+
+export const userinfoApi = (payload: UserinfoApiPayload) => {
+  return rxApiPost<UserinfoResponse, null>('/api/v1/user/get_user_info');
+}
+
+
 // ==================================================================================
 export interface RegisterResponse {
 

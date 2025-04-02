@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { UnlockTwoTone, UserAddOutlined } from '@ant-design/icons';
-import { useWindowInnerSize } from '@/libs/hooks';
+import { useWindowInnerSize, useRefresh } from '@/libs/hooks';
 import { Button, Popover } from 'antd';
 
 import Widget from '@/components/Widget';
