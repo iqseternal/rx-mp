@@ -9,9 +9,6 @@ import tailwindcss from 'tailwindcss';
 import proxy from './config/proxy';
 import tsconfigJson from './tsconfig.web.json';
 
-const rootDir = join(__dirname, '../../');
-const distPath = join(rootDir, './dist/website');
-
 const defineAlias = (basePath: string, paths: Record<string, string[]>) => {
   const alias: Record<string, string> = {};
 
@@ -50,7 +47,7 @@ export default defineConfig(({ env, command, envMode }) => {
     ],
     output: {
       distPath: {
-        root: distPath,
+        root: './dist',
       },
       cleanDistPath: true,
     },
