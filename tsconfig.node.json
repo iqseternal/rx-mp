@@ -34,7 +34,8 @@
     ]
   },
   "include": [
-    "./rsbuild.config.ts"
+    "./rsbuild.config.ts",
+    "./config/**/*.ts"
   ],
   "exclude": [
     "node_modules"

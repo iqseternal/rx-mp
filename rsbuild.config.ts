@@ -6,6 +6,7 @@ import { pluginSass } from '@rsbuild/plugin-sass';
 import { pluginTypedCSSModules } from '@rsbuild/plugin-typed-css-modules';
 
 import tailwindcss from 'tailwindcss';
+import proxy from './config/proxy';
 import tsconfigJson from './tsconfig.web.json';
 
 const rootDir = join(__dirname, '../../');
@@ -39,17 +40,7 @@ export default defineConfig(({ env, command, envMode }) => {
     server: {
       port: 8000,
 
-      proxy: {
-        '/rx-api/': {
-          pathRewrite: (pathname) => {
-            if (pathname.startsWith('/rx')) return pathname.replace('/rx-api', '');
-            return pathname;
-          },
-          changeOrigin: true,
-          // target: 'http://oupro.cn:3000',
-          target: 'http://localhost:3000',
-        }
-      }
+      proxy: proxy
     },
 
     plugins: [
