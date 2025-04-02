@@ -12,4 +12,7 @@ export const proxy: ProxyConfig = {
   }
 }
 
-export default proxy;
+export const defineProxy = (): ProxyConfig => {
+
+  return proxy;
+}
