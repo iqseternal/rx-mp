@@ -109,8 +109,6 @@ const RXPLayoutWrapper = memo(() => {
       console.error(err2.reason.message);
       return;
     }
-
-    console.log('用户信息', res2.data);
   }, []);
 
   return (
