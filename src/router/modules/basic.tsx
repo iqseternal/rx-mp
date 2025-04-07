@@ -4,13 +4,13 @@ import { makeRoute } from '../definition'
 export const notFoundRoute = makeRoute({
   name: 'NotFound',
   path: '*',
-  component: lazy(() => import('@/plats/NotFound'))
+  component: lazy(() => import('@/pages/NotFound'))
 });
 
 export const notRoleRoute = makeRoute({
   name: 'NotRole',
   path: '/403',
-  component: lazy(() => import('@/plats/NotRole'))
+  component: lazy(() => import('@/pages/NotRole'))
 });
 
 export const loginRoute = makeRoute({

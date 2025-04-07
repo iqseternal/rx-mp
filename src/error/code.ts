@@ -1,11 +1,4 @@
 
-enum ErrorCodeEnum {
-  Success = 0,
-  Fail = -1,
-
-
-}
-
 export const ErrorCode = {
   [0]: '操作成功',
   [-1]: '失败',
