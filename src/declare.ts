@@ -1,4 +1,6 @@
+import type { AxiosResponse } from '@suey/pkg-utils';
 import type { ComponentType } from 'react';
+import type { RXApiFailResponse, RXApiSuccessResponse } from './api';
 
 export interface MetadataEntries {
   'ui.layout.header.left.before': ComponentType[];
@@ -22,4 +24,13 @@ export interface MetadataEntries {
    * rxp 垂直菜单, 位于内部, Header 组件下方
    */
   'rxp.ui.layout.vertical.nav.internal': ComponentType[];
+}
+
+export type BusEntries = {
+  /**
+   * api-err 分发器
+   */
+  'api-err-distributor': AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>;
+
+  [RequestError: `api-err:${number}`]: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>;
 }

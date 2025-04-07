@@ -7,8 +7,8 @@ export const proxy: ProxyConfig = {
       return pathname;
     },
     changeOrigin: true,
-    target: 'http://oupro.cn:3000',
-    // target: 'http://localhost:3000',
+    // target: 'http://oupro.cn:3000',
+    target: 'http://localhost:3000',
   }
 }
 

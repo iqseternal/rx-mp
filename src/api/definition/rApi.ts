@@ -3,6 +3,7 @@ import { StringFilters } from '@/libs/common';
 import { rxUpdateAccessTokenApi } from '../modules/auth';
 import { ckSet } from '@suey/pkg-web';
 import { setAccessToken } from '@/storage/token';
+import { bus } from '@/libs/bus';
 
 /**
  * 请求 hConfig 配置
@@ -113,6 +114,8 @@ const rxApiRequest = createApiRequest<RXApiHConfig, RXApiSuccessResponse, RXApiF
     if (isRXAxiosResponse(response)) {
       const data = response.data;
       if (data.code === 0) return Promise.resolve(data);
+
+      bus.emit('api-err-distributor', response);
 
       // 资源访问凭证过期或者无效 ?
       if ([-2002, -2005].includes(data.code)) {
