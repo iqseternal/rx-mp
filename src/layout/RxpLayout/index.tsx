@@ -29,7 +29,8 @@ const RXPLayout = memo(() => {
       {RXPVerticalNavExternal && RXPVerticalNavExternal.map((ExternalNavigation, index) => {
         return (
           <div
-            className='h-full'
+            className='h-full select-none'
+            draggable={false}
             key={index}
           >
             <ExternalNavigation />
@@ -52,8 +53,9 @@ const RXPLayout = memo(() => {
           {RXPVerticalNavInternal && RXPVerticalNavInternal.map((InternalNavigation, index) => {
             return (
               <div
-                className='h-full'
+                className='h-full select-none'
                 key={index}
+                draggable={false}
               >
                 <InternalNavigation />
               </div>
@@ -85,29 +87,6 @@ const RXPLayoutWrapper = memo(() => {
 
       metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', NavigationWrapper);
       metadata.delMetadata('ui.layout.header.right.content');
-    }
-  }, []);
-
-  useAsyncEffect(async () => {
-    const [err, res] = await toNil(rApis.loginApi({
-      email: 'sueyeternal@163.com',
-      password: 'asdadasdas'
-    }))
-
-    if (err) {
-      console.error(err.reason.message);
-      return;
-    }
-
-    setTokens({
-      accessToken: res.data.tokens.access_token,
-      refreshToken: res.data.tokens.refresh_token,
-    })
-
-    const [err2, res2] = await toNil(rApis.userinfoApi({}));
-    if (err2) {
-      console.error(err2.reason.message);
-      return;
     }
   }, []);
 

@@ -1,0 +1,50 @@
+
+.emergeFromLeftSwitchAppear {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+
+.emergeFromLeftSwitchAppearActive {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.3s ease-out;
+  overflow-y: hidden;
+  height: 100%;
+}
+
+.emergeFromLeftSwitchAppearDone {
+  opacity: 1;
+}
+
+.emergeFromLeftSwitchEnter {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+
+.emergeFromLeftSwitchEnterActive {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.2s ease-out;
+  overflow-y: hidden;
+  height: 100%;
+}
+
+.emergeFromLeftSwitchEnterDone {
+  opacity: 1;
+}
+
+.emergeFromLeftSwitchExit {
+  opacity: 1;
+}
+
+.emergeFromLeftSwitchExitActive {
+  transform: translateX(-20px);
+  opacity: 1;
+  transition: all 0.1s ease-out;
+  overflow-y: hidden;
+  height: 100%;
+}
+
+.emergeFromLeftSwitchExitDone {
+  opacity: 0;
+}

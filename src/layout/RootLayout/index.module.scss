@@ -1,0 +1,39 @@
+
+.emergeFromTransparentAppear {
+  opacity: 0;
+}
+
+.emergeFromTransparentAppearActive {
+  opacity: 1;
+  transition: all 0.3s ease-out;
+}
+
+.emergeFromTransparentAppearDone {
+  opacity: 1;
+}
+
+.emergeFromTransparentEnter {
+  opacity: 0;
+}
+
+.emergeFromTransparentEnterActive {
+  opacity: 1;
+  transition: all 0.2s ease-out;
+}
+
+.emergeFromTransparentEnterDone {
+  opacity: 1;
+}
+
+.emergeFromTransparentExit {
+  opacity: 1;
+}
+
+.emergeFromTransparentExitActive {
+  opacity: 1;
+  transition: all 0.1s ease-out;
+}
+
+.emergeFromTransparentExitDone {
+  opacity: 0;
+}

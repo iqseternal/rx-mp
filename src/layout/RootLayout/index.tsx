@@ -1,8 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { memo, useEffect, useState } from 'react';
-import { UnlockTwoTone, UserAddOutlined } from '@ant-design/icons';
-import { useWindowInnerSize, useRefresh } from '@/libs/hooks';
-import { Button, Popover } from 'antd';
+import { memo, useEffect, useRef, useState } from 'react';
+import { SwitchTransition, CSSTransition } from 'react-transition-group';
+import { rootCssTransitionClassNames } from './definition';
 
 import Widget from '@/components/Widget';
 
@@ -12,8 +11,30 @@ import Widget from '@/components/Widget';
  */
 const RootLayout = memo(() => {
 
+  const rootContainerRef = useRef<HTMLDivElement>(null);
 
-  return <Outlet />
+  return (
+    <SwitchTransition mode='out-in'>
+      <CSSTransition
+        key={'rootLayout'}
+        timeout={300}
+        appear={true}
+        in
+        classNames={rootCssTransitionClassNames}
+        enter={true}
+        exit={false}
+        unmountOnExit={false}
+        nodeRef={rootContainerRef}
+      >
+        <div
+          ref={rootContainerRef}
+          className='w-full h-full'
+        >
+          <Outlet />
+        </div>
+      </CSSTransition>
+    </SwitchTransition>
+  )
 })
 
 const RootLayoutWrapper = memo(() => (<RootLayout />));

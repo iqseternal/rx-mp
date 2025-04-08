@@ -1,5 +1,5 @@
 import { Layout, Menu } from 'antd';
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRetrieveRoute, usePresentRoute, getRouteFromFullPath } from '@/router';
 import { useShallowReactive } from '@/libs/hooks';
@@ -8,6 +8,8 @@ import type { MenuItemType } from 'antd/es/menu/interface';
 import type { RouteConfig } from '@/router/definition';
 import { rxpBus } from '@/layout/RxpLayout/bus';
 import { useRXPLayoutStore } from '@/layout/RxpLayout/stores/useRXPLayoutStore';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
+import { navCssTransitionClassNames } from './definition';
 
 import IconFont from '@/components/IconFont';
 
@@ -17,6 +19,7 @@ export const Navigation = memo(() => {
   const rxpRoute = useRetrieveRoute(routes => routes.rxpRoute);
   const presentRoute = usePresentRoute();
   const rxpNavigationCollapsed = useRXPLayoutStore(store => store.status.rxpNavigationCollapsed);
+  const navContainerRef = useRef<HTMLDivElement>(null);
 
   const [shallowMenuState] = useShallowReactive(() => ({
     selectedKeys: [] as string[],
@@ -72,54 +75,69 @@ export const Navigation = memo(() => {
   }, [presentRoute.current]);
 
   return (
-    <nav
-      className='w-full h-full'
-    >
-      <Layout.Sider
-        theme='dark'
-        className='h-full'
-        collapsible={false}
-        collapsed={rxpNavigationCollapsed}
-        onCollapse={(collapsed, type) => {
-          useRXPLayoutStore.setState((store) => {
-            store.status.rxpNavigationCollapsed = collapsed;
-          })
-        }}
+    <SwitchTransition mode='out-in'>
+      <CSSTransition
+        key={'nav'}
+        timeout={300}
+        appear={true}
+        in
+        classNames={navCssTransitionClassNames}
+        enter={true}
+        exit={false}
+        unmountOnExit={false}
+        nodeRef={navContainerRef}
       >
-      <div
-        className='w-full flex justify-center text-xl py-2 gap-x-2 text-[rgba(255,255,255,0.65)] overflow-x-hidden flex-nowrap'
-      >
-        <IeOutlined />
-        {!rxpNavigationCollapsed && (
-          <>
-            RX-MP
-          </>
-        )}
-      </div>
+        <nav
+          className='w-full h-full'
+          ref={navContainerRef}
+        >
+          <Layout.Sider
+            theme='dark'
+            className='h-full'
+            collapsible={false}
+            collapsed={rxpNavigationCollapsed}
+            onCollapse={(collapsed, type) => {
+              useRXPLayoutStore.setState((store) => {
+                store.status.rxpNavigationCollapsed = collapsed;
+              })
+            }}
+          >
+            <div
+              className='w-full flex justify-center text-xl py-2 gap-x-2 text-[rgba(255,255,255,0.65)] overflow-x-hidden flex-nowrap'
+            >
+              <IeOutlined />
+              {!rxpNavigationCollapsed && (
+                <>
+                  RX-MP
+                </>
+              )}
+            </div>
 
-      <Menu
-        theme='dark'
-        mode='inline'
-        triggerSubMenuAction='click'
-        className='h-full'
-        selectedKeys={shallowMenuState.selectedKeys}
-        openKeys={shallowMenuState.openKeys}
-        onOpenChange={(openKeys) => {
-          shallowMenuState.openKeys = openKeys;
-        }}
-        onSelect={(info) => {
+            <Menu
+              theme='dark'
+              mode='inline'
+              triggerSubMenuAction='click'
+              className='h-full'
+              selectedKeys={shallowMenuState.selectedKeys}
+              openKeys={shallowMenuState.openKeys}
+              onOpenChange={(openKeys) => {
+                shallowMenuState.openKeys = openKeys;
+              }}
+              onSelect={(info) => {
 
-          shallowMenuState.selectedKeys = info.selectedKeys;
-        }}
-        onClick={(info) => {
-          navigate(info.key);
-        }}
-        inlineIndent={20}
-        subMenuOpenDelay={0.2}
-        items={menus}
-      />
-      </Layout.Sider>
-    </nav>
+                shallowMenuState.selectedKeys = info.selectedKeys;
+              }}
+              onClick={(info) => {
+                navigate(info.key);
+              }}
+              inlineIndent={20}
+              subMenuOpenDelay={0.2}
+              items={menus}
+            />
+          </Layout.Sider>
+        </nav>
+      </CSSTransition>
+    </SwitchTransition>
   )
 })
 
