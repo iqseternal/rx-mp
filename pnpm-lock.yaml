@@ -15,8 +15,8 @@ importers:
         specifier: 0.3.2
         version: 0.3.2(@angular/common@19.2.4(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))
       '@suey/pkg-web':
-        specifier: 0.0.3
-        version: 0.0.3(typescript@5.8.2)
+        specifier: 0.0.5
+        version: 0.0.5(typescript@5.8.2)
       '@suey/rxp-meta':
         specifier: 0.0.1
         version: 0.0.1
@@ -1552,8 +1552,8 @@ packages:
   '@suey/pkg-utils@0.3.2':
     resolution: {integrity: sha512-HMmSbpM6Hm9snc5zPBjCBf81QvJ5MEXiv7F32VOuyUNuk7/E32sam0yDQY6X/fO1metNDLxkxJuuCDH4uhN6NA==}
 
-  '@suey/pkg-web@0.0.3':
-    resolution: {integrity: sha512-8QBstiqu4N/TSuF329F2a4vxxUnxaQQRvNKzWWy20b3j69t0jcEtDlfDLOlx6pyB7Lup6mC5M/GCkXs/Lmt5Iw==}
+  '@suey/pkg-web@0.0.5':
+    resolution: {integrity: sha512-G+ZjXVwOFBY96W2HtNUVv+2fId77dfSz4PHHSy8pV/uw3ozGqbw2G40o0dI2Q/zisyMoQ3PUVvGMQABxCqbdWA==}
 
   '@suey/rxp-meta@0.0.1':
     resolution: {integrity: sha512-Na1yrPJd6ZYtHQGL6T9awjijwJ7whwrQbPpOV9vdGRT/bbt5CyPndd9fe9GKkqHSjQzGqg7EVGmJFLCItohswg==}
@@ -8726,7 +8726,7 @@ snapshots:
       - '@angular/core'
       - debug
 
-  '@suey/pkg-web@0.0.3(typescript@5.8.2)':
+  '@suey/pkg-web@0.0.5(typescript@5.8.2)':
     dependencies:
       '@types/js-cookie': 3.0.6
       '@types/mousetrap': 1.6.15

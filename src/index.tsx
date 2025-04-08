@@ -5,6 +5,7 @@ import { bus } from './libs/bus';
 
 import ReactDOM from 'react-dom/client';
 
+import './discrete';
 import '@/styles/index.css';
 
 const root = document.getElementById('root');

@@ -1,6 +1,18 @@
+import { Invoker, Emitter } from '@suey/pkg-web';
+import { BusEmitterEntries, BusInvokerEntries } from '@/declare';
 
-import { BusEntries } from '@/declare';
+export const emitter = new Emitter<BusEmitterEntries>();
 
-import mitt from 'mitt';
+export const invoker = new Invoker<BusInvokerEntries>();
 
-export const bus = mitt<BusEntries>();
+export const bus = {
+  /**
+   *
+   */
+  emitter: emitter,
+
+  /**
+   *
+   */
+  invoker: invoker
+} as const;

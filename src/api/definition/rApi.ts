@@ -1,4 +1,4 @@
-import { REQ_METHODS, createApiRequest, ApiPromiseResultTypeBuilder, AxiosError, RequestConfig, toNil, apiDelete, createRequest, request, type AxiosResponse } from '@suey/pkg-utils';
+import { REQ_METHODS, createApiRequest, ApiPromiseResultTypeBuilder, AxiosError, RequestConfig, toNil, type AxiosResponse } from '@suey/pkg-utils';
 import { StringFilters } from '@/libs/common';
 import { rxUpdateAccessTokenApi } from '../modules/auth';
 import { ckSet } from '@suey/pkg-web';
@@ -115,29 +115,11 @@ const rxApiRequest = createApiRequest<RXApiHConfig, RXApiSuccessResponse, RXApiF
       const data = response.data;
       if (data.code === 0) return Promise.resolve(data);
 
-      bus.emit('api-err-distributor', response);
+      // 出现错误, 向 rx-api-err 分发器发送事件, 等待处理
+      const [err, resp] = await toNil(bus.invoker.invoke('rx-api-err-distributor', response));
 
-      // 资源访问凭证过期或者无效 ?
-      if ([-2002, -2005].includes(data.code)) {
-        // 更新资源访问凭证
-        const [authErr, authRes] = await toNil(rxUpdateAccessTokenApi({}));
-        if (authErr) return Promise.reject(data);
-        setAccessToken(authRes.data);
-
-        // 重试请求
-        const [err, res] = await toNil(request<RXApiSuccessResponse, RXApiFailResponse>(response.config));
-        if (err) return Promise.reject(err.reason);
-
-        // 再次检查返回结果是否符合 RX 得 response
-        if (isRXAxiosResponse(res as AxiosResponse)) {
-          const data = res.data;
-          if (data.code === 0) return Promise.resolve(data);
-          return Promise.reject(data);
-        }
-      }
-
-      // 请求失败
-      return Promise.reject(data);
+      if (err) return Promise.reject(err.reason);
+      return resp;
     }
 
     return response;

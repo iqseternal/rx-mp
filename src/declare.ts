@@ -1,6 +1,6 @@
 import type { AxiosResponse } from '@suey/pkg-utils';
 import type { ComponentType } from 'react';
-import type { RXApiFailResponse, RXApiSuccessResponse } from './api';
+import type { RXApiBasicResponse, RXApiFailResponse, RXApiSuccessResponse } from './api';
 
 export interface MetadataEntries {
   'ui.layout.header.left.before': ComponentType[];
@@ -26,11 +26,15 @@ export interface MetadataEntries {
   'rxp.ui.layout.vertical.nav.internal': ComponentType[];
 }
 
-export type BusEntries = {
+export type BusEmitterEntries = {
+
+}
+
+export type BusInvokerEntries = {
   /**
    * api-err 分发器
    */
-  'api-err-distributor': AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>;
+  'rx-api-err-distributor': (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<RXApiBasicResponse>;
 
-  [RequestError: `api-err:${number}`]: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>;
+  [RequestError: `rx-api-err:${number}`]: (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<RXApiBasicResponse>;
 }
