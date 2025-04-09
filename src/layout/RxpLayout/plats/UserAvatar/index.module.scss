@@ -1,0 +1,13 @@
+
+
+.userDropdownMenuRootWrapper {
+  width: max-content;
+  user-select: none;
+  transition: unset !important;
+  animation-duration: 0s !important;
+
+  :global(ul.ant-dropdown-menu) {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}

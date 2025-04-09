@@ -148,6 +148,7 @@ export const reserveRoutes = <Routes extends Record<string, any>,>(presetRoutes:
       }))
 
       if (normalState.currentFullPath !== location.pathname) {
+        normalState.currentFullPath = location.pathname;
         shallowState.current = routeMap.get(normalState.currentFullPath);
       }
 

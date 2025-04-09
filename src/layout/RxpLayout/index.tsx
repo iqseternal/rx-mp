@@ -1,12 +1,6 @@
 import { memo, useLayoutEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { metadata } from '@/libs/rxp-meta';
-import { Avatar } from 'antd';
-import { toNil } from '@suey/pkg-utils';
-import { useAsyncEffect } from '@/libs/hooks';
-import { rApis } from '@/api';
-import { setAccessToken, setRefreshToken, setTokens } from '@/storage/token';
-import { ckSet, loSet } from '@suey/pkg-web';
 
 import NavigationWrapper from './plats/Navigation';
 import HeaderWrapper from '@/b-components/Header';
@@ -14,6 +8,7 @@ import Widget from '@/components/Widget';
 import BreadCrumbsWrapper from './plats/BreadCrumbs';
 import UserAvatar from './plats/UserAvatar';
 import NavigationMenuWidget from './plats/NavigationMenuWidget';
+import Fullscreen from './plats/Fullscreen';
 
 
 const RXPLayout = memo(() => {
@@ -44,8 +39,6 @@ const RXPLayout = memo(() => {
         <HeaderWrapper
           className='w-full bg-white h-12'
         />
-
-        <BreadCrumbsWrapper />
 
         <section
           className='w-full flex flex-nowrap h-full'
@@ -78,14 +71,20 @@ const RXPLayoutWrapper = memo(() => {
 
   useLayoutEffect(() => {
     metadata.defineMetadata('ui.layout.header.left.content', NavigationMenuWidget);
+    metadata.defineMetadataInVector('ui.layout.header.left.after', BreadCrumbsWrapper);
 
     metadata.defineMetadataInVector('rxp.ui.layout.vertical.nav.external', NavigationWrapper);
+
+    metadata.defineMetadataInVector('ui.layout.header.right.before', Fullscreen);
     metadata.defineMetadata('ui.layout.header.right.content', UserAvatar);
 
     return () => {
       metadata.delMetadata('ui.layout.header.left.content');
+      metadata.delMetadataInVector('ui.layout.header.left.after', BreadCrumbsWrapper);
 
       metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', NavigationWrapper);
+
+      metadata.delMetadataInVector('ui.layout.header.right.before', Fullscreen);
       metadata.delMetadata('ui.layout.header.right.content');
     }
   }, []);

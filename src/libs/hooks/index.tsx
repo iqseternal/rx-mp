@@ -43,3 +43,5 @@ export { useTextSelection } from 'ahooks';
 export { useCookieState, useSessionStorageState, useLocalStorageState } from 'ahooks';
 
 export { useEventListener } from './useEventListener';;
+
+export { useFullscreen } from 'ahooks';

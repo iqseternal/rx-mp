@@ -71,14 +71,14 @@ export const Widget = memo(forwardRef<HTMLDivElement, WidgetProps>((props, ref) 
     ...realProps
   } = props;
 
-  const [normalState] = useState({
+  const [normalState] = useState(() => ({
     loading: false,
     disabled: false,
 
     onClick: (() => { }) as (MouseEventHandler<HTMLDivElement> | undefined),
     onDoubleClick: (() => { }) as (MouseEventHandler<HTMLDivElement> | undefined),
     onContextMenu: (() => { }) as (MouseEventHandler<HTMLDivElement> | undefined),
-  })
+  }))
 
   if (normalState.loading !== loading) normalState.loading = loading;
   if (normalState.disabled !== disabled) normalState.disabled = disabled;
