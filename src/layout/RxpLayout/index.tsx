@@ -9,6 +9,7 @@ import BreadCrumbsWrapper from './plats/BreadCrumbs';
 import UserAvatar from './plats/UserAvatar';
 import NavigationMenuWidget from './plats/NavigationMenuWidget';
 import Fullscreen from './plats/Fullscreen';
+import OpenHistory from './plats/OpenHistory';
 
 
 const RXPLayout = memo(() => {
@@ -39,6 +40,8 @@ const RXPLayout = memo(() => {
         <HeaderWrapper
           className='w-full bg-white h-12'
         />
+
+        <OpenHistory />
 
         <section
           className='w-full flex flex-nowrap h-full'
