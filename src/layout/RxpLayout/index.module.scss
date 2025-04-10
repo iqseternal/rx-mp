@@ -1,0 +1,48 @@
+
+.workbenchesRouteSwitchAppear {
+  transform: translateX(20px);
+  opacity: 0;
+}
+
+.workbenchesRouteSwitchAppearActive {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.5s ease-out;
+  overflow-y: hidden;
+  height: 100%;
+}
+
+.workbenchesRouteSwitchAppearDone {
+  opacity: 1;
+}
+
+.workbenchesRouteSwitchEnter {
+  transform: translateX(20px);
+  opacity: 0.5;
+}
+
+.workbenchesRouteSwitchEnterActive {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.4s ease-out;
+  overflow-y: hidden;
+}
+
+.workbenchesRouteSwitchEnterDone {
+  opacity: 1;
+}
+
+.workbenchesRouteSwitchExit {
+  transform: translateX(0);
+  opacity: 1;
+}
+.workbenchesRouteSwitchExitActive {
+  transform: translateX(20px);
+  transition: all 0.2s ease-out;
+  opacity: 0;
+  //overflow-y: hidden;
+}
+
+.workbenchesRouteSwitchExitDone {
+  opacity: 1;
+}

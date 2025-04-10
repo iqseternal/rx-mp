@@ -1,35 +1,41 @@
 
-export const ErrorCode = {
-  [0]: '操作成功',
-  [-1]: '失败',
+export enum Biz {
+  Success = 0,
+  Failure = -1,
 
-  [401]: '权限未定义',
-  [403]: '操作被拒绝',
+  Unauthorized = 401,
+  Forbidden = 403,
+  RequestTimeout = 408,
+  MethodNotAllowed = 405,
 
-  [408]: '请求超时',
-  [405]: '请求不被允许',
+  InternalServerError = 500,
+  NotImplemented = 501,
+  BadGateway = 502,
 
-  [500]: '服务错误',
-  [501]: '服务未实现',
-  [502]: '网关错误',
+  BearerAuthorizationInvalid = -1001,
 
-  [-1001]: '权限未定义',
+  AccessTokenInvalid = -2002,
+  RefreshTokenInvalid = -2003,
+  DatabaseQueryError = -2004,
+  AccessTokenExpired = -2005,
+  RefreshTokenExpired = -2006,
 
-
-  [-2002]: '权限访问凭证未定义',
-  [-2003]: '资源访问凭证未定义',
-  [-2004]: '数据库查询失败',
-  [-2005]: '权限访问凭证已过期',
-  [-2006]: '资源访问凭证已过期',
-
-  [1001]: '用户为拥有管理员权限',
-
-  [1010]: '用户不存在'
+  UserNotHasAdminRole = 1001,
+  UserNotExists = 1010
 }
 
+export const BizMessage = {
+  [Biz.Success]: '操作成功',
+  [Biz.Failure]: '失败',
+
+  [Biz.Unauthorized]: '权限未定义',
+  [Biz.Forbidden]: '操作被拒绝',
+} as const;
+
+
 export const toErrorMsg = (code: number) => {
-  if (ErrorCode[code]) {
-    return ErrorCode[code];
+  if (BizMessage[code]) {
+    return BizMessage[code];
   }
   return '';
 }

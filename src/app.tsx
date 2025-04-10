@@ -30,9 +30,12 @@ export const RXApp = memo(() => {
 
           },
           Card: {
-
+            bodyPadding: 15
           },
           Button: {
+
+          },
+          Table: {
 
           }
         },

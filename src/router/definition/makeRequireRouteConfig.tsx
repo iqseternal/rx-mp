@@ -62,11 +62,9 @@ export function makeRequireRouteConfig(route: RouteConfig, basePath = '', isRoot
 
   // path 是相对路径, 但是允许填写 /, 自动将这个 / 去除
   if (route.path.startsWith('/') && !isRoot) {
-    if (!route.path.startsWith(basePath)) {
-      console.error(basePath, route);
+    if (!new RegExp(`^${basePath}(/.*|$)`).test(route.path)) {
       throw new Error(`子路由必须由父级路径前缀开始, ${route.path}`);
     }
-    // route.path = route.path.substring(1);
   }
 
   // 如果没有处理 fullPath, 那么自动填充

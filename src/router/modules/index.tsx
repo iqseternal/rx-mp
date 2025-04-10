@@ -23,60 +23,34 @@ export const rxpRoute = makeRoute({
       component: lazy(() => import('@/pages/rxp/Dashboard')),
     },
     {
-      name: 'RxpForm',
-      path: '/rxp/form',
+      name: 'RxpExtGAS',
+      path: '/rxp/ext',
       meta: {
-        title: '表单页',
-        icon: 'FormOutlined'
+        title: '扩展',
+        icon: 'ProjectOutlined'
       },
-      component: lazy(() => import('@/pages/rxp/Dashboard')),
-    },
-    {
-      name: 'RxpList',
-      path: '/rxp/list',
-      redirect: '/rxp/list/table',
-      meta: {
-        title: '列表页',
-        icon: 'TableOutlined'
-      },
-
+      redirect: '/rxp/ext/extension-group',
       children: [
         {
-          name: 'RxpListTable',
-          path: '/rxp/list/table',
+          name: 'RxpExtensionGroup',
+          path: '/rxp/ext/extension-group',
           meta: {
-            title: '查询表格'
+            title: '扩展组',
+            icon: 'GroupOutlined'
           },
-          component: lazy(() => import('@/pages/rxp/Dashboard')),
+          component: lazy(() => import('@/pages/rxp/Ext/ExtensionGroup'))
         },
         {
-          name: 'RxpListBasicForm',
-          path: '/rxp/list/basic-form',
+          name: 'RxpExtension',
+          path: '/rxp/ext/extension',
           meta: {
-            title: '基础表单'
+            title: '扩展',
+            icon: 'ExpandOutlined'
           },
-          redirect: '/rxp/list/basic-form/item1',
-          children: [
-            {
-              name: 'RxpListBasicFormItem1',
-              path: '/rxp/list/basic-form/item1',
-              meta: {
-                title: '基础表单 1'
-              },
-              component: lazy(() => import('@/pages/rxp/Dashboard')),
-            },
-            {
-              name: 'RxpListBasicFormItem2',
-              path: '/rxp/list/basic-form/item2',
-              meta: {
-                title: '基础表单 2'
-              },
-              component: lazy(() => import('@/pages/rxp/Dashboard')),
-            }
-          ]
+          component: lazy(() => import('@/pages/rxp/Ext/Extension'))
         }
-      ]
-    }
+      ],
+    },
   ]
 })
 

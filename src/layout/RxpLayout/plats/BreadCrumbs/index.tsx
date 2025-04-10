@@ -45,7 +45,13 @@ export const BreadCrumbs = memo(() => {
                     /&nbsp;
                   </>
                 )}
-                {icon && (<IconFont icon={icon} />)}
+
+                {icon && (
+                  <IconFont
+                    icon={icon}
+                  />
+                )}
+
                 <span>{title}</span>
               </div>
             </CSSTransition>

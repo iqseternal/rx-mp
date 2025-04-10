@@ -27,7 +27,10 @@ export interface MetadataEntries {
 }
 
 export type BusEmitterEntries = {
-
+  /**
+   * 通用错误分发器
+   */
+  'err-distributor': any;
 }
 
 export type BusInvokerEntries = {
@@ -36,5 +39,6 @@ export type BusInvokerEntries = {
    */
   'rx-api-err-distributor': (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<RXApiBasicResponse>;
 
-  [RequestError: `rx-api-err:${number}`]: (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<RXApiBasicResponse>;
+  'rx-api-err:unauthorized-resource': (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<RXApiBasicResponse>;
+  'rx-api-err:unauthorized-credential': (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<RXApiBasicResponse>;
 }

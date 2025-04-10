@@ -35,6 +35,7 @@ export const parsePriorityRouteParams = (route?: CompleteRouteConfig): PriorityR
   const fullPath = route.meta.fullPath;
   const icon = route.meta.icon;
   const nodeRef = createRef<HTMLDivElement>();
+
   const item: PriorityRouteParamItem = {
     title: title,
     icon: icon,

@@ -21,6 +21,8 @@ export const Navigation = memo(() => {
   const rxpNavigationCollapsed = useRXPLayoutStore(store => store.status.rxpNavigationCollapsed);
   const navContainerRef = useRef<HTMLDivElement>(null);
 
+
+
   const [shallowMenuState] = useShallowReactive(() => ({
     selectedKeys: [] as string[],
     openKeys: [] as string[]
@@ -48,7 +50,7 @@ export const Navigation = memo(() => {
 
   const menus = useMemo<MenuItemType[]>(() => revertRouteMenus(rxpRoute.children), [rxpRoute]);
 
-  useLayoutEffect(() => {
+  const autoSetOpenKeys = useCallback(() => {
     if (!presentRoute.current) return;
 
     const openKeys = [] as string[];
@@ -72,7 +74,9 @@ export const Navigation = memo(() => {
     }
 
     shallowMenuState.openKeys = openKeys;
-  }, [presentRoute.current]);
+  }, []);
+
+  useLayoutEffect(autoSetOpenKeys, [rxpNavigationCollapsed]);
 
   return (
     <SwitchTransition mode='out-in'>
@@ -124,7 +128,6 @@ export const Navigation = memo(() => {
                 shallowMenuState.openKeys = openKeys;
               }}
               onSelect={(info) => {
-
                 shallowMenuState.selectedKeys = info.selectedKeys;
               }}
               onClick={(info) => {

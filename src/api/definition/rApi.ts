@@ -113,7 +113,7 @@ const rxApiRequest = createApiRequest<RXApiHConfig, RXApiSuccessResponse, RXApiF
   async onFulfilled(response) {
     if (isRXAxiosResponse(response)) {
       const data = response.data;
-      if (data.code === 0) return Promise.resolve(data);
+      if (data.code === 0) return data;
 
       // 出现错误, 向 rx-api-err 分发器发送事件, 等待处理
       const [err, resp] = await toNil(bus.invoker.invoke('rx-api-err-distributor', response));

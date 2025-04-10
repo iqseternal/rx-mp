@@ -43,4 +43,11 @@ export const UserAvatar = memo(() => {
   )
 })
 
-export default UserAvatar;
+export const UserAvatarWrapper = memo(() => {
+
+  return (
+    <UserAvatar />
+  )
+})
+
+export default UserAvatarWrapper;
