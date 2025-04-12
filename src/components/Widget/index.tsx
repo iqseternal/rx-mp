@@ -1,7 +1,7 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import { classnames } from '@/libs/common';
 import { theme, Tooltip, TooltipProps } from 'antd';
-import type { IconKey } from '@/components/IconFont';
+import type { IconKey, IconFontProps } from '@/components/IconFont';
 import type { HTMLAttributes, MouseEventHandler, ReactNode, MouseEvent } from 'react';
 import { memo, useCallback, useState, useMemo, forwardRef } from 'react';
 
@@ -19,6 +19,7 @@ export interface WidgetProps extends HTMLAttributes<HTMLDivElement> {
 
   /** 当前控件展示的图标元素 */
   icon?: IconKey;
+  iconAttrs?: IconFontProps;
 
   /**
    * 当前控件是否处于 loading 状态
@@ -58,6 +59,7 @@ export const Widget = memo(forwardRef<HTMLDivElement, WidgetProps>((props, ref) 
     innerClassName,
     hasHoverStyle = true,
     icon,
+    iconAttrs = {} as IconFontProps,
     size = 'base',
     disabled = false,
     loading = false,
@@ -148,7 +150,14 @@ export const Widget = memo(forwardRef<HTMLDivElement, WidgetProps>((props, ref) 
           )}
         >
           {loading ? loadingContent : <>
-            {icon ? <IconFont icon={icon} /> : children}
+            {(icon || iconAttrs.icon) ? (
+              <IconFont
+                {...iconAttrs}
+                icon={icon || iconAttrs.icon}
+              />
+            ) : (
+              children
+            )}
           </>}
         </div>
       </Tooltip>

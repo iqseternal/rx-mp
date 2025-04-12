@@ -36,6 +36,12 @@ export const RXApp = memo(() => {
 
           },
           Table: {
+            cellPaddingInlineMD: 6,
+            cellPaddingBlockMD: 8
+          },
+          Alert: {
+            defaultPadding: '6px 10px'
+
 
           }
         },
@@ -50,6 +56,12 @@ export const RXApp = memo(() => {
         style: {
 
         }
+      }}
+      alert={{
+        className: 'mb-1'
+      }}
+      table={{
+
       }}
       message={{
 

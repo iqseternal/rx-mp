@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useOutlet } from 'react-router-dom';
 import { memo, useEffect, useRef, useState } from 'react';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import { rootCssTransitionClassNames } from './definition';
@@ -12,6 +12,7 @@ import Widget from '@/components/Widget';
 const RootLayout = memo(() => {
 
   const rootContainerRef = useRef<HTMLDivElement>(null);
+  const currentOutlet = useOutlet();
 
   return (
     <SwitchTransition mode='out-in'>
@@ -30,7 +31,7 @@ const RootLayout = memo(() => {
           ref={rootContainerRef}
           className='w-full h-full'
         >
-          <Outlet />
+          {currentOutlet}
         </div>
       </CSSTransition>
     </SwitchTransition>

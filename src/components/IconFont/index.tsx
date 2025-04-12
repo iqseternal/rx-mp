@@ -1,11 +1,12 @@
-import { memo } from 'react';
+import { memo, forwardRef } from 'react';
 import { Ansi } from '@suey/pkg-utils';
 
 import type { default as iconInstance } from '@ant-design/icons';
+import type { IconComponentProps } from '@ant-design/icons/lib/components/Icon';
 import * as icons from '@ant-design/icons';
 
 export type IconInstance = typeof iconInstance;
-export type IconProps = Parameters<IconInstance>[0];
+export type IconProps = Omit<IconComponentProps, 'ref'>;
 
 export type IconRealKey = Exclude<keyof typeof icons, 'createFromIconfontCN' | 'default' | 'IconProvider' | 'setTwoToneColor' | 'getTwoToneColor'>;
 export type IconKey = IconRealKey | `icon-${string}`;
@@ -20,7 +21,7 @@ export interface IconFontProps extends Partial<IconProps> {
  * @param props
  * @returns
  */
-export const IconFont = memo((props: IconFontProps) => {
+export const IconFont = memo(forwardRef<HTMLDivElement, IconFontProps>((props, ref) => {
   const { icon, ...iconProps } = props;
 
   if (!icon) {
@@ -33,8 +34,11 @@ export const IconFont = memo((props: IconFontProps) => {
   if (!Icon) return null;
 
   return (
-    <Icon {...iconProps} />
+    <Icon
+      {...iconProps}
+      ref={ref}
+    />
   )
-});
+}));
 
 export default IconFont;

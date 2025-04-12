@@ -1,13 +1,14 @@
 import { memo, Suspense, useEffect, useLayoutEffect, useRef } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useOutlet } from 'react-router-dom';
 import { metadata } from '@/libs/rxp-meta';
-import { useAsyncEffect } from '@/libs/hooks';
+import { useAsyncEffect, useNormalState } from '@/libs/hooks';
 import { toNil } from '@suey/pkg-utils';
 import { rApis } from '@/api';
 import { setTokens } from '@/storage/token';
 import { ErrorBoundary } from 'react-error-boundary';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import { workbenchesCssTransitionClassNames } from './definition';
+import { usePresentRoute } from '@/router';
 
 import NavigationWrapper from './plats/Navigation';
 import HeaderWrapper from '@/b-components/Header';
@@ -16,35 +17,61 @@ import BreadCrumbsWrapper from './plats/BreadCrumbs';
 import UserAvatarWrapper from './plats/UserAvatar';
 import NavigationMenuWidget from './plats/NavigationMenuWidget';
 import Fullscreen from './plats/Fullscreen';
-import OpenHistory from './plats/OpenHistory';
-
+import OpenHistoryWrapper from './plats/OpenHistory';
+import AuthGuard from '@/guards/AuthGuard';
 
 /**
  * 为什么需要这个组件, 因为需要做过渡动画, 当 location.pathname 发生变化时, 只需要更新这一小部分组件内容即可
  */
 const RXPMainContainer = memo(() => {
   const location = useLocation();
+  const currentOutlet = useOutlet();
+  const presentRoute = usePresentRoute();
 
   const mainRef = useRef<HTMLDivElement>(null);
+
+  const [normalState] = useNormalState(() => ({
+    windowTitle: void 0 as (undefined | string)
+  }))
+
+  useLayoutEffect(() => {
+    if (!normalState.windowTitle) {
+      normalState.windowTitle = window.document.title;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!presentRoute.current) return;
+    window.document.title = presentRoute.current.meta.title ?? normalState.windowTitle ?? '';
+  }, [presentRoute.current]);
+
+  useEffect(() => {
+
+    return () => {
+
+      if (normalState.windowTitle) {
+        window.document.title = normalState.windowTitle
+      }
+    }
+  }, []);
 
   return (
     <SwitchTransition mode='out-in'>
       <CSSTransition
-        timeout={{
-          enter: 300,
-          exit: 200,
-          appear: 300
-        }}
+        timeout={300}
         appear
         key={location.pathname}
         nodeRef={mainRef}
+        enter
+        exit
+        unmountOnExit={false}
         classNames={workbenchesCssTransitionClassNames}
       >
         <main
           className='overflow-x-hidden overflow-y-auto w-full h-full max-h-full px-1.5 py-1.5'
           ref={mainRef}
         >
-          <Outlet />
+          {currentOutlet}
         </main>
       </CSSTransition>
 
@@ -59,7 +86,7 @@ const RXPLayout = memo(() => {
   return (
 
     <div
-      className='w-full h-full flex flex-nowrap bg-slate-100'
+      className='w-full h-full flex flex-nowrap bg-slate-100 overflow-x-hidden'
     >
       {RXPVerticalNavExternal && RXPVerticalNavExternal.map((ExternalNavigation, index) => {
         return (
@@ -74,13 +101,13 @@ const RXPLayout = memo(() => {
       })}
 
       <section
-        className='w-full h-full flex flex-col'
+        className='w-full h-full flex flex-col overflow-x-hidden'
       >
         <HeaderWrapper
-          className='w-full bg-white h-12'
+          className='w-full bg-white h-12 flex-none'
         />
 
-        <OpenHistory />
+        <OpenHistoryWrapper />
 
         <section
           className='w-full flex flex-nowrap h-full'
@@ -128,7 +155,9 @@ const RXPLayoutWrapper = memo(() => {
   }, []);
 
   return (
-    <RXPLayout />
+    <AuthGuard>
+      <RXPLayout />
+    </AuthGuard>
   )
 })
 

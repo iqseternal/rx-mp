@@ -57,7 +57,7 @@ export const rxpRoute = makeRoute({
 export const rootRoute = makeRoute({
   name: 'Root',
   path: '/',
-  redirect: rxpRoute.meta.fullPath,
+  redirect: loginRoute.meta.fullPath,
   component: <RootLayoutWrapper />,
   children: [
     loginRoute,

@@ -1,17 +1,15 @@
 @import "./tailwind.css";
 @import "./override.scss";
 
-
 #root {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
 }
 
 /* 全局滚动条样式设置 */
 ::-webkit-scrollbar {
   width: 8px;
-  height: 8px;
+  height: 6px !important;
   box-sizing: content-box;
 }
 

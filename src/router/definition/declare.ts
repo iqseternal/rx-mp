@@ -22,6 +22,9 @@ export interface RouteMeta {
   title?: string;
 
   icon?: IconKey;
+
+  hiddenInMenu?: boolean;
+  hiddenInOpenHistory?: boolean;
 }
 
 /**

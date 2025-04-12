@@ -1,6 +1,6 @@
 import { Layout, Menu } from 'antd';
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useRetrieveRoute, usePresentRoute, getRouteFromFullPath } from '@/router';
 import { useShallowReactive } from '@/libs/hooks';
 import { IeOutlined } from '@ant-design/icons';
@@ -17,19 +17,16 @@ export const Navigation = memo(() => {
   const navigate = useNavigate();
 
   const rxpRoute = useRetrieveRoute(routes => routes.rxpRoute);
+  const location = useLocation();
   const presentRoute = usePresentRoute();
   const rxpNavigationCollapsed = useRXPLayoutStore(store => store.status.rxpNavigationCollapsed);
   const navContainerRef = useRef<HTMLDivElement>(null);
 
-
-
   const [shallowMenuState] = useShallowReactive(() => ({
-    selectedKeys: [] as string[],
     openKeys: [] as string[]
   }))
 
   const revertRouteMenus = useCallback((routes: RouteConfig[]) => {
-
     return routes.map(route => {
       return {
         key: route.meta?.fullPath,
@@ -65,10 +62,6 @@ export const Navigation = memo(() => {
       }
     }
 
-    if (shallowMenuState.selectedKeys[0] !== presentRoute.current.meta.fullPath) {
-      shallowMenuState.selectedKeys = [presentRoute.current.meta.fullPath];
-    }
-
     if (!useRXPLayoutStore.getState().status.rxpNavigationCollapsed) {
       generateOpenKeys(presentRoute.current.meta.parentFullPath);
     }
@@ -83,11 +76,11 @@ export const Navigation = memo(() => {
       <CSSTransition
         key={'nav'}
         timeout={300}
-        appear={true}
+        appear
         in
         classNames={navCssTransitionClassNames}
-        enter={true}
-        exit={false}
+        enter
+        exit
         unmountOnExit={false}
         nodeRef={navContainerRef}
       >
@@ -97,7 +90,7 @@ export const Navigation = memo(() => {
         >
           <Layout.Sider
             theme='dark'
-            className='h-full'
+            className='h-full overflow-y-auto'
             collapsible={false}
             collapsed={rxpNavigationCollapsed}
             onCollapse={(collapsed, type) => {
@@ -107,7 +100,10 @@ export const Navigation = memo(() => {
             }}
           >
             <div
-              className='w-full flex justify-center text-xl py-2 gap-x-2 text-[rgba(255,255,255,0.65)] overflow-x-hidden flex-nowrap'
+              className='h-full overflow-y-auto flex-col max-h-full flex'
+            >
+            <div
+              className='w-full flex justify-center text-xl py-2 gap-x-2 text-[rgba(255,255,255,0.65)] overflow-x-hidden flex-nowrap h-max flex-none'
             >
               <IeOutlined />
               {!rxpNavigationCollapsed && (
@@ -121,14 +117,14 @@ export const Navigation = memo(() => {
               theme='dark'
               mode='inline'
               triggerSubMenuAction='click'
-              className='h-full'
-              selectedKeys={shallowMenuState.selectedKeys}
+              className='h-full flex-1 overflow-y-auto'
+              selectedKeys={[location.pathname]}
               openKeys={shallowMenuState.openKeys}
               onOpenChange={(openKeys) => {
                 shallowMenuState.openKeys = openKeys;
               }}
               onSelect={(info) => {
-                shallowMenuState.selectedKeys = info.selectedKeys;
+                // shallowMenuState.selectedKeys = info.selectedKeys;
               }}
               onClick={(info) => {
                 navigate(info.key);
@@ -137,6 +133,7 @@ export const Navigation = memo(() => {
               subMenuOpenDelay={0.2}
               items={menus}
             />
+            </div>
           </Layout.Sider>
         </nav>
       </CSSTransition>

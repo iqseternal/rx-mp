@@ -48,7 +48,7 @@ export function useTableAttrs<Record>(attrs?: TableProps<Record>) {
 
     return {
       scroll: {
-        x: 'max-content',
+        x: 'max-content'
       },
       tableLayout: 'fixed',
       dataSource: [] as Record[],
