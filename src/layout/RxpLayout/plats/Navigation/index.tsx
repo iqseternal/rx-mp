@@ -15,15 +15,19 @@ import IconFont from '@/components/IconFont';
 
 export const Navigation = memo(() => {
   const navigate = useNavigate();
-
-  const rxpRoute = useRetrieveRoute(routes => routes.rxpRoute);
   const location = useLocation();
   const presentRoute = usePresentRoute();
+
+  const rxpRoute = useRetrieveRoute(routes => routes.rxpRoute);
   const rxpNavigationCollapsed = useRXPLayoutStore(store => store.status.rxpNavigationCollapsed);
   const navContainerRef = useRef<HTMLDivElement>(null);
 
   const [shallowMenuState] = useShallowReactive(() => ({
     openKeys: [] as string[]
+  }))
+
+  const [shallowState] = useShallowReactive(() => ({
+    in: false
   }))
 
   const revertRouteMenus = useCallback((routes: RouteConfig[]) => {
@@ -75,9 +79,9 @@ export const Navigation = memo(() => {
     <SwitchTransition mode='out-in'>
       <CSSTransition
         key={'nav'}
+        in={shallowState.in}
         timeout={300}
         appear
-        in
         classNames={navCssTransitionClassNames}
         enter
         exit

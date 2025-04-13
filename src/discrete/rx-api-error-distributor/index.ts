@@ -1,4 +1,3 @@
-
 import { isRXAxiosResponse, type RXApiFailResponse, type RXApiSuccessResponse } from '@/api';
 import { rxUpdateAccessTokenApi } from '@/api/modules';
 import { Biz } from '@/error/code';
@@ -18,6 +17,7 @@ bus.invoker.handle('rx-api-err-distributor', async response => {
   // 资源访问凭证过期或者无效 ?
   if (
     [
+      Biz.BearerAuthorizationInvalid,
       Biz.AccessTokenExpired,
       Biz.AccessTokenInvalid
     ].includes(data.code)

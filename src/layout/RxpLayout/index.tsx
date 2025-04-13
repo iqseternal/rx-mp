@@ -1,7 +1,7 @@
 import { memo, Suspense, useEffect, useLayoutEffect, useRef } from 'react';
 import { Outlet, useLocation, useOutlet } from 'react-router-dom';
 import { metadata } from '@/libs/rxp-meta';
-import { useAsyncEffect, useNormalState } from '@/libs/hooks';
+import { useAsyncEffect, useNormalState, useShallowReactive } from '@/libs/hooks';
 import { toNil } from '@suey/pkg-utils';
 import { rApis } from '@/api';
 import { setTokens } from '@/storage/token';
@@ -34,6 +34,10 @@ const RXPMainContainer = memo(() => {
     windowTitle: void 0 as (undefined | string)
   }))
 
+  const [shallowState] = useShallowReactive(() => ({
+    in: false
+  }))
+
   useLayoutEffect(() => {
     if (!normalState.windowTitle) {
       normalState.windowTitle = window.document.title;
@@ -59,6 +63,7 @@ const RXPMainContainer = memo(() => {
     <SwitchTransition mode='out-in'>
       <CSSTransition
         timeout={300}
+        in={shallowState.in}
         appear
         key={location.pathname}
         nodeRef={mainRef}

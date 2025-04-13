@@ -122,6 +122,7 @@ const ExtensionGroup = memo(() => {
   const [shallowPagination] = usePaginationAttrs({});
 
   const loadData = useCallback(async () => {
+    if (shallowTableAttrs.loading) return;
     shallowTableAttrs.loading = true;
 
     const [err, res] = await toNil(getExtensionGroupListApi({}));
