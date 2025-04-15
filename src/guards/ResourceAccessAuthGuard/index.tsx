@@ -13,6 +13,9 @@ export interface ResourceAccessAuthGuardProps {
   children: ReactNode;
 }
 
+/**
+ * 资源访问控制鉴权守卫, 查看自身时候具有 access_token 数据
+ */
 export const ResourceAccessAuthGuard = memo<ResourceAccessAuthGuardProps>((props) => {
   const { children } = props;
 
