@@ -4,6 +4,7 @@ import { LockOutlined, PoweroffOutlined } from '@ant-design/icons';
 import { retrieveRoutes } from '@/router';
 import { useNavigate } from 'react-router-dom';
 import { removeTokens } from '@/storage/token';
+import { useTokensStore, useUserStore } from '@/stores';
 
 import Widget from '@/components/Widget';
 import styles from './index.module.scss';
@@ -36,11 +37,7 @@ export const UserAvatar = memo(() => {
               </span>
             ),
             extra: (<></>),
-            onClick: () => {
-              removeTokens();
-              const { loginRoute } = retrieveRoutes();
-              navigate(loginRoute.meta.fullPath);
-            }
+            onClick: () => useTokensStore.removeAccessToken()
           }
         ]
       }}

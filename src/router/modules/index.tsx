@@ -11,6 +11,10 @@ export const rxpRoute = makeRoute({
   name: 'Rxp',
   path: '/rxp',
   redirect: '/rxp/dashboard',
+  meta: {
+    hiddenInMenu: true,
+    hiddenInOpenHistory: true,
+  },
   component: <RXPLayoutWrapper />,
   children: [
     {
@@ -59,6 +63,10 @@ export const rootRoute = makeRoute({
   path: '/',
   redirect: loginRoute.meta.fullPath,
   component: <RootLayoutWrapper />,
+  meta: {
+    hiddenInMenu: true,
+    hiddenInOpenHistory: true,
+  },
   children: [
     loginRoute,
     notFoundRoute,

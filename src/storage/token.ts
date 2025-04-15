@@ -16,7 +16,6 @@ export const setAccessToken = (token: string) => ckSet(StorageKeys.AccessToken, 
  */
 export const removeAccessToken = () => ckRemove(StorageKeys.AccessToken);
 
-
 /**
  * 获得权限访问凭证
  */
@@ -31,7 +30,6 @@ export const setRefreshToken = (token: string) => loSet<string>(StorageKeys.Refr
  * 删除权限访问凭证
  */
 export const removeRefreshToken = () => loRemove(StorageKeys.RefreshToken);
-
 
 /**
  * 获得 tokens
@@ -51,7 +49,6 @@ export const setTokens = (payload: { accessToken: string;refreshToken: string })
   setAccessToken(accessToken);
   setRefreshToken(refreshToken);
 }
-
 
 /**
  * 删除 tokens

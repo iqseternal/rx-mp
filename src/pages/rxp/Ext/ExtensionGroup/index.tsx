@@ -9,9 +9,12 @@ import { getExtensionGroupListApi } from '@/api/modules';
 import type { GetExtensionGroupListApiResponse, GetExtensionGroupListApiPayload } from '@/api/modules';
 import { ClearOutlined, FolderAddOutlined, SearchOutlined } from '@ant-design/icons';
 import { toNil } from '@suey/pkg-utils';
+import { useTokensStore, useUserStore } from '@/stores';
+
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';
+
 
 const ExtensionGroup = memo(() => {
   const { message, modal } = App.useApp();
@@ -163,6 +166,15 @@ const ExtensionGroup = memo(() => {
               icon={<FolderAddOutlined />}
             >
               新建
+            </Button>
+
+            <Button
+              type='primary'
+              onClick={() => {
+                useTokensStore.removeAccessToken();
+              }}
+            >
+              清除资源访问权限
             </Button>
           </Space>
 

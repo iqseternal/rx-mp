@@ -2,6 +2,7 @@
 import { loGet } from '@suey/pkg-web';
 import { rxApiPost, rxRequest } from '../definition'
 import { getRefreshToken } from '@/storage/token';
+import { invoker } from '@/libs/bus';
 
 export interface RXGetAccessTokenApiPayload {
 
@@ -11,8 +12,8 @@ export interface RXGetAccessTokenApiResponse {
 
 }
 
-export const rxGetAccessTokenApi = (payload: RXGetAccessTokenApiPayload) => {
-  const refreshToken = getRefreshToken();
+export const rxGetAccessTokenApi = async (payload: RXGetAccessTokenApiPayload) => {
+  const refreshToken = await invoker.invoke('rx-data-getter-store-access-token');
 
   return rxRequest<RXGetAccessTokenApiResponse, {}>({
     url: '/api/auth/get_access_token',
@@ -20,7 +21,7 @@ export const rxGetAccessTokenApi = (payload: RXGetAccessTokenApiPayload) => {
       needAuth: false
     },
     headers: {
-      'Authorization': `Bearer ${refreshToken}`
+      'Authorization': refreshToken ? `Bearer ${refreshToken}` : void 0
     },
   });
 }
@@ -36,8 +37,8 @@ export interface RXUpdateAccessTokenApiResponse {
 
 }
 
-export const rxUpdateAccessTokenApi = (payload: RXUpdateAccessTokenApiPayload) => {
-  const refreshToken = getRefreshToken();
+export const rxUpdateAccessTokenApi = async (payload: RXUpdateAccessTokenApiPayload) => {
+  const refreshToken = await invoker.invoke('rx-data-getter-store-refresh-token');
 
   return rxRequest<string, {}>({
     url: '/api/auth/update_access_token',
@@ -46,7 +47,7 @@ export const rxUpdateAccessTokenApi = (payload: RXUpdateAccessTokenApiPayload) =
     },
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${refreshToken}`
+      'Authorization': refreshToken ? `Bearer ${refreshToken}` : void 0
     },
   });
 }

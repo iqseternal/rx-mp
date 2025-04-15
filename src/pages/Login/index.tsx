@@ -3,6 +3,7 @@ import { loginApi } from '@/api/modules';
 import { toErrorMsg } from '@/error/code';
 import { retrieveRoutes } from '@/router';
 import { getAccessToken, setTokens } from '@/storage/token';
+import { useTokensStore, useUserStore } from '@/stores';
 import { toNil } from '@suey/pkg-utils';
 import { useAsyncEffect, useRequest } from 'ahooks';
 import { Button, message } from 'antd';
@@ -24,9 +25,9 @@ export const Login = memo(() => {
       return;
     }
 
-    setTokens({
+    useTokensStore.setTokens({
       accessToken: res.data.tokens.access_token,
-      refreshToken: res.data.tokens.refresh_token,
+      refreshToken: res.data.tokens.refresh_token
     })
 
     const [err2, res2] = await toNil(rApis.userinfoApi({}));
@@ -40,7 +41,7 @@ export const Login = memo(() => {
   }, []);
 
   useEffect(() => {
-    const isAuthed = !!getAccessToken();
+    const isAuthed = !!useTokensStore.getAccessToken();
 
     if (isAuthed) {
       const { rxpRoute } = retrieveRoutes();

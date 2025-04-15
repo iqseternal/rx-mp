@@ -9,6 +9,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import { workbenchesCssTransitionClassNames } from './definition';
 import { usePresentRoute } from '@/router';
+import { useTokensStore, useUserStore } from '@/stores';
 
 import NavigationWrapper from './plats/Navigation';
 import HeaderWrapper from '@/b-components/Header';
@@ -18,7 +19,7 @@ import UserAvatarWrapper from './plats/UserAvatar';
 import NavigationMenuWidget from './plats/NavigationMenuWidget';
 import Fullscreen from './plats/Fullscreen';
 import OpenHistoryWrapper from './plats/OpenHistory';
-import AuthGuard from '@/guards/AuthGuard';
+import ResourceAccessAuthGuard from '@/guards/ResourceAccessAuthGuard';
 
 /**
  * 为什么需要这个组件, 因为需要做过渡动画, 当 location.pathname 发生变化时, 只需要更新这一小部分组件内容即可
@@ -32,10 +33,6 @@ const RXPMainContainer = memo(() => {
 
   const [normalState] = useNormalState(() => ({
     windowTitle: void 0 as (undefined | string)
-  }))
-
-  const [shallowState] = useShallowReactive(() => ({
-    in: false
   }))
 
   useLayoutEffect(() => {
@@ -63,13 +60,13 @@ const RXPMainContainer = memo(() => {
     <SwitchTransition mode='out-in'>
       <CSSTransition
         timeout={300}
-        in={shallowState.in}
+        in
         appear
         key={location.pathname}
         nodeRef={mainRef}
         enter
         exit
-        unmountOnExit={false}
+        unmountOnExit
         classNames={workbenchesCssTransitionClassNames}
       >
         <main
@@ -136,9 +133,7 @@ const RXPLayout = memo(() => {
   )
 })
 
-
 const RXPLayoutWrapper = memo(() => {
-
   useLayoutEffect(() => {
     metadata.defineMetadata('ui.layout.header.left.content', NavigationMenuWidget);
     metadata.defineMetadataInVector('ui.layout.header.left.after', BreadCrumbsWrapper);
@@ -160,9 +155,9 @@ const RXPLayoutWrapper = memo(() => {
   }, []);
 
   return (
-    <AuthGuard>
+    <ResourceAccessAuthGuard>
       <RXPLayout />
-    </AuthGuard>
+    </ResourceAccessAuthGuard>
   )
 })
 

@@ -27,6 +27,7 @@ export const useHistoryStore = create<HistoryStore>()(
 
 export const pushHistory = (routeMeta: RouteMeta) => {
   if (!routeMeta) return;
+
   if (routeMeta.hiddenInOpenHistory) return;
 
   const history = useHistoryStore.getState().history;

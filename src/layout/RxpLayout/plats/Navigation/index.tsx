@@ -26,10 +26,6 @@ export const Navigation = memo(() => {
     openKeys: [] as string[]
   }))
 
-  const [shallowState] = useShallowReactive(() => ({
-    in: false
-  }))
-
   const revertRouteMenus = useCallback((routes: RouteConfig[]) => {
     return routes.map(route => {
       return {
@@ -79,13 +75,13 @@ export const Navigation = memo(() => {
     <SwitchTransition mode='out-in'>
       <CSSTransition
         key={'nav'}
-        in={shallowState.in}
         timeout={300}
         appear
+        in
         classNames={navCssTransitionClassNames}
         enter
         exit
-        unmountOnExit={false}
+        unmountOnExit
         nodeRef={navContainerRef}
       >
         <nav

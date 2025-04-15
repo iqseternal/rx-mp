@@ -65,6 +65,9 @@ importers:
       zustand:
         specifier: 5.0.3
         version: 5.0.3(@types/react@18.3.19)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.4.0(react@18.3.1))
+      zustand-multi-persist:
+        specifier: 0.1.4
+        version: 0.1.4(react@18.3.1)(zustand@5.0.3(@types/react@18.3.19)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.4.0(react@18.3.1)))
     devDependencies:
       '@rsbuild/core':
         specifier: 1.1.0
@@ -7343,6 +7346,12 @@ packages:
 
   zrender@5.6.1:
     resolution: {integrity: sha512-OFXkDJKcrlx5su2XbzJvj/34Q3m6PvyCZkVPHGYpcCJ52ek4U/ymZyfuV1nKE23AyBJ51E/6Yr0mhZ7xGTO4ag==}
+
+  zustand-multi-persist@0.1.4:
+    resolution: {integrity: sha512-cax56z95P/o4Ceu0nlV0rPvap2O6VFn7wgdGqwTKNQBCfWMt9+2+8k8axxKiMuDIlvPWu61IIaMnFsAP/DysIA==}
+    peerDependencies:
+      react: '>=18.0.0'
+      zustand: '>=5.0.0'
 
   zustand@5.0.3:
     resolution: {integrity: sha512-14fwWQtU3pH4dE0dOpdMiWjddcH+QzKIgk1cl8epwSE7yag43k/AD/m4L6+K7DytAOr9gGBe3/EXj9g7cdostg==}
@@ -15944,6 +15953,11 @@ snapshots:
   zrender@5.6.1:
     dependencies:
       tslib: 2.3.0
+
+  zustand-multi-persist@0.1.4(react@18.3.1)(zustand@5.0.3(@types/react@18.3.19)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.4.0(react@18.3.1))):
+    dependencies:
+      react: 18.3.1
+      zustand: 5.0.3(@types/react@18.3.19)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.4.0(react@18.3.1))
 
   zustand@5.0.3(@types/react@18.3.19)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.4.0(react@18.3.1)):
     optionalDependencies:

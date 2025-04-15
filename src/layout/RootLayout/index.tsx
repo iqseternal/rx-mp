@@ -19,12 +19,12 @@ const RootLayout = memo(() => {
       <CSSTransition
         key={'rootLayout'}
         timeout={300}
-        appear={true}
+        appear
         in
         classNames={rootCssTransitionClassNames}
-        enter={true}
-        exit={false}
-        unmountOnExit={false}
+        enter
+        exit
+        unmountOnExit
         nodeRef={rootContainerRef}
       >
         <div

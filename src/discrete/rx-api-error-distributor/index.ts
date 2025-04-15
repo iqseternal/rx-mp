@@ -1,9 +1,11 @@
-import { isRXAxiosResponse, type RXApiFailResponse, type RXApiSuccessResponse } from '@/api';
+import { isRXAxiosResponse } from '@/api';
+import type { RXApiFailResponse, RXApiSuccessResponse } from '@/api';
 import { rxUpdateAccessTokenApi } from '@/api/modules';
 import { Biz } from '@/error/code';
 import { bus } from '@/libs/bus';
-import { setAccessToken } from '@/storage/token';
-import { request, toNil, type AxiosResponse } from '@suey/pkg-utils';
+import { request, toNil } from '@suey/pkg-utils';
+import type { AxiosResponse } from '@suey/pkg-utils';
+import { useTokensStore } from '@/stores';
 
 /**
  *
@@ -35,7 +37,8 @@ bus.invoker.handle('rx-api-err:unauthorized-resource', async response => {
   // 更新资源访问凭证
   const [authErr, authRes] = await toNil(rxUpdateAccessTokenApi({}));
   if (authErr) return Promise.reject(data);
-  setAccessToken(authRes.data);
+
+  useTokensStore.setAccessToken(authRes.data);
 
   // 重试请求
   const [err, res] = await toNil(request<RXApiSuccessResponse, RXApiFailResponse>(response.config));
