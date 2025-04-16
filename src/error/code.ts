@@ -1,3 +1,4 @@
+import type { RXApiBasicResponse } from '@/api';
 
 export enum Biz {
   Success = 0,
@@ -13,6 +14,7 @@ export enum Biz {
   BadGateway = 502,
 
   BearerAuthorizationInvalid = -1001,
+  ParameterError = -1003,
 
   AccessTokenInvalid = -2002,
   RefreshTokenInvalid = -2003,
@@ -25,17 +27,19 @@ export enum Biz {
 }
 
 export const BizMessage = {
-  [Biz.Success]: '操作成功',
-  [Biz.Failure]: '失败',
 
-  [Biz.Unauthorized]: '权限未定义',
-  [Biz.Forbidden]: '操作被拒绝',
+  [Biz.ParameterError]: '参数错误'
+
 } as const;
 
 
-export const toErrorMsg = (code: number) => {
-  if (BizMessage[code]) {
-    return BizMessage[code];
-  }
-  return '';
+
+export const toBizErrorMsg = (data: RXApiBasicResponse, msg?: string) => {
+  if (typeof data !== 'object') return '';
+  if (!Reflect.has(data, 'code')) return '';
+
+  const definitionMsg = BizMessage[data.code];
+
+  if (definitionMsg) return definitionMsg;
+  return msg ?? data.message;
 }

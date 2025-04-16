@@ -129,7 +129,7 @@ export const isReactComponent = <
  * Object.defineProperty, 向对象注入变量, 默认不可修改不可配置不可删除不可枚举
  * @description 为什么需要它？当对象生命为 readonly, 但是需要初始化赋值
  */
-export function inject<T extends {}, Key extends keyof T, Value>(target: T, propertyKey: Key, value: Value, attributes: PropertyDescriptor & ThisType<any> = {}): void {
+export function injectReadonlyVariable<T extends {}, Key extends keyof T, Value>(target: T, propertyKey: Key, value: Value, attributes: PropertyDescriptor & ThisType<any> = {}): void {
   const propertyDescriptor = {
     value: value,
     enumerable: false,
@@ -141,4 +141,27 @@ export function inject<T extends {}, Key extends keyof T, Value>(target: T, prop
   const r = Reflect.defineProperty(target, propertyKey, propertyDescriptor);
 
   if (!r) throw new Error(`Failed to define property ${String(propertyKey)}`);
+}
+
+/**
+ * 将一个对象浅层劫持, 并在 调用 setter 时, 执行特定的回调函数
+ */
+export function shallowProxy<T extends {}>(target: T, setterCallback = () => {}) {
+
+  return new Proxy(target, {
+    get: (target, p, receiver) => Reflect.get(target, p, receiver),
+    set: (target, p, newValue, receiver) => {
+      const oldValue = Reflect.get(target, p, receiver);
+      if (oldValue === newValue) return true;
+
+      const setResult = Reflect.set(target, p, newValue, receiver);
+      if (setResult) setterCallback();
+
+      return setResult;
+    },
+    deleteProperty: (target, p) => {
+      setterCallback();
+      return Reflect.deleteProperty(target, p);
+    },
+  })
 }

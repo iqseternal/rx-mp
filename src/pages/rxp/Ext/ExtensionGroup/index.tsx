@@ -1,20 +1,79 @@
-import { useShallowReactive } from '@/libs/hooks';
+import { useAutoFixTableSize, useShallowReactive } from '@/libs/hooks';
 import { usePaginationAttrs, useTableAttrs } from '@/libs/hooks/useAttrs';
 import { useAsyncEffect, usePagination } from 'ahooks';
 import type { TableColumnsType } from 'antd';
 import { Alert, App, Button, Card, Space, Switch, Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import { memo, useCallback } from 'react';
+import type { ColumnsType, TableRef } from 'antd/es/table';
+import { memo, useCallback, useRef } from 'react';
 import { getExtensionGroupListApi } from '@/api/modules';
-import type { GetExtensionGroupListApiResponse, GetExtensionGroupListApiPayload } from '@/api/modules';
+import { GetExtensionGroupListApiResponse, GetExtensionGroupListApiPayload, deleteExtensionGroupApi } from '@/api/modules';
 import { ClearOutlined, FolderAddOutlined, SearchOutlined } from '@ant-design/icons';
 import { toNil } from '@suey/pkg-utils';
 import { useTokensStore, useUserStore } from '@/stores';
 
+import { ExtensionGroupModal, ExtensionGroupModalInstance } from './ExtensionGroupModal';
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';
+import IconFont from '@/components/IconFont';
+import { toBizErrorMsg } from '@/error/code';
 
+const ExtensionGroupDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionGroupListApiResponse;onSuccess: () => void; }) => {
+  const { message, modal } = App.useApp();
+
+  const [shallowState] = useShallowReactive(() => ({
+    isDeleting: false
+  }))
+
+  const deleteExtensionGroup = async () => {
+    modal.confirm({
+      title: '是否确认删除?',
+      okText: '删除',
+      cancelText: '取消',
+      okButtonProps: {
+        icon: <IconFont icon='DeleteOutlined' />,
+        type: 'primary',
+        danger: true,
+      },
+      cancelButtonProps: {
+        icon: <IconFont icon='RollbackOutlined' />,
+        type: 'default'
+      },
+      onOk: async () => {
+        if (shallowState.isDeleting) return;
+        shallowState.isDeleting = true;
+
+        const [err, res] = await toNil(deleteExtensionGroupApi({
+          extension_group_id: row.extension_group_id,
+          extension_group_uuid: row.extension_group_uuid
+        }));
+
+        if (err) {
+          message.error(toBizErrorMsg(err.reason, `删除扩展组 ${row.extension_group_name} 失败`));
+          shallowState.isDeleting = false;
+          return;
+        }
+
+        message.success(`删除扩展组 ${row.extension_group_name} 成功`);
+        shallowState.isDeleting = false;
+        onSuccess && onSuccess();
+      },
+      onCancel: () => {
+
+      }
+    })
+  }
+
+  return (
+    <Widget
+      icon='DeleteOutlined'
+      className='text-red-500'
+      tipText='删除扩展组'
+      loading={shallowState.isDeleting}
+      onClick={deleteExtensionGroup}
+    />
+  )
+})
 
 const ExtensionGroup = memo(() => {
   const { message, modal } = App.useApp();
@@ -86,22 +145,9 @@ const ExtensionGroup = memo(() => {
           <div
             className='flex items-center'
           >
-            <Widget
-              icon='DeleteOutlined'
-              className='text-red-500'
-              tipText='删除扩展组'
-              onClick={() => {
-                modal.confirm({
-                  title: '是否确认删除?',
-                  onOk: () => {
-
-                  },
-                  onCancel: () => {
-
-
-                  }
-                })
-              }}
+            <ExtensionGroupDeleteWidget
+              row={row}
+              onSuccess={() => loadData()}
             />
 
             <Button
@@ -124,6 +170,9 @@ const ExtensionGroup = memo(() => {
 
   const [shallowPagination] = usePaginationAttrs({});
 
+  const extensionGroupModalRef = useRef<ExtensionGroupModalInstance>(null);
+  const tableRef = useRef<TableRef>(null);
+
   const loadData = useCallback(async () => {
     if (shallowTableAttrs.loading) return;
     shallowTableAttrs.loading = true;
@@ -142,6 +191,7 @@ const ExtensionGroup = memo(() => {
   }, []);
 
   useAsyncEffect(loadData, []);
+  useAutoFixTableSize(tableRef, {});
 
   return (
     <>
@@ -164,6 +214,9 @@ const ExtensionGroup = memo(() => {
             <Button
               type='primary'
               icon={<FolderAddOutlined />}
+              onClick={() => {
+                extensionGroupModalRef.current?.open();
+              }}
             >
               新建
             </Button>
@@ -198,6 +251,12 @@ const ExtensionGroup = memo(() => {
           {...shallowTableAttrs}
           pagination={shallowPagination}
           columns={shallowColumns}
+          ref={tableRef}
+        />
+
+        <ExtensionGroupModal
+          ref={extensionGroupModalRef}
+          onSuccess={loadData}
         />
       </Card>
     </>

@@ -14,14 +14,23 @@ import { CiCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import Widget from '@/components/Widget';
 import IconFont from '@/components/IconFont';
 
-export const OpenHistory = memo(() => {
+export interface OpenHistoryProps {
+  readonly className?: string;
+}
+
+export const OpenHistory = memo<OpenHistoryProps>((props) => {
+  const { className } = props;
+
   const presentRoute = usePresentRoute();
   const navigate = useNavigate();
   const history = useHistoryStore(store => store.history);
 
   return (
     <div
-      className='w-full bg-white px-2 flex gap-x-1 py-1'
+      className={classnames(
+        'w-full bg-white px-2 flex gap-x-1 py-1',
+        className
+      )}
     >
       {history && history.filter(item => !item.hiddenInOpenHistory).map((item, index) => {
 
@@ -61,7 +70,7 @@ export const OpenHistory = memo(() => {
   )
 })
 
-export const OpenHistoryWrapper = memo(() => {
+export const OpenHistoryWrapper = memo<OpenHistoryProps>((props) => {
   const presentRoute = usePresentRoute();
 
   useLayoutEffect(() => {
@@ -70,7 +79,9 @@ export const OpenHistoryWrapper = memo(() => {
   }, [presentRoute.current]);
 
   return (
-    <OpenHistory />
+    <OpenHistory
+      {...props}
+    />
   )
 })
 

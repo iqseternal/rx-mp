@@ -44,10 +44,7 @@ export const useTokensStore: UseTokensStore<TokensStore> = (selector) => {
     value: value
   })
 
-  if (normalState.value !== value) {
-    normalState.value = value;
-  }
-
+  if (normalState.value !== value) normalState.value = value;
   return [normalState] as const;
 }
 

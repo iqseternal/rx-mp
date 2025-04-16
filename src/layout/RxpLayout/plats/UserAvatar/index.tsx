@@ -1,10 +1,8 @@
 import { memo } from 'react';
-import { Dropdown, Space } from 'antd';
+import { Dropdown } from 'antd';
 import { LockOutlined, PoweroffOutlined } from '@ant-design/icons';
-import { retrieveRoutes } from '@/router';
 import { useNavigate } from 'react-router-dom';
-import { removeTokens } from '@/storage/token';
-import { useTokensStore, useUserStore } from '@/stores';
+import { useTokensStore } from '@/stores';
 
 import Widget from '@/components/Widget';
 import styles from './index.module.scss';

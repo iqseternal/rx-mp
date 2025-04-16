@@ -4,24 +4,13 @@ import { join } from 'path';
 import { pluginReact } from '@rsbuild/plugin-react';
 import { pluginSass } from '@rsbuild/plugin-sass';
 import { pluginTypedCSSModules } from '@rsbuild/plugin-typed-css-modules';
-
+import { pluginCssMinimizer } from '@rsbuild/plugin-css-minimizer';
 import { defineProxy } from './config/proxy';
+import { defineAlias } from './config/alias';
+import { pluginLess } from '@rsbuild/plugin-less';
 
 import tailwindcss from 'tailwindcss';
 import tsconfigJson from './tsconfig.web.json';
-
-const defineAlias = (basePath: string, paths: Record<string, string[]>) => {
-  const alias: Record<string, string> = {};
-
-  const aliasMaps: [string, string][] = Object.keys(paths).filter((key) => paths[key].length > 0).map((key) => {
-    return [key.replace(/\/\*$/, ''), join(basePath, paths[key][0].replace('/*', ''))] as const;
-  });
-
-  aliasMaps.forEach(([aliasKey, aliasPath]) => {
-    alias[aliasKey] = aliasPath;
-  })
-  return alias;
-}
 
 export default defineConfig({
   source: {
@@ -29,23 +18,21 @@ export default defineConfig({
       index: join(__dirname, './src/index.tsx')
     },
     alias: defineAlias(__dirname, tsconfigJson.compilerOptions.paths),
-
   },
   server: {
     port: 8000,
-
     proxy: defineProxy()
   },
-
   plugins: [
     pluginSass(),
+    pluginLess(),
+    pluginCssMinimizer(),
     pluginTypedCSSModules(),
-    pluginReact()
+    pluginReact(),
   ],
   output: {
     cleanDistPath: true,
   },
-
   tools: {
     postcss: {
       postcssOptions: {

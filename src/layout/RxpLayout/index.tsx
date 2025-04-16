@@ -2,14 +2,10 @@ import { memo, Suspense, useEffect, useLayoutEffect, useRef } from 'react';
 import { Outlet, useLocation, useOutlet } from 'react-router-dom';
 import { metadata } from '@/libs/rxp-meta';
 import { useAsyncEffect, useNormalState, useShallowReactive } from '@/libs/hooks';
-import { toNil } from '@suey/pkg-utils';
-import { rApis } from '@/api';
-import { setTokens } from '@/storage/token';
-import { ErrorBoundary } from 'react-error-boundary';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import { workbenchesCssTransitionClassNames } from './definition';
+import { Skeleton } from 'antd';
 import { usePresentRoute } from '@/router';
-import { useTokensStore, useUserStore } from '@/stores';
 
 import NavigationWrapper from './plats/Navigation';
 import HeaderWrapper from '@/b-components/Header';
@@ -70,7 +66,7 @@ const RXPMainContainer = memo(() => {
         classNames={workbenchesCssTransitionClassNames}
       >
         <main
-          className='overflow-x-hidden overflow-y-auto w-full h-full max-h-full px-1.5 py-1.5'
+          className='overflow-x-hidden overflow-y-auto w-full h-full max-h-full px-1.5 py-1.5 max-w-full'
           ref={mainRef}
         >
           {currentOutlet}
@@ -112,7 +108,7 @@ const RXPLayout = memo(() => {
         <OpenHistoryWrapper />
 
         <section
-          className='w-full flex flex-nowrap h-full'
+          className='w-full flex flex-nowrap h-full overflow-y-auto overflow-x-hidden'
         >
           {RXPVerticalNavInternal && RXPVerticalNavInternal.map((InternalNavigation, index) => {
             return (

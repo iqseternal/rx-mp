@@ -33,16 +33,32 @@ export const RXApp = memo(() => {
             bodyPadding: 15
           },
           Button: {
-
+            paddingInline: 10,
+            controlHeight: 30,
           },
           Table: {
             cellPaddingInlineMD: 6,
-            cellPaddingBlockMD: 8
+            cellPaddingBlockMD: 8,
+
+            stickyScrollBarBg: 'unset'
           },
           Alert: {
             defaultPadding: '6px 10px'
 
 
+          },
+          Modal: {
+            paddingContentHorizontal: 18,
+            paddingContentVertical: 16,
+
+            controlPaddingHorizontal: 18,
+          },
+          Pagination: {
+            itemSize: 26,
+            controlHeight: 28,
+          },
+          Select: {
+            controlHeight: 28,
           }
         },
         cssVar: {

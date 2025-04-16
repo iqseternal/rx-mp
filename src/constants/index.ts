@@ -7,3 +7,9 @@ export enum StorageKeys {
 
 
 }
+
+export enum ModalMode {
+  Create,
+  Edit,
+  View
+}

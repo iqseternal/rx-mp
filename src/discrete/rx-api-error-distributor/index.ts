@@ -25,7 +25,7 @@ bus.invoker.handle('rx-api-err-distributor', async response => {
     ].includes(data.code)
   ) return bus.invoker.invoke('rx-api-err:unauthorized-resource', response);
 
-  return Promise.resolve(data);
+  return Promise.reject(data);
 })
 
 /**
@@ -36,7 +36,11 @@ bus.invoker.handle('rx-api-err:unauthorized-resource', async response => {
 
   // 更新资源访问凭证
   const [authErr, authRes] = await toNil(rxUpdateAccessTokenApi({}));
-  if (authErr) return Promise.reject(data);
+  if (authErr || authRes.code !== Biz.Success) {
+    useTokensStore.removeAccessToken();
+    useTokensStore.removeRefreshToken();
+    return Promise.reject(data);
+  }
 
   useTokensStore.setAccessToken(authRes.data);
 
@@ -47,7 +51,7 @@ bus.invoker.handle('rx-api-err:unauthorized-resource', async response => {
   // 再次检查返回结果是否符合 RX 得 response
   if (isRXAxiosResponse(res as AxiosResponse)) {
     const data = res.data;
-    if (data.code === 0) return Promise.resolve(data);
+    if (data.code === Biz.Success) return Promise.resolve(data);
     return Promise.reject(data);
   }
 

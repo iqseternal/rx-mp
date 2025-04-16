@@ -1,4 +1,6 @@
+import { asynced } from '@suey/pkg-utils';
 import { rxApiPost, rxApiGet, rxApiDelete, rxApiPut } from '../definition';
+import type { RApiPromiseLike } from '../definition';
 
 export interface GetExtensionGroupListApiPayload {
   extension_group_id?: number;
@@ -20,8 +22,37 @@ export interface GetExtensionGroupListApiResponse {
   updated_time: string;
 }
 
-export const getExtensionGroupListApi = async (payload: GetExtensionGroupListApiPayload) => {
-  return rxApiGet<null | GetExtensionGroupListApiResponse[]>('/api/v1/rx/ext/get_ext_group_list', {
+export type GetExtensionGroupListApi = (payload: GetExtensionGroupListApiPayload) => RApiPromiseLike<GetExtensionGroupListApiResponse[], null>;
+
+export const getExtensionGroupListApi = asynced<GetExtensionGroupListApi>(async (payload) => {
+  return rxApiGet('/api/v1/rx/ext/get_ext_group_list', {
     data: payload
   })
+})
+
+export interface CreateExtensionGroupApiPayload {
+  extension_group_name: string;
+  description?: string;
 }
+
+export type CreateExtensionGroupApi = (payload: CreateExtensionGroupApiPayload) => RApiPromiseLike<null, null>;
+
+export const createExtensionGroupApi = asynced<CreateExtensionGroupApi>(async (payload) => {
+  return rxApiPut('/api/v1/rx/ext/ext_group', {
+    data: payload
+  })
+})
+
+
+export interface DeleteExtensionGroupApiPayload {
+  extension_group_id: number;
+  extension_group_uuid: string;
+}
+
+export type DeleteExtensionGroupApi = (payload: DeleteExtensionGroupApiPayload) => RApiPromiseLike<null>;
+
+export const deleteExtensionGroupApi = asynced<DeleteExtensionGroupApi>(async (payload) => {
+  return rxApiDelete('/api/v1/rx/ext/ext_group', {
+    data: payload
+  })
+})

@@ -2,7 +2,6 @@ import { REQ_METHODS, createApiRequest, ApiPromiseResultTypeBuilder, AxiosError,
 import { StringFilters } from '@/libs/common';
 import { rxUpdateAccessTokenApi } from '../modules/auth';
 import { ckSet } from '@suey/pkg-web';
-import { setAccessToken } from '@/storage/token';
 import { bus } from '@/libs/bus';
 
 /**
@@ -87,7 +86,7 @@ export interface RXApiFailResponse extends RXApiBasicResponse {
  * //
  * ```
  */
-export type RApiPromiseLike<Success, Fail = {}> = ApiPromiseResultTypeBuilder<RXApiSuccessResponse, RXApiFailResponse, Success, Fail>;
+export type RApiPromiseLike<Success, Fail = null> = ApiPromiseResultTypeBuilder<RXApiSuccessResponse, RXApiFailResponse, Success, Fail>;
 
 /**
  * 判断响应体是否是符合 RX 得 response
@@ -117,8 +116,8 @@ const rxApiRequest = createApiRequest<RXApiHConfig, RXApiSuccessResponse, RXApiF
 
       // 出现错误, 向 rx-api-err 分发器发送事件, 等待处理
       const [err, resp] = await toNil(bus.invoker.invoke('rx-api-err-distributor', response));
-
       if (err) return Promise.reject(err.reason);
+
       return resp;
     }
 
