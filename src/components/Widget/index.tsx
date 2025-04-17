@@ -129,7 +129,7 @@ export const Widget = memo(forwardRef<HTMLDivElement, WidgetProps>((props, ref) 
       <Tooltip
         title={tipText}
         getPopupContainer={() => document.body}
-        mouseEnterDelay={0.7}
+        mouseEnterDelay={0.5}
         autoAdjustOverflow
         {...tipAttrs}
       >

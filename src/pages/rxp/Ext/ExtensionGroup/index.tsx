@@ -10,13 +10,14 @@ import { GetExtensionGroupListApiResponse, GetExtensionGroupListApiPayload, dele
 import { ClearOutlined, FolderAddOutlined, SearchOutlined } from '@ant-design/icons';
 import { toNil } from '@suey/pkg-utils';
 import { useTokensStore, useUserStore } from '@/stores';
-
+import { toBizErrorMsg } from '@/error/code';
+import { ModalMode } from '@/constants';
 import { ExtensionGroupModal, ExtensionGroupModalInstance } from './ExtensionGroupModal';
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';
 import IconFont from '@/components/IconFont';
-import { toBizErrorMsg } from '@/error/code';
+import moment from 'moment';
 
 const ExtensionGroupDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionGroupListApiResponse;onSuccess: () => void; }) => {
   const { message, modal } = App.useApp();
@@ -133,7 +134,16 @@ const ExtensionGroup = memo(() => {
         )
       }
     },
-
+    {
+      key: 'created_time',
+      title: '创建时间',
+      width: 200,
+      render: (value, row) => {
+        const date = moment(row.created_time);
+        if (date.isValid()) return date.format('YYYY/MM/DD hh:mm:ss');
+        return '-';
+      }
+    },
     {
       key: 'operator',
       title: '操作',
@@ -145,19 +155,28 @@ const ExtensionGroup = memo(() => {
           <div
             className='flex items-center'
           >
+            <Widget
+              icon='EditOutlined'
+              tipText='编辑'
+              className='text-blue-500'
+              onClick={() => {
+                extensionGroupModalRef.current?.open(ModalMode.Edit);
+              }}
+            />
+
             <ExtensionGroupDeleteWidget
               row={row}
               onSuccess={() => loadData()}
             />
 
-            <Button
-              type='link'
+            <Widget
+              icon='ArrowRightOutlined'
+              tipText='前往插件组'
+              className='text-blue-500'
               onClick={() => {
 
               }}
-            >
-              去操作
-            </Button>
+            />
           </div>
         )
       }

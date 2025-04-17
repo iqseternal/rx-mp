@@ -76,6 +76,12 @@ export const RXApp = memo(() => {
       alert={{
         className: 'mb-1'
       }}
+      popover={{
+
+      }}
+      tooltip={{
+
+      }}
       table={{
 
       }}
