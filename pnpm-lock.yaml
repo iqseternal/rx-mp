@@ -18,8 +18,8 @@ importers:
         specifier: 0.0.5
         version: 0.0.5(typescript@5.8.2)
       '@suey/rxp-meta':
-        specifier: 0.0.1
-        version: 0.0.1
+        specifier: 0.0.3
+        version: 0.0.3
       ahooks:
         specifier: 3.8.4
         version: 3.8.4(react@18.3.1)
@@ -1592,8 +1592,8 @@ packages:
   '@suey/pkg-web@0.0.5':
     resolution: {integrity: sha512-G+ZjXVwOFBY96W2HtNUVv+2fId77dfSz4PHHSy8pV/uw3ozGqbw2G40o0dI2Q/zisyMoQ3PUVvGMQABxCqbdWA==}
 
-  '@suey/rxp-meta@0.0.1':
-    resolution: {integrity: sha512-Na1yrPJd6ZYtHQGL6T9awjijwJ7whwrQbPpOV9vdGRT/bbt5CyPndd9fe9GKkqHSjQzGqg7EVGmJFLCItohswg==}
+  '@suey/rxp-meta@0.0.3':
+    resolution: {integrity: sha512-dF5Ue2szTkLCVTj06X2KOQ4Dcm419qdR3J+/B1c9pM9K2b/QUmhxN+JYdssQCcPfuY8muhtD80AIbJ6MCdiARw==}
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
@@ -8998,7 +8998,7 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@suey/rxp-meta@0.0.1': {}
+  '@suey/rxp-meta@0.0.3': {}
 
   '@swc/helpers@0.5.15':
     dependencies:

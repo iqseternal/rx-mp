@@ -84,19 +84,23 @@ const RXPLayout = memo(() => {
   return (
 
     <div
-      className='w-full h-full flex flex-nowrap bg-slate-100 overflow-x-hidden'
+      className='w-full h-full flex bg-slate-100 max-w-full overflow-x-auto'
     >
-      {RXPVerticalNavExternal && RXPVerticalNavExternal.map((ExternalNavigation, index) => {
-        return (
-          <div
-            className='h-full select-none'
-            draggable={false}
-            key={index}
-          >
-            <ExternalNavigation />
-          </div>
-        )
-      })}
+      <section
+        className='w-max h-full flex flex-row justify-start'
+      >
+        {RXPVerticalNavExternal && RXPVerticalNavExternal.map((ExternalNavigation, index) => {
+          return (
+            <div
+              className='w-max h-full select-none flex-none'
+              draggable={false}
+              key={index}
+            >
+              <ExternalNavigation />
+            </div>
+          )
+        })}
+      </section>
 
       <section
         className='w-full h-full flex flex-col overflow-x-hidden'

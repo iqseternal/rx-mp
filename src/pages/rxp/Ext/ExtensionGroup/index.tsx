@@ -12,7 +12,9 @@ import { toNil } from '@suey/pkg-utils';
 import { useTokensStore, useUserStore } from '@/stores';
 import { toBizErrorMsg } from '@/error/code';
 import { ModalMode } from '@/constants';
+import { useNavigate } from 'react-router-dom';
 import { ExtensionGroupModal, ExtensionGroupModalInstance } from './ExtensionGroupModal';
+import { retrieveRoutes } from '@/router';
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';
@@ -77,6 +79,8 @@ const ExtensionGroupDeleteWidget = memo(({ row, onSuccess }: { row: GetExtension
 })
 
 const ExtensionGroup = memo(() => {
+  const navigate = useNavigate();
+
   const { message, modal } = App.useApp();
 
   const [shallowColumns] = useShallowReactive<TableColumnsType<GetExtensionGroupListApiResponse>>(() => ([
@@ -160,7 +164,7 @@ const ExtensionGroup = memo(() => {
               tipText='编辑'
               className='text-blue-500'
               onClick={() => {
-                extensionGroupModalRef.current?.open(ModalMode.Edit);
+                extensionGroupModalRef.current?.open(ModalMode.Edit, row);
               }}
             />
 
@@ -174,14 +178,14 @@ const ExtensionGroup = memo(() => {
               tipText='前往插件组'
               className='text-blue-500'
               onClick={() => {
-
+                navigate(`/rxp/ext/extension?extension_group_id=${row.extension_group_id}`)
               }}
             />
           </div>
         )
       }
     }
-  ]))
+  ] as const));
 
   const [shallowTableAttrs] = useTableAttrs<GetExtensionGroupListApiResponse>({
     rowKey: row => row.extension_group_id
@@ -199,7 +203,7 @@ const ExtensionGroup = memo(() => {
     const [err, res] = await toNil(getExtensionGroupListApi({}));
 
     if (err) {
-      message.error(`数据加载失败`);
+      message.error(toBizErrorMsg(err.reason, `数据加载失败`));
       shallowTableAttrs.loading = false;
       return;
     }

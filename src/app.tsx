@@ -54,11 +54,11 @@ export const RXApp = memo(() => {
             controlPaddingHorizontal: 18,
           },
           Pagination: {
-            itemSize: 26,
-            controlHeight: 28,
+            itemSize: 28,
+            controlHeight: 30,
           },
           Select: {
-            controlHeight: 28,
+            controlHeight: 30,
           }
         },
         cssVar: {

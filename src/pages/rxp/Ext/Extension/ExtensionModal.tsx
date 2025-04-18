@@ -2,7 +2,7 @@ import { ModalMode } from '@/constants';
 import { useNormalState, useShallowReactive } from '@/libs/hooks';
 import { Alert, App, Form, Input, Modal, Space, type ModalProps } from 'antd';
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle } from 'react';
-import { createExtensionGroupApi, editExtensionGroupApi, type GetExtensionGroupListApiResponse } from '@/api/modules';
+import type { GetExtensionListApiResponse } from '@/api/modules';
 import { toBizErrorMsg } from '@/error/code';
 import { toNil } from '@suey/pkg-utils';
 import { useSyncNormalState } from '@/libs/hooks/useReactive';
@@ -11,21 +11,20 @@ import IconFont from '@/components/IconFont';
 
 import * as validators from '@/libs/validators';
 
-export interface ExtensionGroupModalProps {
+export interface ExtensionModalProps {
   onSuccess: () => void;
 }
 
-export interface ExtensionGroupModalInstance {
-  open: (mode?: ModalMode, initData?: GetExtensionGroupListApiResponse) => void;
+export interface ExtensionModalInstance {
+  open: (mode?: ModalMode, initData?: GetExtensionListApiResponse) => void;
   close: () => void;
 }
 
-export interface ExtensionGroupModalFormRecord {
-  extension_group_name: string;
-  description: string;
+export interface ExtensionModalFormRecord {
+  extension_name: string;
 }
 
-export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, ExtensionGroupModalProps>((props, ref) => {
+export const ExtensionModal = memo(forwardRef<ExtensionModalInstance, ExtensionModalProps>((props, ref) => {
   const { onSuccess } = props;
 
   const { message } = App.useApp();
@@ -46,27 +45,27 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
   }))
 
   const [normalState] = useNormalState(() => ({
-    extensionGroupRecord: void 0 as (GetExtensionGroupListApiResponse | undefined)
+    extensionGroupRecord: void 0 as (GetExtensionListApiResponse | undefined)
   }))
 
-  const [form] = Form.useForm<ExtensionGroupModalFormRecord>();
+  const [form] = Form.useForm<ExtensionModalFormRecord>();
 
   const createExtensionGroup = useCallback(async () => {
     const data = form.getFieldsValue();
 
     shallowStatus.okLoading = true;
-    const [err, res] = await toNil(createExtensionGroupApi({
-      extension_group_name: data.extension_group_name,
-      description: data.description
-    }))
+    // const [err, res] = await toNil(createExtensionGroupApi({
+    //   extension_group_name: data.extension_group_name,
+    //   description: data.description
+    // }))
 
-    if (err) {
-      message.error(toBizErrorMsg(err.reason, `创建扩展组 ${data.extension_group_name} 失败`));
-      shallowStatus.okLoading = false;
-      return;
-    }
+    // if (err) {
+    //   message.error(toBizErrorMsg(err.reason, `创建扩展 ${data.extension_group_name} 失败`));
+    //   shallowStatus.okLoading = false;
+    //   return;
+    // }
 
-    message.success(`创建扩展组 ${data.extension_group_name} 成功`);
+    message.success(`创建扩展 ${data.extension_name} 成功`);
     shallowStatus.okLoading = false;
     shallowAttrs.open = false;
     syncPropsState.onSuccess?.();
@@ -83,21 +82,21 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
     const data = form.getFieldsValue();
 
     shallowStatus.okLoading = true;
-    const [err, res] = await toNil(editExtensionGroupApi({
-      extension_group_id: extensionGroupRecord.extension_group_id,
-      extension_group_uuid: extensionGroupRecord.extension_group_uuid,
+    // const [err, res] = await toNil(editExtensionGroupApi({
+    //   extension_group_id: extensionGroupRecord.extension_group_id,
+    //   extension_group_uuid: extensionGroupRecord.extension_group_uuid,
 
-      extension_group_name: data.extension_group_name,
-      description: data.description,
-    }))
+    //   extension_group_name: data.extension_group_name,
+    //   description: data.description,
+    // }))
 
-    if (err) {
-      message.error(toBizErrorMsg(err.reason, `编辑扩展组 ${data.extension_group_name} 失败`));
-      shallowStatus.okLoading = false;
-      return;
-    }
+    // if (err) {
+    //   message.error(toBizErrorMsg(err.reason, `编辑扩展 ${data.extension_group_name} 失败`));
+    //   shallowStatus.okLoading = false;
+    //   return;
+    // }
 
-    message.success(`编辑扩展组 ${data.extension_group_name} 成功`);
+    message.success(`编辑扩展 ${data.extension_name} 成功`);
     shallowStatus.okLoading = false;
     shallowAttrs.open = false;
     syncPropsState.onSuccess?.();
@@ -161,7 +160,7 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
           {shallowStatus.mode === ModalMode.Create && '创建'}
           {shallowStatus.mode === ModalMode.Edit && '编辑'}
           {shallowStatus.mode === ModalMode.View && '查看'}
-          扩展组
+          扩展
         </span>
       )}
       okText='保存'
@@ -195,7 +194,7 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
         wrapperCol={{ span: 16 }}
       >
         <Form.Item
-          label='扩展组名称'
+          label='扩展名称'
           required
         >
           <Space
@@ -208,15 +207,15 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
               rules={[
                 {
                   validator: async (rule, value) => {
-                    if (!validators.isString(value) || validators.isEmptyString(value)) return Promise.reject(`请输入扩展组名称`);
-                    if (!validators.isMaxLengthString(value, 64)) return Promise.reject(`扩展组名称长度大于64字符`);
-                    if (!validators.isValidCharacterName(value)) return Promise.reject(`扩展组名称不合法`);
+                    if (!validators.isString(value) || validators.isEmptyString(value)) return Promise.reject(`请输入扩展名称`);
+                    if (!validators.isMaxLengthString(value, 64)) return Promise.reject(`扩展名称长度大于64字符`);
+                    if (!validators.isValidCharacterName(value)) return Promise.reject(`扩展名称不合法`);
                   }
                 }
               ]}
             >
               <Input
-                placeholder='请输入扩展组名称'
+                placeholder='请输入扩展名称'
                 maxLength={64}
                 allowClear
               />
@@ -226,27 +225,6 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
               64字符
             </span>
           </Space>
-        </Form.Item>
-
-        <Form.Item
-          label='扩展组描述'
-          name='description'
-          rules={[
-            {
-              async validator(rule, value, callback) {
-                if (validators.isString(value)) {
-                  if (!validators.isMaxLengthString(value, 255)) return Promise.reject(`扩展组描述长度大于255字符`);
-                }
-              },
-            }
-          ]}
-        >
-          <Input.TextArea
-            placeholder='请输入扩展组描述'
-            maxLength={255}
-            allowClear
-            rows={3}
-          />
         </Form.Item>
       </Form>
     </Modal>

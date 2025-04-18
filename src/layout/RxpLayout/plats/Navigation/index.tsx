@@ -1,5 +1,5 @@
 import { Layout, Menu } from 'antd';
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRetrieveRoute, usePresentRoute, getRouteFromFullPath } from '@/router';
 import { useShallowReactive } from '@/libs/hooks';
@@ -13,14 +13,13 @@ import { navCssTransitionClassNames } from './definition';
 
 import IconFont from '@/components/IconFont';
 
-export const Navigation = memo(() => {
+export const Navigation = memo(forwardRef<HTMLDivElement>((props, ref) => {
   const navigate = useNavigate();
   const location = useLocation();
   const presentRoute = usePresentRoute();
 
   const rxpRoute = useRetrieveRoute(routes => routes.rxpRoute);
   const rxpNavigationCollapsed = useRXPLayoutStore(store => store.status.rxpNavigationCollapsed);
-  const navContainerRef = useRef<HTMLDivElement>(null);
 
   const [shallowMenuState] = useShallowReactive(() => ({
     openKeys: [] as string[]
@@ -72,6 +71,67 @@ export const Navigation = memo(() => {
   useLayoutEffect(autoSetOpenKeys, [rxpNavigationCollapsed]);
 
   return (
+    <nav
+      className='w-full h-full'
+      ref={ref}
+    >
+      <Layout.Sider
+        theme='dark'
+        className='h-full overflow-y-auto'
+        collapsible={false}
+        breakpoint='md'
+        collapsed={rxpNavigationCollapsed}
+        onCollapse={(collapsed, type) => {
+          useRXPLayoutStore.setState((store) => {
+            store.status.rxpNavigationCollapsed = collapsed;
+          })
+        }}
+      >
+        <div
+          className='h-full overflow-y-auto flex-col max-h-full flex'
+        >
+          <div
+            className='w-full flex justify-center text-xl py-2 gap-x-2 text-[rgba(255,255,255,0.65)] overflow-x-hidden flex-nowrap h-max flex-none'
+          >
+            <IeOutlined />
+            {!rxpNavigationCollapsed && (
+              <>
+                RX-MP
+              </>
+            )}
+          </div>
+
+          <Menu
+            theme='dark'
+            mode='inline'
+            triggerSubMenuAction='click'
+            className='h-full flex-1 overflow-y-auto'
+            selectedKeys={[location.pathname]}
+            openKeys={shallowMenuState.openKeys}
+            onOpenChange={(openKeys) => {
+              shallowMenuState.openKeys = openKeys;
+            }}
+            onSelect={(info) => {
+              // shallowMenuState.selectedKeys = info.selectedKeys;
+            }}
+            onClick={(info) => {
+              navigate(info.key);
+            }}
+            inlineIndent={20}
+            subMenuOpenDelay={0.2}
+            items={menus}
+          />
+        </div>
+      </Layout.Sider>
+    </nav>
+  )
+}))
+
+export const NavigationWrapper = memo(() => {
+  const navContainerRef = useRef<HTMLDivElement>(null);
+
+
+  return (
     <SwitchTransition mode='out-in'>
       <CSSTransition
         key={'nav'}
@@ -84,67 +144,12 @@ export const Navigation = memo(() => {
         unmountOnExit
         nodeRef={navContainerRef}
       >
-        <nav
-          className='w-full h-full'
+        <Navigation
           ref={navContainerRef}
-        >
-          <Layout.Sider
-            theme='dark'
-            className='h-full overflow-y-auto'
-            collapsible={false}
-            collapsed={rxpNavigationCollapsed}
-            onCollapse={(collapsed, type) => {
-              useRXPLayoutStore.setState((store) => {
-                store.status.rxpNavigationCollapsed = collapsed;
-              })
-            }}
-          >
-            <div
-              className='h-full overflow-y-auto flex-col max-h-full flex'
-            >
-            <div
-              className='w-full flex justify-center text-xl py-2 gap-x-2 text-[rgba(255,255,255,0.65)] overflow-x-hidden flex-nowrap h-max flex-none'
-            >
-              <IeOutlined />
-              {!rxpNavigationCollapsed && (
-                <>
-                  RX-MP
-                </>
-              )}
-            </div>
-
-            <Menu
-              theme='dark'
-              mode='inline'
-              triggerSubMenuAction='click'
-              className='h-full flex-1 overflow-y-auto'
-              selectedKeys={[location.pathname]}
-              openKeys={shallowMenuState.openKeys}
-              onOpenChange={(openKeys) => {
-                shallowMenuState.openKeys = openKeys;
-              }}
-              onSelect={(info) => {
-                // shallowMenuState.selectedKeys = info.selectedKeys;
-              }}
-              onClick={(info) => {
-                navigate(info.key);
-              }}
-              inlineIndent={20}
-              subMenuOpenDelay={0.2}
-              items={menus}
-            />
-            </div>
-          </Layout.Sider>
-        </nav>
+        />
       </CSSTransition>
     </SwitchTransition>
-  )
-})
 
-export const NavigationWrapper = memo(() => {
-
-  return (
-    <Navigation />
   )
 })
 
