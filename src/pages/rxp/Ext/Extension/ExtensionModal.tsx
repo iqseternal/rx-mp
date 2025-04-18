@@ -2,7 +2,7 @@ import { ModalMode } from '@/constants';
 import { useNormalState, useShallowReactive } from '@/libs/hooks';
 import { Alert, App, Form, Input, Modal, Space, type ModalProps } from 'antd';
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle } from 'react';
-import type { GetExtensionListApiResponse } from '@/api/modules';
+import { createExtensionApi, type GetExtensionListApiResponse } from '@/api/modules';
 import { toBizErrorMsg } from '@/error/code';
 import { toNil } from '@suey/pkg-utils';
 import { useSyncNormalState } from '@/libs/hooks/useReactive';
@@ -12,6 +12,7 @@ import IconFont from '@/components/IconFont';
 import * as validators from '@/libs/validators';
 
 export interface ExtensionModalProps {
+  extensionGroupId?: number;
   onSuccess: () => void;
 }
 
@@ -25,12 +26,13 @@ export interface ExtensionModalFormRecord {
 }
 
 export const ExtensionModal = memo(forwardRef<ExtensionModalInstance, ExtensionModalProps>((props, ref) => {
-  const { onSuccess } = props;
+  const { onSuccess, extensionGroupId } = props;
 
   const { message } = App.useApp();
 
   const [syncPropsState] = useSyncNormalState(() => ({
-    onSuccess: onSuccess
+    onSuccess: onSuccess,
+    extensionGroupId: extensionGroupId
   }))
 
   const [shallowAttrs] = useShallowReactive<ModalProps>(() => ({
@@ -51,19 +53,23 @@ export const ExtensionModal = memo(forwardRef<ExtensionModalInstance, ExtensionM
   const [form] = Form.useForm<ExtensionModalFormRecord>();
 
   const createExtensionGroup = useCallback(async () => {
+    if (!syncPropsState.extensionGroupId) {
+      message.error(`无效扩展组`)
+      return;
+    }
+
     const data = form.getFieldsValue();
-
     shallowStatus.okLoading = true;
-    // const [err, res] = await toNil(createExtensionGroupApi({
-    //   extension_group_name: data.extension_group_name,
-    //   description: data.description
-    // }))
+    const [err, res] = await toNil(createExtensionApi({
+      extension_group_id: syncPropsState.extensionGroupId,
+      extension_name: data.extension_name
+    }))
 
-    // if (err) {
-    //   message.error(toBizErrorMsg(err.reason, `创建扩展 ${data.extension_group_name} 失败`));
-    //   shallowStatus.okLoading = false;
-    //   return;
-    // }
+    if (err) {
+      message.error(toBizErrorMsg(err.reason, `创建扩展 ${data.extension_name} 失败`));
+      shallowStatus.okLoading = false;
+      return;
+    }
 
     message.success(`创建扩展 ${data.extension_name} 成功`);
     shallowStatus.okLoading = false;
@@ -201,7 +207,7 @@ export const ExtensionModal = memo(forwardRef<ExtensionModalInstance, ExtensionM
             align='center'
           >
             <Form.Item
-              name='extension_group_name'
+              name='extension_name'
               tooltip='最大64字符'
               noStyle
               rules={[

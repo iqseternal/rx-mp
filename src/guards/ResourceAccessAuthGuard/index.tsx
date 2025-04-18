@@ -2,7 +2,7 @@ import { NotHasAnyData } from '@/components/Empty/NotHasAnyData';
 import { useNormalState } from '@/libs/hooks';
 import { retrieveRoutes } from '@/router';
 import type { ReactNode } from 'react';
-import { memo, useEffect, useLayoutEffect } from 'react';
+import { memo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTokensStore } from '@/stores';
 

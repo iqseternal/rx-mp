@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { Card } from 'antd';
 
 import HomePage from './index copy';
 
@@ -6,10 +7,10 @@ const Dashboard = memo(() => {
 
 
   return (
-    <div>
-
+    <Card>
+      Dashboard
       {/* <HomePage /> */}
-    </div>
+    </Card>
   )
 })
 

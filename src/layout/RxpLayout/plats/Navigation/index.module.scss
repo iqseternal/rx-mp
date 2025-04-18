@@ -45,3 +45,13 @@
 .emergeFromLeftSwitchExitDone {
   opacity: 0;
 }
+
+
+
+
+.navigationMenu {
+
+  &::-webkit-scrollbar {
+    width: 5px !important;
+  }
+}

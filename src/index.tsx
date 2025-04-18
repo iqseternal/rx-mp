@@ -1,4 +1,4 @@
-import { memo, StrictMode, useLayoutEffect } from 'react';
+import { memo, StrictMode } from 'react';
 import { metadata } from './libs/rxp-meta';
 import { RXAppWrapper } from './app';
 import { bus } from './libs/bus';

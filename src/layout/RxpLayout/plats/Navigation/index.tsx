@@ -9,9 +9,11 @@ import type { RouteConfig } from '@/router/definition';
 import { rxpBus } from '@/layout/RxpLayout/bus';
 import { useRXPLayoutStore } from '@/layout/RxpLayout/stores/useRXPLayoutStore';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
+import { classnames } from '@/libs/common';
 import { navCssTransitionClassNames } from './definition';
 
 import IconFont from '@/components/IconFont';
+import styles from './index.module.scss';
 
 export const Navigation = memo(forwardRef<HTMLDivElement>((props, ref) => {
   const navigate = useNavigate();
@@ -105,7 +107,10 @@ export const Navigation = memo(forwardRef<HTMLDivElement>((props, ref) => {
             theme='dark'
             mode='inline'
             triggerSubMenuAction='click'
-            className='h-full flex-1 overflow-y-auto'
+            className={classnames(
+              'h-full flex-1 overflow-y-auto',
+              styles.navigationMenu
+            )}
             selectedKeys={[location.pathname]}
             openKeys={shallowMenuState.openKeys}
             onOpenChange={(openKeys) => {

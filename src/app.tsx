@@ -1,5 +1,5 @@
 import { ConfigProvider, App } from 'antd';
-import { memo, useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import RXRouterWrapper from './router';

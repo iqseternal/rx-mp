@@ -1,6 +1,6 @@
 import { isString } from '@suey/pkg-utils';
 import type { FC, LazyExoticComponent, MemoExoticComponent, ReactElement } from 'react';
-import { isValidElement, useLayoutEffect, useMemo, memo } from 'react';
+import { isValidElement, useLayoutEffect, useMemo, memo, useEffect } from 'react';
 import { Outlet, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { useNormalState, useShallowReactive } from '@/libs/hooks';
 
@@ -50,7 +50,7 @@ export const Redirect = memo((props: RedirectProps) => {
     isMatched: false
   })
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (isString(from)) {
       shallowState.isMatched = location.pathname === from;
       return;

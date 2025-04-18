@@ -1,5 +1,5 @@
 import type { RouteMeta } from '@/router/definition';
-import { memo, useEffect, useLayoutEffect } from 'react';
+import { memo, useEffect } from 'react';
 import { create, useStore } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { useLocation } from 'react-router-dom';

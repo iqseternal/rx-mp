@@ -28,6 +28,7 @@ export const BreadCrumbs = memo(() => {
                 enter: 300,
                 exit: 100
               }}
+              exit={false}
               key={fullPath}
               classNames={cssTransitionClassNames}
               nodeRef={nodeRef}

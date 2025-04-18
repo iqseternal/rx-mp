@@ -73,7 +73,7 @@ export const OpenHistory = memo<OpenHistoryProps>((props) => {
 export const OpenHistoryWrapper = memo<OpenHistoryProps>((props) => {
   const presentRoute = usePresentRoute();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!presentRoute.current) return;
     pushHistory(presentRoute.current.meta);
   }, [presentRoute.current]);

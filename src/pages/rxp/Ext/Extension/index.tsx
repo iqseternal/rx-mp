@@ -1,6 +1,6 @@
 import { metadata } from '@/libs/rxp-meta';
 import { Alert, App, Button, Card, Space, Switch, Table, type TableColumnsType } from 'antd';
-import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { ExtensionGroupModalInstance } from '../ExtensionGroup/ExtensionGroupModal';
 import type { TableRef } from 'antd/es/table';
 import { ModalMode } from '@/constants';
@@ -15,12 +15,16 @@ import { toBizErrorMsg } from '@/error/code';
 import { ExtensionModal, type ExtensionModalInstance } from './ExtensionModal';
 import { useExtensionStatusStore } from './store/useExtensionStatusStore';
 import { useSyncNormalState } from '@/libs/hooks/useReactive';
+import { bus } from '@/libs/bus';
+import { SwitchTransition, CSSTransition } from 'react-transition-group';
+import { extensionCardCssTransitionClassNames } from './definition';
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';
 import moment from 'moment';
 import ExtensionGroupNavigationWrapper from './plats/ExtensionGroupNavigation';
 import IconFont from '@/components/IconFont';
+
 
 const ExtensionDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionListApiResponse; onSuccess: () => void; }) => {
   const { message, modal } = App.useApp();
@@ -79,15 +83,20 @@ const ExtensionDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionListA
   )
 })
 
-const Extension = memo(() => {
+const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
   const navigate = useNavigate();
 
   const { message, modal } = App.useApp();
   const [extensionGroupId] = useExtensionStatusStore(store => store.selectedKeys);
 
-  const [syncState] = useSyncNormalState(() => ({
-    extensionGroupId: extensionGroupId
-  }))
+  const [syncState] = useSyncNormalState(() => {
+    const id = Number(extensionGroupId);
+    const validId = Number.isNaN(id) ? void 0 : id;
+
+    return {
+      extensionGroupId: validId
+    }
+  })
 
   const [shallowColumns] = useShallowReactive<TableColumnsType<GetExtensionListApiResponse>>(() => ([
     {
@@ -184,7 +193,7 @@ const Extension = memo(() => {
     shallowTableAttrs.loading = true;
 
     const [err, res] = await toNil(getExtensionListApi({
-      extension_group_id: extensionGroupId
+      extension_group_id: extensionGroupId,
     }));
 
     if (err) {
@@ -201,16 +210,10 @@ const Extension = memo(() => {
   useAsyncEffect(loadData, [syncState.extensionGroupId]);
   useAutoFixTableSize(tableRef, {});
 
-  useLayoutEffect(() => {
-    metadata.defineMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionGroupNavigationWrapper);
-
-    return () => {
-      metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionGroupNavigationWrapper);
-    }
-  }, []);
-
   return (
-    <>
+    <div
+      ref={ref}
+    >
       <Alert
         type='info'
         showIcon
@@ -272,11 +275,49 @@ const Extension = memo(() => {
 
         <ExtensionModal
           ref={extensionModalRef}
+          extensionGroupId={syncState.extensionGroupId}
           onSuccess={loadData}
         />
       </Card>
-    </>
+    </div>
+  )
+}))
+
+const ExtensionWrapper = memo(() => {
+  const extensionContainerRef = useRef<HTMLDivElement>(null);
+
+  const selectedKeys = useExtensionStatusStore(store => store.selectedKeys);
+
+  useEffect(() => {
+    metadata.defineMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionGroupNavigationWrapper);
+
+
+    return () => {
+
+      metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionGroupNavigationWrapper);
+    }
+  }, []);
+
+  return (
+
+    <SwitchTransition mode='out-in'>
+      <CSSTransition
+        key={selectedKeys?.[0] ?? 'extension-card'}
+        timeout={200}
+        appear
+        in
+        classNames={extensionCardCssTransitionClassNames}
+        enter
+        exit
+        unmountOnExit={true}
+        nodeRef={extensionContainerRef}
+      >
+        <Extension
+          ref={extensionContainerRef}
+        />
+      </CSSTransition>
+    </SwitchTransition>
   )
 })
 
-export default Extension;
+export default ExtensionWrapper;

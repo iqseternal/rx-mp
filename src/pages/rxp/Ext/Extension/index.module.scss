@@ -1,0 +1,48 @@
+
+.extensionCardSwitchAppear {
+  transform: translateX(20px);
+  opacity: 0;
+}
+
+.extensionCardSwitchAppearActive {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.3s ease-out;
+  overflow-y: hidden;
+  height: 100%;
+}
+
+.extensionCardSwitchAppearDone {
+  opacity: 1;
+}
+
+.extensionCardSwitchEnter {
+  transform: translateX(20px);
+  opacity: 0.5;
+}
+
+.extensionCardSwitchEnterActive {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.3s ease-out;
+  overflow-y: hidden;
+}
+
+.extensionCardSwitchEnterDone {
+  opacity: 1;
+}
+
+.extensionCardSwitchExit {
+  transform: translateX(0);
+  opacity: 1;
+}
+.extensionCardSwitchExitActive {
+  transform: translateX(20px);
+  transition: all 0.2s ease-out;
+  opacity: 0;
+  //overflow-y: hidden;
+}
+
+.extensionCardSwitchExitDone {
+  opacity: 1;
+}

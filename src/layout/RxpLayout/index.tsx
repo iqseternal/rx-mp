@@ -1,11 +1,12 @@
 import { memo, Suspense, useEffect, useLayoutEffect, useRef } from 'react';
 import { Outlet, useLocation, useOutlet } from 'react-router-dom';
 import { metadata } from '@/libs/rxp-meta';
-import { useAsyncEffect, useNormalState, useShallowReactive } from '@/libs/hooks';
+import { useAsyncEffect, useNormalState, useRefresh, useShallowReactive } from '@/libs/hooks';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import { workbenchesCssTransitionClassNames } from './definition';
 import { Skeleton } from 'antd';
 import { usePresentRoute } from '@/router';
+import { bus } from '@/libs/bus';
 
 import NavigationWrapper from './plats/Navigation';
 import HeaderWrapper from '@/b-components/Header';
@@ -61,8 +62,8 @@ const RXPMainContainer = memo(() => {
         key={location.pathname}
         nodeRef={mainRef}
         enter
-        exit
-        unmountOnExit
+        exit={false}
+        unmountOnExit={false}
         classNames={workbenchesCssTransitionClassNames}
       >
         <main
@@ -77,8 +78,33 @@ const RXPMainContainer = memo(() => {
   )
 })
 
-const RXPLayout = memo(() => {
+interface RXPLayoutVerticalNavExternalProps {
+  className?: string;
+}
+
+const RXPLayoutVerticalNavExternal = memo<RXPLayoutVerticalNavExternalProps>((props) => {
   const RXPVerticalNavExternal = metadata.useMetadata('rxp.ui.layout.vertical.nav.external');
+
+  return (
+    <section
+      className={props.className}
+    >
+      {RXPVerticalNavExternal && RXPVerticalNavExternal.map((ExternalNavigation, index) => {
+        return (
+          <div
+            className='w-max h-full select-none flex-none'
+            draggable={false}
+            key={index}
+          >
+            <ExternalNavigation />
+          </div>
+        )
+      })}
+    </section>
+  )
+})
+
+const RXPLayout = memo(() => {
   const RXPVerticalNavInternal = metadata.useMetadata('rxp.ui.layout.vertical.nav.internal');
 
   return (
@@ -86,21 +112,7 @@ const RXPLayout = memo(() => {
     <div
       className='w-full h-full flex bg-slate-100 max-w-full overflow-x-auto'
     >
-      <section
-        className='w-max h-full flex flex-row justify-start'
-      >
-        {RXPVerticalNavExternal && RXPVerticalNavExternal.map((ExternalNavigation, index) => {
-          return (
-            <div
-              className='w-max h-full select-none flex-none'
-              draggable={false}
-              key={index}
-            >
-              <ExternalNavigation />
-            </div>
-          )
-        })}
-      </section>
+      <RXPLayoutVerticalNavExternal className='w-max h-full flex flex-row justify-start' />
 
       <section
         className='w-full h-full flex flex-col overflow-x-hidden'
@@ -134,7 +146,7 @@ const RXPLayout = memo(() => {
 })
 
 const RXPLayoutWrapper = memo(() => {
-  useLayoutEffect(() => {
+  useEffect(() => {
     metadata.defineMetadata('ui.layout.header.left.content', NavigationMenuWidget);
     metadata.defineMetadataInVector('ui.layout.header.left.after', BreadCrumbsWrapper);
 
