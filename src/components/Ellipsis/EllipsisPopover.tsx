@@ -34,7 +34,7 @@ export const EllipsisPopover = memo((props: EllipsisPopoverProps) => {
       overlayRender={(realContent) => {
         return (
           <Popover
-            overlay={<>{children}</>}
+            content={<>{children}</>}
             autoAdjustOverflow
             {...tipAttrs}
           >

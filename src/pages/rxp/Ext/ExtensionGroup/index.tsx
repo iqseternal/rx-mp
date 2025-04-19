@@ -21,7 +21,7 @@ import Widget from '@/components/Widget';
 import IconFont from '@/components/IconFont';
 import moment from 'moment';
 
-const ExtensionGroupDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionGroupListApiResponse;onSuccess: () => void; }) => {
+const ExtensionGroupDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionGroupListApiResponse; onSuccess: () => void; }) => {
   const { message, modal } = App.useApp();
 
   const [shallowState] = useShallowReactive(() => ({

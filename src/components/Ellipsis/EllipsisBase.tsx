@@ -6,8 +6,6 @@ import { useDebounceHook, useResizeObserver, useShallowReactive } from '@/libs/h
 import { isRawObject, isUnDef } from '@suey/pkg-utils';
 import { StringFilters } from '@/libs/common';
 
-import styles from './ellipsis.module.scss';
-
 /**
  * Ellipsis props
  */
@@ -131,7 +129,10 @@ export const EllipsisBase = memo((props: EllipsisProps) => {
     const element = (
       <div
         ref={textContainerRef}
-        className={classnames(styles.wFullSize, styles.textOverflow, className)}
+        className={classnames(
+          'w-full whitespace-nowrap overflow-hidden text-ellipsis',
+          className
+        )}
       >
         {realContent}
       </div>
