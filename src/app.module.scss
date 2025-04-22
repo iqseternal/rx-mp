@@ -1,0 +1,12 @@
+
+// 在这里补充 ant-provider 无法修改的样式变量
+
+.modalRoot {
+  --rx-modal-content-padding: 16px 21px 18px 21px;
+
+  :global(.rx-alert) {
+    --rx-alert-default-padding: 4px 10px;
+
+  }
+}
+

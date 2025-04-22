@@ -1,16 +1,16 @@
-.ant-spin-nested-loading {
+.rx-spin-nested-loading {
 
-  .ant-spin-container {
+  .rx-spin-container {
     width: 100%;
     height: 100%;
   }
 }
 
-.ant-table {
+.rx-table {
 
-  .ant-table-container {
+  .rx-table-container {
 
-    .ant-table-header {
+    .rx-table-header {
 
 
       &::-webkit-scrollbar {
@@ -31,18 +31,26 @@
 
 }
 
-.ant-form.ant-form-horizontal {
+.rx-form.rx-form-horizontal {
 
-  .ant-form-item {
+  .rx-form-item {
 
-    .ant-row.ant-form-item-row {
+    .rx-row.rx-form-item-row {
 
-      .ant-form-item-control {
-
-        .ant-form-item-control-input {
+      .rx-form-item-control {
 
 
-          .ant-form-item-control-input-content {
+        .rx-form-item-control-input {
+          .rx-form-item-control-input-content {
+
+
+
+          }
+        }
+
+        .rx-form-item-additional {
+          .rx-form-item-extra {
+
 
 
 
@@ -52,5 +60,14 @@
 
     }
 
+  }
+}
+
+
+.rx-alert {
+  align-items: flex-start;
+
+  .rx-alert-icon {
+    height: 1.5em;
   }
 }

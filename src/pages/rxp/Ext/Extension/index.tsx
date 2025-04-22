@@ -167,7 +167,8 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
   ] as const));
 
   const [shallowTableAttrs] = useTableAttrs<GetExtensionListApiResponse>({
-    rowKey: row => row.extension_id
+    rowKey: row => row.extension_id,
+    sticky: { offsetHeader: 0 },
   })
 
   const [shallowPagination] = usePaginationAttrs({});

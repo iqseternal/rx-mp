@@ -1,6 +1,6 @@
 import { ModalMode } from '@/constants';
 import { useNormalState, useShallowReactive } from '@/libs/hooks';
-import { Alert, App, Form, Input, Modal, Space, type ModalProps } from 'antd';
+import { Alert, App, Form, Input, Modal, Space, Tooltip, Typography, type ModalProps } from 'antd';
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle } from 'react';
 import { createExtensionGroupApi, editExtensionGroupApi, type GetExtensionGroupListApiResponse } from '@/api/modules';
 import { toBizErrorMsg } from '@/error/code';
@@ -184,26 +184,26 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
         type='info'
         message={(
           <div>
-            Message
+            <div>创建扩展组, 以使得项目能够对接对应的扩展集合。</div>
+            <div>1</div>
           </div>
         )}
       />
 
       <Form
         form={form}
-        labelCol={{ span: 5 }}
-        wrapperCol={{ span: 16 }}
+        labelCol={{ span: 6 }}
       >
         <Form.Item
           label='扩展组名称'
           required
+          tooltip='assd'
         >
-          <Space
-            align='center'
-          >
+          <div className='w-full flex justify-end items-center flex-nowrap gap-x-1'>
             <Form.Item
               name='extension_group_name'
               tooltip='最大64字符'
+              className='flex-auto'
               noStyle
               rules={[
                 {
@@ -222,31 +222,53 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
               />
             </Form.Item>
 
-            <span>
-              64字符
-            </span>
-          </Space>
+            <Tooltip
+              title='Useful information'
+            >
+              <Typography.Text
+                className='flex-none text-sm text-gray-500'
+              >
+                64字符
+              </Typography.Text>
+            </Tooltip>
+          </div>
         </Form.Item>
 
         <Form.Item
           label='扩展组描述'
-          name='description'
-          rules={[
-            {
-              async validator(rule, value, callback) {
-                if (validators.isString(value)) {
-                  if (!validators.isMaxLengthString(value, 255)) return Promise.reject(`扩展组描述长度大于255字符`);
-                }
-              },
-            }
-          ]}
         >
-          <Input.TextArea
-            placeholder='请输入扩展组描述'
-            maxLength={255}
-            allowClear
-            rows={3}
-          />
+          <div className='w-full flex justify-end items-center flex-nowrap gap-x-1'>
+            <Form.Item
+              name='description'
+              rules={[
+                {
+                  async validator(rule, value, callback) {
+                    if (validators.isString(value)) {
+                      if (!validators.isMaxLengthString(value, 255)) return Promise.reject(`扩展组描述长度大于255字符`);
+                    }
+                  },
+                }
+              ]}
+              noStyle
+            >
+              <Input.TextArea
+                placeholder='请输入扩展组描述'
+                maxLength={255}
+                allowClear
+                rows={3}
+              />
+            </Form.Item>
+
+            <Tooltip
+              title='Useful information'
+            >
+              <Typography.Text
+                className='flex-none text-sm text-gray-500'
+              >
+                255字符
+              </Typography.Text>
+            </Tooltip>
+          </div>
         </Form.Item>
       </Form>
     </Modal>

@@ -196,6 +196,10 @@ export interface AutoFixTableSizeProps<RecordType extends Record<string, unknown
   minScrollHeight?: number;
 }
 
+const AntTableClassName = 'div.rx-table';
+const AntTableHeaderClassName = 'div.rx-table-header';
+const AntTableContentClassName = 'div.rx-table-body';
+
 /**
  * 是否自动调整 Table 尺寸以更好适应页面
  *
@@ -253,11 +257,11 @@ export function useAutoFixTableSize<RecordType extends Record<string, unknown>>(
     const tableWrapper = tableRef.current.nativeElement;
 
     //
-    const antTable = tableWrapper.querySelector('div.ant-table');
+    const antTable = tableWrapper.querySelector(AntTableClassName);
     if (!antTable) return;
 
     // 获取到表格数据区域
-    const antTableContent = antTable.querySelector('div.ant-table-body') as HTMLDivElement;
+    const antTableContent = antTable.querySelector(AntTableContentClassName) as HTMLDivElement;
     if (!antTableContent) return;
 
     // 记录旧的值
@@ -279,10 +283,10 @@ export function useAutoFixTableSize<RecordType extends Record<string, unknown>>(
     const tableWrapper = tableRef.current.nativeElement;
 
     // 表头
-    const antTableHeader = tableWrapper.querySelector('div.ant-table-header') as HTMLDivElement;
+    const antTableHeader = tableWrapper.querySelector(AntTableHeaderClassName) as HTMLDivElement;
 
     // 表格
-    const antTable = tableWrapper.querySelector('div.ant-table') as HTMLDivElement;
+    const antTable = tableWrapper.querySelector(AntTableClassName) as HTMLDivElement;
 
     if (!antTable || !antTableHeader) {
       console.error('useAutoFixTableSize: 正在运行插件, 但 DOM 元素不满足执行条件, 请检查脚本是否正确. (无法找到表头或者表格元素：div.ant-table-header | div.ant-table)');
@@ -290,7 +294,7 @@ export function useAutoFixTableSize<RecordType extends Record<string, unknown>>(
     }
 
     // 表格数据内容区域, 需要维护的数据容器
-    const antTableContent = antTable.querySelector('div.ant-table-body') as HTMLDivElement;
+    const antTableContent = antTable.querySelector(AntTableContentClassName) as HTMLDivElement;
     if (!antTableContent) {
       console.error('useAutoFixTableSize: 正在运行插件, 但 DOM 元素不满足执行条件, 请检查脚本是否正确. (无法找到数据区域 div.ant-table-body)');
       return;

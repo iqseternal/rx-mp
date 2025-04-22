@@ -62,7 +62,7 @@ const RXPMainContainer = memo(() => {
         key={location.pathname}
         nodeRef={mainRef}
         enter
-        exit={false}
+        exit
         unmountOnExit={false}
         classNames={workbenchesCssTransitionClassNames}
       >

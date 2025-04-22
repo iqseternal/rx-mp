@@ -1,9 +1,11 @@
 import { ConfigProvider, App } from 'antd';
+import type { ConfigProviderProps } from 'antd';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 import RXRouterWrapper from './router';
 import REmpty from '@/components/Empty';
+import styles from './app.module.scss';
 
 /**
  * 在这里做根组件的渲染处理, 这里的 memo 有必要, 会避免一些不必要的重新渲染
@@ -22,7 +24,7 @@ export const RXApp = memo(() => {
       iconPrefixCls={'anticon'}
       popupMatchSelectWidth={true}
       popupOverflow={'viewport'}
-      prefixCls='ant'
+      prefixCls='rx'
       renderEmpty={() => <REmpty />}
       theme={{
         components: {
@@ -39,19 +41,13 @@ export const RXApp = memo(() => {
           Table: {
             cellPaddingInlineMD: 6,
             cellPaddingBlockMD: 8,
-
             stickyScrollBarBg: 'unset'
           },
           Alert: {
             defaultPadding: '6px 10px'
-
-
           },
           Modal: {
-            paddingContentHorizontal: 18,
-            paddingContentVertical: 16,
 
-            controlPaddingHorizontal: 18,
           },
           Pagination: {
             itemSize: 28,
@@ -87,6 +83,9 @@ export const RXApp = memo(() => {
       }}
       message={{
 
+      }}
+      modal={{
+        className: styles.modalRoot,
       }}
       variant='outlined'
     >

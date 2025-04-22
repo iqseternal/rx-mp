@@ -188,7 +188,8 @@ const ExtensionGroup = memo(() => {
   ] as const));
 
   const [shallowTableAttrs] = useTableAttrs<GetExtensionGroupListApiResponse>({
-    rowKey: row => row.extension_group_id
+    rowKey: row => row.extension_group_id,
+    sticky: { offsetHeader: 0 },
   })
 
   const [shallowPagination] = usePaginationAttrs({});
@@ -223,7 +224,7 @@ const ExtensionGroup = memo(() => {
         showIcon
         message={(
           <div>
-            创建扩展组, 以使用项目对接对应的扩展集合
+            <div>创建扩展组, 以使得项目能够对接对应的扩展集合。</div>
           </div>
         )}
       />

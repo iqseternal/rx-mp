@@ -58,8 +58,6 @@ export function useTableAttrs<Record>(attrs?: TableProps<Record>) {
       scroll: {},
       tableLayout: 'fixed',
       dataSource: [] as Record[],
-      // sticky: autoFixSize ? (attrs?.sticky ?? { offsetHeader: 0 }) : void 0,
-      sticky: { offsetHeader: 0 },
       ...(attrs ?? {}),
     }
   })

@@ -72,6 +72,7 @@ export const ExtensionGroupNavigation = memo(forwardRef<HTMLDivElement>(() => {
 }))
 
 export const ExtensionGroupNavigationWrapper = memo(() => {
+
   const navContainerRef = useRef<HTMLDivElement>(null);
 
   return (
