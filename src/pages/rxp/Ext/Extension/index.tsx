@@ -5,7 +5,7 @@ import type { ExtensionGroupModalInstance } from '../ExtensionGroup/ExtensionGro
 import type { TableRef } from 'antd/es/table';
 import { ModalMode } from '@/constants';
 import { useNavigate } from 'react-router-dom';
-import { useAsyncEffect, useAutoFixTableSize, useShallowReactive } from '@/libs/hooks';
+import { useAsyncEffect, useShallowReactive, useTransition } from '@/libs/hooks';
 import { usePaginationAttrs, useTableAttrs } from '@/libs/hooks/useAttrs';
 import { getExtensionGroupListApi, getExtensionListApi, type GetExtensionGroupListApiResponse, type GetExtensionListApiPayload, type GetExtensionListApiResponse } from '@/api/modules';
 import { toNil } from '@suey/pkg-utils';
@@ -24,61 +24,53 @@ import Widget from '@/components/Widget';
 import moment from 'moment';
 import ExtensionGroupNavigationWrapper from './plats/ExtensionGroupNavigation';
 import IconFont from '@/components/IconFont';
-
+import RXUI from '@/b-components/RXUI';
 
 const ExtensionDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionListApiResponse; onSuccess: () => void; }) => {
   const { message, modal } = App.useApp();
 
-  const [shallowState] = useShallowReactive(() => ({
-    isDeleting: false
-  }))
+  const [extensionDeleting, deleteExtension] = useTransition(async () => {
+    // const [err, res] = await toNil(deleteExtensionGroupApi({
+    //   extension_group_id: row.extension_group_id,
+    //   extension_group_uuid: row.extension_group_uuid
+    // }));
 
-  const deleteExtension = async () => {
-    modal.confirm({
-      title: '是否确认删除?',
-      okText: '删除',
-      cancelText: '取消',
-      okButtonProps: {
-        icon: <IconFont icon='DeleteOutlined' />,
-        type: 'primary',
-        danger: true,
-      },
-      cancelButtonProps: {
-        icon: <IconFont icon='RollbackOutlined' />,
-        type: 'default'
-      },
-      onOk: async () => {
-        if (shallowState.isDeleting) return;
-        shallowState.isDeleting = true;
+    // if (err) {
+    //   message.error(toBizErrorMsg(err.reason, `删除扩展组 ${row.extension_group_name} 失败`));
+    //   shallowState.isDeleting = false;
+    //   return;
+    // }
 
-        // const [err, res] = await toNil(deleteExtensionGroupApi({
-        //   extension_group_id: row.extension_group_id,
-        //   extension_group_uuid: row.extension_group_uuid
-        // }));
-
-        // if (err) {
-        //   message.error(toBizErrorMsg(err.reason, `删除扩展组 ${row.extension_group_name} 失败`));
-        //   shallowState.isDeleting = false;
-        //   return;
-        // }
-
-        message.success(`删除扩展 ${row.extension_name} 成功`);
-        shallowState.isDeleting = false;
-        onSuccess && onSuccess();
-      },
-      onCancel: () => {
-
-      }
-    })
-  }
+    message.success(`删除扩展 ${row.extension_name} 成功`);
+    onSuccess && onSuccess();
+  }, []);
 
   return (
     <Widget
       icon='DeleteOutlined'
       className='text-red-500'
       tipText='删除扩展'
-      loading={shallowState.isDeleting}
-      onClick={deleteExtension}
+      loading={extensionDeleting.pending}
+      onClick={async () => {
+        modal.confirm({
+          title: '是否确认删除?',
+          okText: '删除',
+          cancelText: '取消',
+          okButtonProps: {
+            icon: <IconFont icon='DeleteOutlined' />,
+            type: 'primary',
+            danger: true,
+          },
+          cancelButtonProps: {
+            icon: <IconFont icon='RollbackOutlined' />,
+            type: 'default'
+          },
+          onOk: deleteExtension,
+          onCancel: () => {
+
+          }
+        })
+      }}
     />
   )
 })
@@ -86,7 +78,11 @@ const ExtensionDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionListA
 const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
   const navigate = useNavigate();
 
+  const extensionModalRef = useRef<ExtensionModalInstance>(null);
+  const tableRef = useRef<TableRef>(null);
+
   const { message, modal } = App.useApp();
+
   const [extensionGroupId] = useExtensionStatusStore(store => store.selectedKeys);
 
   const [syncState] = useSyncNormalState(() => {
@@ -167,14 +163,12 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
   ] as const));
 
   const [shallowTableAttrs] = useTableAttrs<GetExtensionListApiResponse>({
-    rowKey: row => row.extension_id,
-    sticky: { offsetHeader: 0 },
+    rowKey: row => row.extension_id
   })
 
-  const [shallowPagination] = usePaginationAttrs({});
-
-  const extensionModalRef = useRef<ExtensionModalInstance>(null);
-  const tableRef = useRef<TableRef>(null);
+  const [shallowPagination] = usePaginationAttrs({
+    onChange: () => loadData()
+  });
 
   const loadData = useCallback(async () => {
     if (!syncState.extensionGroupId) {
@@ -209,7 +203,6 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
   }, []);
 
   useAsyncEffect(loadData, [syncState.extensionGroupId]);
-  useAutoFixTableSize(tableRef, {});
 
   return (
     <div
@@ -267,7 +260,7 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
           </Space>
         </div>
 
-        <Table
+        <RXUI.Table
           {...shallowTableAttrs}
           pagination={shallowPagination}
           columns={shallowColumns}

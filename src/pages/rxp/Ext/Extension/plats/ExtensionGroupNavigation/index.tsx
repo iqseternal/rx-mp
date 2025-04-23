@@ -8,6 +8,8 @@ import { toNil } from '@suey/pkg-utils';
 import { classnames } from '@/libs/common';
 import { toBizErrorMsg } from '@/error/code';
 import { useExtensionStatusStore } from '../../store/useExtensionStatusStore';
+import { useLocation } from 'react-router-dom';
+import { animated, useTransition } from '@react-spring/web';
 
 import IconFont from '@/components/IconFont';
 import styles from './index.module.scss';
@@ -24,7 +26,7 @@ export const ExtensionGroupNavigation = memo(forwardRef<HTMLDivElement>(() => {
   useAsyncEffect(async () => {
     const [err, res] = await toNil(getExtensionGroupListApi({}));
     if (err) return;
-    shallowState.extensionGroupList = res.data;
+    shallowState.extensionGroupList = res.data.list;
   }, []);
 
   useEffect(() => {
@@ -71,29 +73,49 @@ export const ExtensionGroupNavigation = memo(forwardRef<HTMLDivElement>(() => {
   )
 }))
 
-export const ExtensionGroupNavigationWrapper = memo(() => {
+export const ExtensionGroupNavigationWrapper = (() => {
+  const location = useLocation();
+  const isInternalNav = location.pathname === '/rxp/ext/extension';
 
-  const navContainerRef = useRef<HTMLDivElement>(null);
+  const transitions = useTransition(isInternalNav, {
+    keys: isInternalNav ? 'internal_nav' : 'not_internal_nav',
+    from: {
+      opacity: 0,
+      transform: 'translateX(-20px)',
+      width: '0%',
+      maxWidth: 0,
+    },
+    enter: {
+      opacity: 1,
+      transform: 'translateX(0%)',
+      maxWidth: 1000
+    },
+    leave: {
+      opacity: 0,
+      transform: 'translateX(20px)',
+      width: '0%',
+      maxWidth: 0,
+    },
+    config: {
+      duration: 300,
+      easing: t => t * (2 - t)
+    },
+    exitBeforeEnter: true
+  });
 
-  return (
-    <SwitchTransition mode='out-in'>
-      <CSSTransition
-        key={'internal_nav'}
-        timeout={300}
-        appear
-        in
-        classNames={navCssTransitionClassNames}
-        enter
-        exit
-        unmountOnExit={true}
-        nodeRef={navContainerRef}
-      >
-        <ExtensionGroupNavigation
-          ref={navContainerRef}
-        />
-      </CSSTransition>
-    </SwitchTransition>
-  )
+  return transitions((style, item) => (
+    <animated.div
+      style={{
+        ...style,
+        willChange: 'transform, opacity, width'
+      }}
+      className='h-full z-20'
+    >
+      {item && (
+        <ExtensionGroupNavigation />
+      )}
+    </animated.div>
+  ))
 })
 
 export default ExtensionGroupNavigationWrapper;

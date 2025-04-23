@@ -74,7 +74,7 @@ export const Navigation = memo(forwardRef<HTMLDivElement>((props, ref) => {
 
   return (
     <nav
-      className='w-full h-full'
+      className='w-full h-full z-30 sticky'
       ref={ref}
     >
       <Layout.Sider

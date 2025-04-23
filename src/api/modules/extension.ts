@@ -5,6 +5,9 @@ import type { RApiPromiseLike } from '../definition';
 export interface GetExtensionGroupListApiPayload {
   extension_group_id?: number;
   extension_group_name?: string;
+
+  page?: number;
+  page_size?: number;
 }
 
 export interface GetExtensionGroupListApiResponse {
@@ -22,11 +25,14 @@ export interface GetExtensionGroupListApiResponse {
   updated_time: string;
 }
 
-export type GetExtensionGroupListApi = (payload: GetExtensionGroupListApiPayload) => RApiPromiseLike<GetExtensionGroupListApiResponse[], null>;
+export type GetExtensionGroupListApi = (payload: GetExtensionGroupListApiPayload) => RApiPromiseLike<{
+  list: GetExtensionGroupListApiResponse[];
+  total: number;
+}, null>;
 
 export const getExtensionGroupListApi = asynced<GetExtensionGroupListApi>(async (payload) => {
   return rxApiGet('/api/v1/rx/ext/get_ext_group_list', {
-    data: payload
+    params: payload
   })
 })
 
@@ -45,8 +51,10 @@ export const createExtensionGroupApi = asynced<CreateExtensionGroupApi>(async (p
 
 
 export interface DeleteExtensionGroupApiPayload {
-  extension_group_id: number;
-  extension_group_uuid: string;
+  certificates: {
+    extension_group_id: number;
+    extension_group_uuid: string;
+  }[]
 }
 
 export type DeleteExtensionGroupApi = (payload: DeleteExtensionGroupApiPayload) => RApiPromiseLike<null>;
@@ -74,15 +82,6 @@ export const editExtensionGroupApi = asynced<EditExtensionGroupApi>(async (paylo
     data: payload
   })
 })
-
-
-
-
-
-
-
-
-
 
 export interface GetExtensionListApiPayload {
   extension_group_id?: number;

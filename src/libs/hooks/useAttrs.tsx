@@ -30,16 +30,16 @@ export function usePaginationAttrs<Attrs extends PaginationProps>(attrs?: Attrs)
       size: 'default' as const,
       showTotal: (total, range) => <>共&nbsp;{total}&nbsp;条</>,
       onShowSizeChange(current, size) {
-        shallowPaginationAttrs.current = current
-        shallowPaginationAttrs.pageSize = size
-        seSet(StorageKeys.MemoryPageSize, size)
+        shallowPaginationAttrs.current = current;
+        shallowPaginationAttrs.pageSize = size;
+        seSet(StorageKeys.MemoryPageSize, size);
       },
       ...(attrs ?? {}),
       onChange(page, pageSize) {
-        shallowPaginationAttrs.current = page
-        shallowPaginationAttrs.pageSize = pageSize
-        seSet(StorageKeys.MemoryPageSize, pageSize)
-        if (attrs?.onChange) attrs.onChange(page, pageSize)
+        shallowPaginationAttrs.current = page;
+        shallowPaginationAttrs.pageSize = pageSize;
+        seSet(StorageKeys.MemoryPageSize, pageSize);
+        if (attrs?.onChange) attrs.onChange(page, pageSize);
       },
     }
   })

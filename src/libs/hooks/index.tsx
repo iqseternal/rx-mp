@@ -45,5 +45,3 @@ export { useCookieState, useSessionStorageState, useLocalStorageState } from 'ah
 export { useEventListener } from './useEventListener';;
 
 export { useFullscreen } from 'ahooks';
-
-export { useAutoFixTableSize } from './useAutoFixTableSize';

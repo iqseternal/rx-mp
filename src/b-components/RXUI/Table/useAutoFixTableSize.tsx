@@ -1,10 +1,10 @@
-import type { RefObject } from 'react';
+import type { Ref, RefObject } from 'react';
 import { useLayoutEffect } from 'react';
 import { useEffect, useState } from 'react';
-import { useDebounceHook, useThrottleHook } from './useDebounce';
-import { classnames } from '../common';
+import { useDebounceHook, useThrottleHook } from '@/libs/hooks/useDebounce';
+import { classnames } from '@/libs/common';
 import type { TableRef } from 'antd/es/table';
-import { useNormalState } from './useReactive';
+import { useNormalState } from '@/libs/hooks/useReactive';
 
 /**
  * 获取当前 Dom overflow Y 上是否一定含有 scroll 值

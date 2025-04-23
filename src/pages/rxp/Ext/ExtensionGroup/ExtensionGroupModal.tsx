@@ -36,7 +36,6 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
 
   const [shallowAttrs] = useShallowReactive<ModalProps>(() => ({
     open: false,
-
   }))
 
   const [shallowStatus] = useShallowReactive(() => ({
@@ -182,6 +181,7 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
       <Alert
         showIcon
         type='info'
+        className='mb-2'
         message={(
           <div>
             <div>创建扩展组, 以使得项目能够对接对应的扩展集合。</div>
