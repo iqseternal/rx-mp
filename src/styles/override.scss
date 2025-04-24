@@ -26,7 +26,6 @@
     }
 
   }
-
 }
 
 .rx-form.rx-form-horizontal {
@@ -41,15 +40,11 @@
         .rx-form-item-control-input {
           .rx-form-item-control-input-content {
 
-
-
           }
         }
 
         .rx-form-item-additional {
           .rx-form-item-extra {
-
-
 
 
           }
@@ -64,8 +59,32 @@
 
 .rx-alert {
   align-items: flex-start;
+  line-height: 1.5em !important;
 
   .rx-alert-icon {
+    font-size: unset;
     height: 1.5em;
   }
+
+  .rx-alert-content {
+
+    .rx-alert-message {
+
+    }
+  }
+
+  .rx-alert-close-icon {
+    height: calc(1.5em + 4px);
+    font-size: calc(100% - 2px);
+  }
+}
+
+:where(.rx-alert).rx-alert-with-description .rx-alert-message {
+  margin-bottom: unset;
+}
+
+
+
+.rx-tag {
+  margin-inline-end: unset;
 }

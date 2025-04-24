@@ -3,6 +3,7 @@
     "ahooks",
     "Poweroff",
     "rsbuild",
-    "RXUI"
+    "RXUI",
+    "Sider"
   ]
 }

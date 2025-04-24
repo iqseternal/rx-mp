@@ -7,17 +7,14 @@ import { ModalMode } from '@/constants';
 import { useNavigate } from 'react-router-dom';
 import { useAsyncEffect, useShallowReactive, useTransition } from '@/libs/hooks';
 import { usePaginationAttrs, useTableAttrs } from '@/libs/hooks/useAttrs';
-import { getExtensionGroupListApi, getExtensionListApi, type GetExtensionGroupListApiResponse, type GetExtensionListApiPayload, type GetExtensionListApiResponse } from '@/api/modules';
+import { getExtensionListApi } from '@/api/modules';
+import type { GetExtensionListApiResponse } from '@/api/modules';
 import { toNil } from '@suey/pkg-utils';
 import { ClearOutlined, FolderAddOutlined, SearchOutlined } from '@ant-design/icons';
-import { useTokensStore } from '@/stores';
 import { toBizErrorMsg } from '@/error/code';
 import { ExtensionModal, type ExtensionModalInstance } from './ExtensionModal';
 import { useExtensionStatusStore } from './store/useExtensionStatusStore';
 import { useSyncNormalState } from '@/libs/hooks/useReactive';
-import { bus } from '@/libs/bus';
-import { SwitchTransition, CSSTransition } from 'react-transition-group';
-import { extensionCardCssTransitionClassNames } from './definition';
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';
@@ -211,11 +208,9 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
       <Alert
         type='info'
         showIcon
-        message={(
-          <div>
-            创建扩展
-          </div>
-        )}
+        closable
+        className='mb-1'
+        message='创建扩展'
       />
 
       <Card>
@@ -223,7 +218,6 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
           className='w-full flex justify-between mb-2'
         >
           <Space>
-
             <Button
               type='primary'
               icon={<FolderAddOutlined />}
@@ -232,15 +226,6 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
               }}
             >
               新建
-            </Button>
-
-            <Button
-              type='primary'
-              onClick={() => {
-                useTokensStore.removeAccessToken();
-              }}
-            >
-              清除资源访问权限
             </Button>
           </Space>
 
@@ -278,39 +263,18 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
 }))
 
 const ExtensionWrapper = memo(() => {
-  const extensionContainerRef = useRef<HTMLDivElement>(null);
-
-  const selectedKeys = useExtensionStatusStore(store => store.selectedKeys);
-
   useEffect(() => {
-    metadata.defineMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionGroupNavigationWrapper);
+    // metadata.defineMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionGroupNavigationWrapper);
 
 
     return () => {
 
-      metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionGroupNavigationWrapper);
+      // metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionGroupNavigationWrapper);
     }
   }, []);
 
   return (
-
-    <SwitchTransition mode='out-in'>
-      <CSSTransition
-        key={selectedKeys?.[0] ?? 'extension-card'}
-        timeout={200}
-        appear
-        in
-        classNames={extensionCardCssTransitionClassNames}
-        enter
-        exit
-        unmountOnExit={true}
-        nodeRef={extensionContainerRef}
-      >
-        <Extension
-          ref={extensionContainerRef}
-        />
-      </CSSTransition>
-    </SwitchTransition>
+    <Extension />
   )
 })
 

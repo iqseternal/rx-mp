@@ -29,10 +29,7 @@ export function useSyncNormalState<S extends {}>(initValue: () => S) {
 
   const [state] = useNormalState(() => initState);
 
-  for (const key in initState) {
-    state[key] = initState[key];
-  }
-
+  for (const key in initState) state[key] = initState[key];
   return [state] as const;
 }
 

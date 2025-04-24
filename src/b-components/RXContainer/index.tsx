@@ -3,7 +3,7 @@ import { injectReadonlyVariable } from '@/libs/common';
 import { RXTableSearchContainer } from './RXTableSearchContainer';
 
 export type ContainerType = {} & {
-  RXTableSearch: typeof RXTableSearchContainer;
+  readonly RXTableSearch: typeof RXTableSearchContainer;
 }
 
 const RXContainer: ContainerType = {} as ContainerType;

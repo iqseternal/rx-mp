@@ -1,21 +1,19 @@
 import { useShallowReactive, useTransition } from '@/libs/hooks';
 import { usePaginationAttrs, useTableAttrs } from '@/libs/hooks/useAttrs';
-import { useAsyncEffect, usePagination } from 'ahooks';
+import { useAsyncEffect } from 'ahooks';
 import type { TableColumnsType } from 'antd';
-import { Alert, App, Button, Card, Form, Input, InputNumber, Popover, Space, Switch, Table } from 'antd';
-import type { ColumnsType, TableRef } from 'antd/es/table';
-import { memo, useCallback, useRef } from 'react';
-import { getExtensionGroupListApi } from '@/api/modules';
-import { GetExtensionGroupListApiResponse, GetExtensionGroupListApiPayload, deleteExtensionGroupApi } from '@/api/modules';
+import { Alert, App, Button, Card, Form, Input, InputNumber, Space, Switch } from 'antd';
+import { memo, useCallback, useEffect, useRef } from 'react';
+import { editExtensionGroupApi, getExtensionGroupListApi } from '@/api/modules';
+import { GetExtensionGroupListApiResponse, deleteExtensionGroupApi } from '@/api/modules';
 import { ClearOutlined, FolderAddOutlined, SearchOutlined } from '@ant-design/icons';
 import { toNil } from '@suey/pkg-utils';
-import { useTokensStore, useUserStore } from '@/stores';
 import { toBizErrorMsg } from '@/error/code';
 import { ModalMode } from '@/constants';
 import { useNavigate } from 'react-router-dom';
 import { ExtensionGroupModal, ExtensionGroupModalInstance } from './ExtensionGroupModal';
-import { retrieveRoutes } from '@/router';
 import type { TableRowSelection } from 'antd/es/table/interface';
+import { useSyncNormalState } from '@/libs/hooks/useReactive';
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';
@@ -26,6 +24,10 @@ import RXUI from '@/b-components/RXUI';
 
 const ExtensionGroupDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionGroupListApiResponse; onSuccess: () => void; }) => {
   const { message, modal } = App.useApp();
+
+  const [syncPropsState] = useSyncNormalState(() => ({
+    onSuccess: onSuccess
+  }))
 
   const [extensionGroupDeleting, deleteExtensionGroup] = useTransition(async () => {
     const [err, res] = await toNil(deleteExtensionGroupApi({
@@ -42,8 +44,7 @@ const ExtensionGroupDeleteWidget = memo(({ row, onSuccess }: { row: GetExtension
       return;
     }
 
-    message.success(`删除扩展组 ${row.extension_group_name} 成功`);
-    onSuccess && onSuccess();
+    syncPropsState.onSuccess && syncPropsState.onSuccess();
   }, []);
 
   return (
@@ -54,7 +55,7 @@ const ExtensionGroupDeleteWidget = memo(({ row, onSuccess }: { row: GetExtension
       loading={extensionGroupDeleting.pending}
       onClick={async () => {
         modal.confirm({
-          title: '是否确认删除?',
+          title: `是否确认删除扩展组 ${row.extension_group_name} ?`,
           okText: '删除',
           cancelText: '取消',
           okButtonProps: {
@@ -80,6 +81,43 @@ interface ExtensionGroupSearchForm {
   extension_group_id?: number;
   extension_group_name?: string;
 }
+
+const ExtensionGroupEnabledSwitch = memo(({ row, onSuccess }: { row: GetExtensionGroupListApiResponse; onSuccess: () => void; }) => {
+  const { message, modal } = App.useApp();
+
+  const [syncPropsState] = useSyncNormalState(() => ({
+    onSuccess: onSuccess
+  }))
+
+  const [extensionGroupEnabledChanging, changeExtensionGroupEnabled] = useTransition(async () => {
+    const enabled = row.enabled;
+
+    const nextEnabled = enabled === 1 ? 0 : 1;
+    const [err, res] = await toNil(editExtensionGroupApi({
+      extension_group_id: row.extension_group_id,
+      extension_group_uuid: row.extension_group_uuid,
+      enabled: nextEnabled
+    }))
+
+    if (err) {
+      message.error(toBizErrorMsg(err.reason, '扩展组切换启用状态失败'));
+      return;
+    }
+
+    syncPropsState.onSuccess && syncPropsState.onSuccess();
+  }, []);
+
+  return (
+
+    <Switch
+      checked={row.enabled === 1}
+      loading={extensionGroupEnabledChanging.pending}
+      onClick={changeExtensionGroupEnabled}
+    >
+
+    </Switch>
+  )
+})
 
 const ExtensionGroup = memo(() => {
   const navigate = useNavigate();
@@ -123,8 +161,12 @@ const ExtensionGroup = memo(() => {
       render: (value, row) => {
 
         return (
-          <Switch
-            checked={row.enabled === 1}
+          <ExtensionGroupEnabledSwitch
+            row={row}
+            onSuccess={() => {
+              const nextEnabled = row.enabled === 1 ? 0 : 1;
+              row.enabled = nextEnabled;
+            }}
           />
         )
       }
@@ -241,11 +283,9 @@ const ExtensionGroup = memo(() => {
       <Alert
         type='info'
         showIcon
-        message={(
-          <div>
-            <div>创建扩展组, 以使得项目能够对接对应的扩展集合。</div>
-          </div>
-        )}
+        className='mb-1'
+        closable
+        message='创建扩展组, 以使得项目能够对接对应的扩展集合。'
       />
 
       <Card>

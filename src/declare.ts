@@ -45,10 +45,10 @@ export type BusInvokerEntries = {
   /**
    * invoker: 获取 store access_token
    */
-  'rx-data-getter-store-access-token': () => Promise<string | null>;
+  'rx-data-getter-store:access-token': () => Promise<string | null>;
 
   /**
    * invoker: 获取 store refresh_token
    */
-  'rx-data-getter-store-refresh-token': () => Promise<string | null>;
+  'rx-data-getter-store:refresh-token': () => Promise<string | null>;
 }

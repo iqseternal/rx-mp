@@ -112,7 +112,7 @@ const RXPLayout = memo(() => {
     <div
       className='w-full h-full flex bg-slate-100 max-w-full overflow-x-auto'
     >
-      <RXPLayoutVerticalNavExternal className='w-max h-full flex flex-row justify-start' />
+      <RXPLayoutVerticalNavExternal className='w-max h-full flex flex-row justify-start shadow-md' />
 
       <section
         className='w-full h-full flex flex-col overflow-x-hidden transition-all duration-300 ease-out'

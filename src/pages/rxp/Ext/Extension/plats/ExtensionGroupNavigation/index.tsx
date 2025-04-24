@@ -1,10 +1,10 @@
-import { App, Layout, Menu } from 'antd';
+import { App, Layout, Menu, Skeleton } from 'antd';
 import { forwardRef, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, type Key } from 'react';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { navCssTransitionClassNames } from './definition';
 import { useAsyncEffect, useShallowReactive } from '@/libs/hooks';
 import { getExtensionGroupListApi, type GetExtensionGroupListApiResponse } from '@/api/modules';
-import { toNil } from '@suey/pkg-utils';
+import { toNil, toWaitPromise } from '@suey/pkg-utils';
 import { classnames } from '@/libs/common';
 import { toBizErrorMsg } from '@/error/code';
 import { useExtensionStatusStore } from '../../store/useExtensionStatusStore';
@@ -19,15 +19,21 @@ export const ExtensionGroupNavigation = memo(forwardRef<HTMLDivElement>(() => {
 
   const [shallowState] = useShallowReactive(() => ({
     extensionGroupList: [] as GetExtensionGroupListApiResponse[],
+    extensionGroupListLoading: false,
   }))
 
   const selectedKeys = useExtensionStatusStore(store => store.selectedKeys);
 
-  useAsyncEffect(async () => {
+  const loadExtensionGroupList = useCallback(async () => {
+    if (shallowState.extensionGroupListLoading) return;
+    shallowState.extensionGroupListLoading = true;
     const [err, res] = await toNil(getExtensionGroupListApi({}));
     if (err) return;
     shallowState.extensionGroupList = res.data.list;
+    shallowState.extensionGroupListLoading = false;
   }, []);
+
+  useAsyncEffect(loadExtensionGroupList, []);
 
   useEffect(() => {
     const search = new URLSearchParams(window.location.search);
@@ -40,34 +46,45 @@ export const ExtensionGroupNavigation = memo(forwardRef<HTMLDivElement>(() => {
   return (
     <Layout.Sider
       theme='light'
-      className='w-full h-full'
+      className='w-full h-full sticky top-0 z-20'
       collapsible={false}
       breakpoint='xl'
     >
+
       <div
-        className='w-full h-full flex flex-col overflow-y-auto overflow-x-hidden'
+        className='w-full h-full px-0.5 flex flex-col overflow-y-hidden overflow-x-hidden'
       >
-        <div
-          className='w-full h-11 flex-none'
+        <Skeleton
+          active
+          loading={shallowState.extensionGroupListLoading}
+          paragraph={{
+            rows: 21,
+            width: 180
+          }}
         >
+          <div
+            className='w-full h-11 flex-none'
+          >
 
-        </div>
+          </div>
 
-        <Menu
-          selectedKeys={selectedKeys}
-          className={classnames(
-            'h-full overflow-y-auto',
-            styles.extensionGroupNavMenu
-          )}
-          items={shallowState.extensionGroupList.map(item => ({
 
-            label: item.extension_group_name,
-            key: item.extension_group_id,
-            onClick: () => {
-              useExtensionStatusStore.setState({ selectedKeys: [`${item.extension_group_id}`] })
-            }
-          }))}
-        />
+          <Menu
+            selectedKeys={selectedKeys}
+            className={classnames(
+              'h-full overflow-y-auto',
+              styles.extensionGroupNavMenu
+            )}
+            items={shallowState.extensionGroupList.map(item => ({
+
+              label: item.extension_group_name,
+              key: item.extension_group_id,
+              onClick: () => {
+                useExtensionStatusStore.setState({ selectedKeys: [`${item.extension_group_id}`] })
+              }
+            }))}
+          />
+        </Skeleton>
       </div>
     </Layout.Sider>
   )

@@ -3,7 +3,7 @@ import { injectReadonlyVariable } from '@/libs/common';
 import { RXTable } from './Table';
 
 export type RXUIType= {} & {
-  Table: typeof RXTable;
+  readonly Table: typeof RXTable;
 };
 
 const RXUI = {} as RXUIType;

@@ -44,7 +44,8 @@ export const RXApp = memo(() => {
             stickyScrollBarBg: 'unset'
           },
           Alert: {
-            defaultPadding: '6px 10px'
+            defaultPadding: '6px 10px',
+            withDescriptionPadding: '6px 10px',
           },
           Modal: {
 
@@ -70,7 +71,7 @@ export const RXApp = memo(() => {
         }
       }}
       alert={{
-        className: 'mb-1'
+
       }}
       popover={{
 

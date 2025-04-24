@@ -49,7 +49,6 @@ export const createExtensionGroupApi = asynced<CreateExtensionGroupApi>(async (p
   })
 })
 
-
 export interface DeleteExtensionGroupApiPayload {
   certificates: {
     extension_group_id: number;
@@ -65,14 +64,14 @@ export const deleteExtensionGroupApi = asynced<DeleteExtensionGroupApi>(async (p
   })
 })
 
-
-
 export interface EditExtensionGroupApiPayload {
   extension_group_id: number;
   extension_group_uuid: string;
 
   extension_group_name?: string;
   description?: string;
+
+  enabled?: 0 | 1;
 }
 
 export type EditExtensionGroupApi = (payload: EditExtensionGroupApiPayload) => RApiPromiseLike<null, null>;

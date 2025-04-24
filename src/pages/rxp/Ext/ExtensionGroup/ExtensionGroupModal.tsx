@@ -157,9 +157,24 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
       {...shallowAttrs}
       title={(
         <span>
-          {shallowStatus.mode === ModalMode.Create && '创建'}
-          {shallowStatus.mode === ModalMode.Edit && '编辑'}
-          {shallowStatus.mode === ModalMode.View && '查看'}
+          {shallowStatus.mode === ModalMode.Create && (
+            <>
+              <IconFont icon='FolderAddOutlined' />
+              &nbsp;创建
+            </>
+          )}
+          {shallowStatus.mode === ModalMode.Edit && (
+            <>
+              <IconFont icon='EditOutlined' />
+              &nbsp;编辑
+            </>
+          )}
+          {shallowStatus.mode === ModalMode.View && (
+            <>
+              <IconFont icon='FolderViewOutlined' />
+              &nbsp;查看
+            </>
+          )}
           扩展组
         </span>
       )}
@@ -182,27 +197,21 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
         showIcon
         type='info'
         className='mb-2'
-        message={(
-          <div>
-            <div>创建扩展组, 以使得项目能够对接对应的扩展集合。</div>
-            <div>1</div>
-          </div>
-        )}
+        closable
+        message='创建扩展组, 以使得项目能够对接对应的扩展集合。'
       />
 
       <Form
         form={form}
-        labelCol={{ span: 6 }}
+        labelCol={{ span: 3 }}
       >
         <Form.Item
-          label='扩展组名称'
+          label='名称'
           required
-          tooltip='assd'
         >
           <div className='w-full flex justify-end items-center flex-nowrap gap-x-1'>
             <Form.Item
               name='extension_group_name'
-              tooltip='最大64字符'
               className='flex-auto'
               noStyle
               rules={[
@@ -222,20 +231,16 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
               />
             </Form.Item>
 
-            <Tooltip
-              title='Useful information'
+            <Typography.Text
+              className='flex-none text-sm text-gray-500'
             >
-              <Typography.Text
-                className='flex-none text-sm text-gray-500'
-              >
-                64字符
-              </Typography.Text>
-            </Tooltip>
+              64字符
+            </Typography.Text>
           </div>
         </Form.Item>
 
         <Form.Item
-          label='扩展组描述'
+          label='描述'
         >
           <div className='w-full flex justify-end items-center flex-nowrap gap-x-1'>
             <Form.Item
@@ -259,15 +264,11 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
               />
             </Form.Item>
 
-            <Tooltip
-              title='Useful information'
+            <Typography.Text
+              className='flex-none text-sm text-gray-500'
             >
-              <Typography.Text
-                className='flex-none text-sm text-gray-500'
-              >
-                255字符
-              </Typography.Text>
-            </Tooltip>
+              255字符
+            </Typography.Text>
           </div>
         </Form.Item>
       </Form>
