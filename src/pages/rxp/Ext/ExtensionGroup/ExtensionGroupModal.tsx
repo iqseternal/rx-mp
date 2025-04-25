@@ -82,7 +82,7 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
     const data = form.getFieldsValue();
 
     shallowStatus.okLoading = true;
-    const [err, res] = await toNil(editExtensionGroupApi({
+    const [err] = await toNil(editExtensionGroupApi({
       extension_group_id: extensionGroupRecord.extension_group_id,
       extension_group_uuid: extensionGroupRecord.extension_group_uuid,
 
