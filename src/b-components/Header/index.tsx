@@ -12,6 +12,9 @@ export interface HeaderProps {
     center?: string;
     right?: string;
   }
+  /**
+   * 方便自定义 Header 三区域的样式
+   */
   styles?: {
     left?: React.CSSProperties;
     center?: React.CSSProperties;

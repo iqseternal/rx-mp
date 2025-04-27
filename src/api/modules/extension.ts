@@ -115,7 +115,6 @@ export const getExtensionListApi = asynced<GetExtensionListApi>(async (payload) 
 })
 
 
-
 export interface CreateExtensionApiPayload {
   extension_group_id: number;
   extension_group_uuid?: string;
@@ -127,6 +126,32 @@ export type CreateExtensionApi = (payload: CreateExtensionApiPayload) => RApiPro
 
 export const createExtensionApi = asynced<CreateExtensionApi>(async (payload) => {
   return rxApiPut('/api/v1/rx/ext/ext', {
+    data: payload
+  })
+})
+
+export interface EditExtensionApiPayload {
+  extension_id: number;
+  extension_uuid: string;
+}
+
+export type EditExtensionApi = (payload: EditExtensionApiPayload) => RApiPromiseLike<null, null>;
+
+export const editExtensionApi = asynced<EditExtensionApi>(async (payload) => {
+  return rxApiPost('/api/v1/rx/ext/ext', {
+    data: payload
+  })
+})
+
+export interface DeleteExtensionApiPayload {
+  extension_id: number;
+  extension_uuid: string;
+}
+
+export type DeleteExtensionApi = (payload: DeleteExtensionApiPayload) => RApiPromiseLike<null, null>;
+
+export const deleteExtensionApi = asynced<DeleteExtensionApi>(async (payload) => {
+  return rxApiDelete('/api/v1/rx/ext/ext', {
     data: payload
   })
 })

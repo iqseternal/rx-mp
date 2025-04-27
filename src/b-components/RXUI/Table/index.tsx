@@ -17,6 +17,9 @@ export interface RXTableProps<RecordType = Record<PropertyKey, any>> extends Tab
 
 }
 
+/**
+ * RXTable: 表格
+ */
 export const RXTable = forwardRef<RXTableInstance, RXTableProps>((props, ref) => {
 
   const tableRef = useRef<TableRef>(null);

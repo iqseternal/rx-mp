@@ -1,0 +1,65 @@
+name: Front-CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  front-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        run:  npm install -g pnpm
+
+      - name: Install dependencies
+        run:  pnpm install
+
+      - name: Run typecheck
+        run: pnpm typecheck
+
+      - name: Run tests
+        run: pnpm test:all
+
+  front-cd:
+    runs-on: ubuntu-latest
+    needs: front-ci  # 依赖 CI 任务完成
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'  # 核心条件
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        run:  npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: setup graduation of website
+        run: pnpm build
+
+      - name: Deploy via rsync of website
+        uses: easingthemes/ssh-deploy@v2.1.6
+        env:
+         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+         ARGS: "-rltgoDzvO"
+         SOURCE: "./dist/"
+         REMOTE_HOST: ${{ secrets.SERVER_IP }}
+         REMOTE_USER: ${{ secrets.SERVER_USER }}
+         TARGET: "/www/wwwroot/rx-mp/dist"
