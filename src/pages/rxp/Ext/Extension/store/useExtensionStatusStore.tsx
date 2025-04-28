@@ -3,8 +3,8 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
 export interface ExtensionStatusStore {
-
-  selectedKeys: string[];
+  selectedExtensionGroupId?: string;
+  selectedExtensionId?: string;
 }
 
 export const useExtensionStatusStore = create<ExtensionStatusStore>()(
@@ -13,7 +13,9 @@ export const useExtensionStatusStore = create<ExtensionStatusStore>()(
     immer(
       (set, get, store) => ({
 
-        selectedKeys: []
+        selectedExtensionGroupId: void 0,
+
+        selectedExtensionId: void 0
       })
     ),
     {

@@ -4,6 +4,8 @@ import { rxUpdateAccessTokenApi } from '../modules/auth';
 import { ckSet } from '@suey/pkg-web';
 import { bus } from '@/libs/bus';
 
+import NProgress from 'nprogress';
+
 /**
  * 请求 hConfig 配置
  */

@@ -1,11 +1,14 @@
 import { NotHasAnyData } from '@/components/Empty/NotHasAnyData';
-import { useNormalState } from '@/libs/hooks';
+import { useAsyncEffect, useNormalState, useShallowReactive } from '@/libs/hooks';
 import { retrieveRoutes } from '@/router';
 import type { ReactNode } from 'react';
 import { memo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTokensStore } from '@/stores';
+import { toNil } from '@suey/pkg-utils';
+import { rxUpdateAccessTokenApi } from '@/api/modules';
 
+import NProgress from 'nprogress';
 import Empty from '@/components/Empty';
 
 export interface ResourceAccessAuthGuardProps {
@@ -22,11 +25,14 @@ export const ResourceAccessAuthGuard = memo<ResourceAccessAuthGuardProps>((props
 
   const [accessToken] = useTokensStore(store => store.accessToken);
 
-  useEffect(() => {
-    const hasAuthed = !!accessToken.value;
-    if (hasAuthed) return;
+  useAsyncEffect(async () => {
+    if (accessToken.value && accessToken.value !== '') return;
+
+    useTokensStore.removeAccessToken();
+    useTokensStore.removeRefreshToken();
 
     const { notRoleRoute } = retrieveRoutes();
+
     navigate(notRoleRoute.meta.fullPath, { replace: true });
   }, [accessToken.value]);
 

@@ -6,6 +6,7 @@ import { bus } from './libs/bus';
 import ReactDOM from 'react-dom/client';
 
 import './discrete';
+import 'nprogress/nprogress.css';
 import '@/styles/index.scss';
 
 const root = document.getElementById('root');

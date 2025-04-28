@@ -84,9 +84,12 @@ export const editExtensionGroupApi = asynced<EditExtensionGroupApi>(async (paylo
 
 export interface GetExtensionListApiPayload {
   extension_group_id?: number;
-  extension_group_uuid?: string;
+
   extension_id?: number;
   extension_name?: string;
+
+  page?: number;
+  page_size?: number;
 }
 
 export interface GetExtensionListApiResponse {
@@ -95,6 +98,7 @@ export interface GetExtensionListApiResponse {
   extension_uuid: string;
   extension_name: string;
   use_version?: null | number;
+  description?: string;
   script_hash?: null | string;
   metadata: Record<string, any>;
   status?: {
@@ -106,7 +110,10 @@ export interface GetExtensionListApiResponse {
   updated_time: string;
 }
 
-export type GetExtensionListApi = (payload: GetExtensionListApiPayload) => RApiPromiseLike<GetExtensionListApiResponse[], null>;
+export type GetExtensionListApi = (payload: GetExtensionListApiPayload) => RApiPromiseLike<{
+  list: GetExtensionListApiResponse[];
+  total: number;
+}, null>;
 
 export const getExtensionListApi = asynced<GetExtensionListApi>(async (payload) => {
   return rxApiGet('/api/v1/rx/ext/get_ext_list', {
@@ -120,6 +127,7 @@ export interface CreateExtensionApiPayload {
   extension_group_uuid?: string;
 
   extension_name: string;
+  description?: string
 }
 
 export type CreateExtensionApi = (payload: CreateExtensionApiPayload) => RApiPromiseLike<null, null>;

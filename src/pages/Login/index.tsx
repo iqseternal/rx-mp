@@ -3,7 +3,6 @@ import { loginApi } from '@/api/modules';
 import { retrieveRoutes } from '@/router';
 import { useTokensStore, useUserStore } from '@/stores';
 import { toNil } from '@suey/pkg-utils';
-import { useAsyncEffect, useRequest } from 'ahooks';
 import { Button, message } from 'antd';
 import { memo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -39,9 +38,7 @@ export const Login = memo(() => {
   }, []);
 
   useEffect(() => {
-    const isAuthed = !!useTokensStore.getAccessToken();
-
-    if (isAuthed) {
+    if (useTokensStore.hasAccessToken()) {
       const { rxpRoute } = retrieveRoutes();
       navigate(rxpRoute.meta.fullPath, { replace: true });
     }

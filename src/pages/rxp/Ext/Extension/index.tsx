@@ -1,5 +1,5 @@
 import { metadata } from '@/libs/rxp-meta';
-import { Alert, App, Button, Card, Space, Switch, Table, type TableColumnsType } from 'antd';
+import { Alert, App, Button, Card, Space, Switch, Table, Tabs, Timeline, type TableColumnsType } from 'antd';
 import { forwardRef, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { ExtensionGroupModalInstance } from '../ExtensionGroup/ExtensionGroupModal';
 import type { TableRef } from 'antd/es/table';
@@ -10,266 +10,119 @@ import { usePaginationAttrs, useTableAttrs } from '@/libs/hooks/useAttrs';
 import { getExtensionListApi } from '@/api/modules';
 import type { GetExtensionListApiResponse } from '@/api/modules';
 import { toNil } from '@suey/pkg-utils';
-import { ClearOutlined, FolderAddOutlined, SearchOutlined } from '@ant-design/icons';
+import Icon, { ClearOutlined, ClockCircleOutlined, FolderAddOutlined, SearchOutlined } from '@ant-design/icons';
 import { toBizErrorMsg } from '@/error/code';
 import { ExtensionModal, type ExtensionModalInstance } from './ExtensionModal';
 import { useExtensionStatusStore } from './store/useExtensionStatusStore';
 import { useSyncNormalState } from '@/libs/hooks/useReactive';
+import { javascript } from '@codemirror/lang-javascript';
+import { vscodeDark } from '@uiw/codemirror-theme-vscode';
+import { EditorView } from '@uiw/react-codemirror';
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';
 import moment from 'moment';
-import ExtensionGroupNavigationWrapper from './plats/ExtensionGroupNavigation';
+import ExtensionNavigationWrapper from './plats/ExtensionNavigation';
 import IconFont from '@/components/IconFont';
 import RXUI from '@/b-components/RXUI';
-
-const ExtensionDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionListApiResponse; onSuccess: () => void; }) => {
-  const { message, modal } = App.useApp();
-
-  const [extensionDeleting, deleteExtension] = useTransition(async () => {
-    // const [err, res] = await toNil(deleteExtensionGroupApi({
-    //   extension_group_id: row.extension_group_id,
-    //   extension_group_uuid: row.extension_group_uuid
-    // }));
-
-    // if (err) {
-    //   message.error(toBizErrorMsg(err.reason, `删除扩展组 ${row.extension_group_name} 失败`));
-    //   shallowState.isDeleting = false;
-    //   return;
-    // }
-
-    message.success(`删除扩展 ${row.extension_name} 成功`);
-    onSuccess && onSuccess();
-  }, []);
-
-  return (
-    <Widget
-      icon='DeleteOutlined'
-      className='text-red-500'
-      tipText='删除扩展'
-      loading={extensionDeleting.pending}
-      onClick={async () => {
-        modal.confirm({
-          title: '是否确认删除?',
-          okText: '删除',
-          cancelText: '取消',
-          okButtonProps: {
-            icon: <IconFont icon='DeleteOutlined' />,
-            type: 'primary',
-            danger: true,
-          },
-          cancelButtonProps: {
-            icon: <IconFont icon='RollbackOutlined' />,
-            type: 'default'
-          },
-          onOk: deleteExtension,
-          onCancel: () => {
-
-          }
-        })
-      }}
-    />
-  )
-})
+import TabPane from 'antd/es/tabs/TabPane';
+import ReactCodeMirror from '@uiw/react-codemirror';
 
 const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
   const navigate = useNavigate();
 
-  const extensionModalRef = useRef<ExtensionModalInstance>(null);
-  const tableRef = useRef<TableRef>(null);
-
   const { message, modal } = App.useApp();
 
-  const [extensionGroupId] = useExtensionStatusStore(store => store.selectedKeys);
+  const [syncStoreState] = useSyncNormalState(() => ({
+    extensionGroupId: useExtensionStatusStore(store => store.selectedExtensionGroupId),
+    extensionId: useExtensionStatusStore(store => store.selectedExtensionId)
+  }))
 
-  const [syncState] = useSyncNormalState(() => {
-    const id = Number(extensionGroupId);
-    const validId = Number.isNaN(id) ? void 0 : id;
 
-    return {
-      extensionGroupId: validId
-    }
-  })
+  useAsyncEffect(async () => {
 
-  const [shallowColumns] = useShallowReactive<TableColumnsType<GetExtensionListApiResponse>>(() => ([
-    {
-      key: 'extension_id',
-      title: 'id',
-      fixed: 'left',
-      width: 80,
-      render: (value, row) => {
-
-        return (
-          <div>
-            {row.extension_id}
-          </div>
-        )
-      }
-    },
-    {
-      key: 'extension_name',
-      title: '扩展名称',
-      width: 250,
-      render: (value, row) => {
-
-        return (
-          <Ellipsis.Popover>
-            {row.extension_name}
-          </Ellipsis.Popover>
-        )
-      }
-    },
-    {
-      key: 'created_time',
-      title: '创建时间',
-      width: 200,
-      render: (value, row) => {
-        const date = moment(row.created_time);
-        if (date.isValid()) return date.format('YYYY/MM/DD hh:mm:ss');
-        return '-';
-      }
-    },
-    {
-      key: 'operator',
-      title: '操作',
-      width: 100,
-      fixed: 'right',
-      render: (value, row) => {
-
-        return (
-          <div
-            className='flex items-center'
-          >
-            <Widget
-              icon='EditOutlined'
-              tipText='编辑'
-              className='text-blue-500'
-              onClick={() => {
-                extensionModalRef.current?.open(ModalMode.Edit, row);
-              }}
-            />
-
-            <ExtensionDeleteWidget
-              row={row}
-              onSuccess={() => loadData()}
-            />
-          </div>
-        )
-      }
-    }
-  ] as const));
-
-  const [shallowTableAttrs] = useTableAttrs<GetExtensionListApiResponse>({
-    rowKey: row => row.extension_id
-  })
-
-  const [shallowPagination] = usePaginationAttrs({
-    onChange: () => loadData()
-  });
-
-  const loadData = useCallback(async () => {
-    if (!syncState.extensionGroupId) {
-      shallowTableAttrs.dataSource = [];
-      shallowPagination.total = 0;
-      return;
-    }
-
-    const extensionGroupId = Number(syncState.extensionGroupId);
-    if (Number.isNaN(extensionGroupId)) {
-      shallowTableAttrs.dataSource = [];
-      shallowPagination.total = 0;
-      return;
-    }
-
-    if (shallowTableAttrs.loading) return;
-    shallowTableAttrs.loading = true;
-
-    const [err, res] = await toNil(getExtensionListApi({
-      extension_group_id: extensionGroupId,
-    }));
-
-    if (err) {
-      message.error(toBizErrorMsg(err.reason, `数据加载失败`));
-      shallowTableAttrs.loading = false;
-      return;
-    }
-
-    shallowTableAttrs.dataSource = res.data ?? [];
-    shallowPagination.total = res.data?.length ?? 0;
-    shallowTableAttrs.loading = false;
   }, []);
 
-  useAsyncEffect(loadData, [syncState.extensionGroupId]);
 
   return (
     <div
       ref={ref}
     >
-      <Alert
-        type='info'
-        showIcon
-        closable
-        className='mb-1'
-        message='创建扩展'
-      />
-
       <Card>
         <div
-          className='w-full flex justify-between mb-2'
+          className='w-full flex justify-between items-center'
         >
-          <Space>
-            <Button
-              type='primary'
-              icon={<FolderAddOutlined />}
-              onClick={() => {
-                extensionModalRef.current?.open();
-              }}
-            >
-              新建
-            </Button>
-          </Space>
+          <div>
+
+          </div>
 
           <Space>
             <Button
-              type='default'
-              icon={<ClearOutlined />}
-            >
-              重置
-            </Button>
-            <Button
               type='primary'
-              icon={<SearchOutlined />}
+              icon={(
+                <IconFont icon='FolderAddOutlined' />
+              )}
+              onClick={() => {
+
+              }}
             >
-              搜索
+              Create
             </Button>
           </Space>
         </div>
 
-        <RXUI.Table
-          {...shallowTableAttrs}
-          pagination={shallowPagination}
-          columns={shallowColumns}
-          ref={tableRef}
-        />
+        <div
+          className='w-full flex justify-between items-center'
+        >
+          <Timeline
 
-        <ExtensionModal
-          ref={extensionModalRef}
-          extensionGroupId={syncState.extensionGroupId}
-          onSuccess={loadData}
-        />
+            items={[
+              {
+                children: 'Create a services site 2015-09-01',
+              },
+              {
+                children: 'Solve initial network problems 2015-09-01',
+              },
+              {
+                dot: <ClockCircleOutlined className="timeline-clock-icon" />,
+                color: 'red',
+                children: 'Technical testing 2015-09-01',
+              },
+              {
+                children: 'Network problems being solved 2015-09-01',
+              },
+            ]}
+          />
+
+          <div
+            className='w-full'
+          >
+            <ReactCodeMirror
+              value={JSON.stringify({ name: 'asdsad', age: 20 }, null, 2)}
+              theme={vscodeDark}
+              className='w-full h-full'
+              basicSetup={{
+                lineNumbers: true,
+              }}
+              extensions={[
+                javascript(),
+                EditorView.lineWrapping
+              ]}
+            />
+          </div>
+        </div>
       </Card>
     </div>
   )
 }))
 
 const ExtensionWrapper = memo(() => {
-  useEffect(() => {
-    // metadata.defineMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionGroupNavigationWrapper);
 
+  useEffect(() => {
+    metadata.defineMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionNavigationWrapper);
 
     return () => {
-
-      // metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionGroupNavigationWrapper);
+      metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionNavigationWrapper);
     }
   }, []);
 

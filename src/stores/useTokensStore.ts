@@ -13,11 +13,14 @@ export interface TokensStore {
 export interface UseTokensStore<Store extends TokensStore> {
   <T>(selector: (store: Store) => T): [{ readonly value: T }];
 
-  getState(): TokensStore;
+  getState: () => TokensStore;
 
   getAccessToken: typeof getAccessToken;
   getRefreshToken: typeof getRefreshToken;
   getTokens: typeof getTokens;
+
+  hasAccessToken: () => boolean;
+  hasRefreshToken: () => boolean;
 
   setAccessToken: typeof setAccessToken;
   setRefreshToken: typeof setRefreshToken;
@@ -37,7 +40,7 @@ const useInnerStore = create<TokensStore>()(
   ),
 );
 
-export const useTokensStore: UseTokensStore<TokensStore> = (selector) => {
+const useTokensStore: UseTokensStore<TokensStore> = (selector) => {
   const value = useInnerStore(selector);
 
   const [normalState] = useNormalState({
@@ -61,6 +64,16 @@ useTokensStore.getTokens = () => {
     accessToken: state.accessToken ?? '',
     refreshToken: state.refreshToken ?? ''
   }
+}
+
+useTokensStore.hasAccessToken = () => {
+  const access_token = useInnerStore.getState().accessToken;
+  return !!access_token && access_token !== '';
+}
+
+useTokensStore.hasRefreshToken = () => {
+  const refresh_token = useInnerStore.getState().refreshToken;
+  return !!refresh_token && refresh_token !== '';
 }
 
 useTokensStore.setAccessToken = (accessToken: string) => {
@@ -108,3 +121,4 @@ useTokensStore.removeTokens = () => {
   return removeTokens();
 }
 
+export { useTokensStore };

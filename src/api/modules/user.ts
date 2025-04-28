@@ -18,7 +18,14 @@ export type LoginResponse = {
 }
 
 export interface LoginApiPayload {
+  /**
+   * 邮箱地址
+   */
   readonly email: string;
+
+  /**
+   * 密码
+   */
   readonly password: string;
 }
 

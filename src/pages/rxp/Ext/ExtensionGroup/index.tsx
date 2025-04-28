@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { ExtensionGroupModal, ExtensionGroupModalInstance } from './ExtensionGroupModal';
 import type { TableRowSelection } from 'antd/es/table/interface';
 import { useSyncNormalState } from '@/libs/hooks/useReactive';
+import { useTokensStore } from '@/stores';
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';

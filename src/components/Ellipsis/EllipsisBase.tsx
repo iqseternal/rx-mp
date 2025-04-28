@@ -81,7 +81,7 @@ export const EllipsisBase = memo((props: EllipsisProps) => {
     }
   } = props;
 
-  if (isUnDef(children)) return <></>;
+  if (isUnDef(children)) return defaultContent;
 
   const [state] = useShallowReactive({
     // 当前内容是否溢出了容器
