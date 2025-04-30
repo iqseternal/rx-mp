@@ -6,7 +6,6 @@ import type { HTMLAttributes, MouseEventHandler, ReactNode, MouseEvent } from 'r
 import { memo, useCallback, useState, useMemo, forwardRef } from 'react';
 
 import IconFont from '@/components/IconFont';
-import styles from './index.module.scss';
 
 export interface WidgetProps extends HTMLAttributes<HTMLDivElement> {
   /**
@@ -117,11 +116,11 @@ export const Widget = memo(forwardRef<HTMLDivElement, WidgetProps>((props, ref) 
   return (
     <div
       className={classnames(
-        'w-max h-max max-w-full max-h-full rounded-md text-[#636c76] overflow-hidden cursor-pointer select-none flex-none drop-shadow-sm flex justify-center items-center',
+        'max-w-full max-h-full rounded-md text-[#636c76] overflow-hidden cursor-pointer select-none flex-none drop-shadow-sm flex justify-center items-center text-base',
         className,
         {
           ['select-none']: loading || disabled,
-          [styles.widgetHasHover]: !loading && hasHoverStyle,
+          ['hover:bg-[rgba(0,0,0,0.1)]']: !loading && hasHoverStyle,
         }
       )}
       ref={ref}
@@ -139,13 +138,13 @@ export const Widget = memo(forwardRef<HTMLDivElement, WidgetProps>((props, ref) 
           onDoubleClick={withDisabledDoubleClick}
           onContextMenu={withDisabledContextMenu}
           className={classnames(
-            'flex items-center justify-center text-[100%] p-[25%] max-w-full max-h-full',
-            'w-7 h-7',
+            'flex items-center justify-center max-w-full max-h-full aspect-square',
+            size === 'base' && 'w-7 h-7 text-[100%]',
+            size === 'large' && 'w-8 h-8 text-[110%]',
+            size === 'small' && 'w-6 h-6 text-[90%]',
             {
               ['pointer-events-none']: loading || disabled
             },
-            size === 'large' && '!w-8 !h-8 text-[110%]',
-            size === 'small' && '!w-6 !h-6 text-[90%]',
             innerClassName
           )}
         >
@@ -153,6 +152,12 @@ export const Widget = memo(forwardRef<HTMLDivElement, WidgetProps>((props, ref) 
             {(icon || iconAttrs.icon) ? (
               <IconFont
                 {...iconAttrs}
+                className={classnames(
+                  'inline-flex overflow-hidden aspect-square items-center justify-center'
+                )}
+                style={{
+                  lineHeight: '1em'
+                }}
                 icon={icon || iconAttrs.icon}
               />
             ) : (

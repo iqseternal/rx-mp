@@ -1,16 +1,17 @@
-import { App, Empty, Layout, Menu, Skeleton } from 'antd';
+import { App, Empty, Layout, Menu, Skeleton, Tooltip } from 'antd';
 import { forwardRef, memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, type Key } from 'react';
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { navCssTransitionClassNames } from './definition';
 import { useAsyncEffect, useShallowReactive, useTransition as useRXTransition } from '@/libs/hooks';
-import { getExtensionGroupListApi, getExtensionListApi, type GetExtensionGroupListApiResponse, type GetExtensionListApiResponse } from '@/api/modules';
-import { toNil, toWaitPromise } from '@suey/pkg-utils';
+import { getExtensionGroupListApi, getExtensionListApi, type GetExtensionGroupListApiResponse, type GetExtensionListApiPayload, type GetExtensionListApiResponse } from '@/api/modules';
+import { isNumber, toNil, toWaitPromise } from '@suey/pkg-utils';
 import { classnames } from '@/libs/common';
 import { toBizErrorMsg } from '@/error/code';
 import { useExtensionStatusStore } from '../../store/useExtensionStatusStore';
 import { useLocation } from 'react-router-dom';
 import { animated, useTransition } from '@react-spring/web';
-import { useSyncNormalState } from '@/libs/hooks/useReactive';
+import { useNormalState, useSyncNormalState } from '@/libs/hooks/useReactive';
+import type { ItemType } from 'antd/es/menu/interface';
 
 import IconFont from '@/components/IconFont';
 import styles from './index.module.scss';
@@ -68,49 +69,86 @@ const ExtensionDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionListA
 export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
   const { message } = App.useApp();
 
+  const [normalState] = useNormalState(() => ({
+    extensionIdMap: new Map<number, GetExtensionListApiResponse>()
+  }))
   const [shallowState] = useShallowReactive(() => ({
     extensionList: [] as GetExtensionListApiResponse[],
     extensionListLoading: false,
   }))
 
   const [syncStoreState] = useSyncNormalState(() => ({
-    selectedExtensionGroupId: useExtensionStatusStore(store => store.selectedExtensionGroupId),
-    selectedExtensionId: useExtensionStatusStore(store => store.selectedExtensionId)
+    selectedExtensionGroup: useExtensionStatusStore(store => store.selectedExtensionGroup),
+    selectedExtension: useExtensionStatusStore(store => store.selectedExtension)
   }))
 
   const loadExtensionList = useCallback(async () => {
+    // 扩展组无效
+    if (!syncStoreState.selectedExtensionGroup) return;
+
     if (shallowState.extensionListLoading) return;
     shallowState.extensionListLoading = true;
 
-    const selectedExtensionGroupId = syncStoreState.selectedExtensionGroupId;
-    const extension_group_id = Number(selectedExtensionGroupId);
+    const extensionGroupId = syncStoreState.selectedExtensionGroup.extension_group_id;
 
     const [err, res] = await toNil(getExtensionListApi({
-      extension_group_id: Number.isNaN(extension_group_id) ? void 0 : extension_group_id,
+      extension_group_id: extensionGroupId,
       page: 1,
       page_size: 10,
     }));
 
     if (err) return;
-    if (selectedExtensionGroupId !== syncStoreState.selectedExtensionGroupId) return;
+
+    if (!syncStoreState.selectedExtensionGroup) return;
+    if (extensionGroupId !== syncStoreState.selectedExtensionGroup.extension_group_id) return;
 
     shallowState.extensionList = res.data.list;
+    for (let i = 0;i < res.data.list.length;i ++) {
+      const extension = res.data.list[i];
+      if (extension) {
+        normalState.extensionIdMap.set(extension.extension_id, extension);
+      }
+    }
+
+    if (!syncStoreState.selectedExtension) {
+      if (res.data.list.length !== 0) {
+        useExtensionStatusStore.setState({
+          selectedExtension: res.data.list[0]
+        })
+      }
+    }
     shallowState.extensionListLoading = false;
+  }, []);
+
+
+  useAsyncEffect(async () => {
+    const search = new URLSearchParams(window.location.search);
+    const extensionGroupId = Number(search.get('extension_group_id'));
+
+    if (Number.isNaN(extensionGroupId)) return;
+
+    if (extensionGroupId) {
+      const [err, res] = await toNil(getExtensionGroupListApi({
+        extension_group_id: extensionGroupId,
+        page_size: 1
+      }))
+
+      if (err) return;
+
+      if (res.data?.list.length > 0) {
+        useExtensionStatusStore.setState({
+          selectedExtensionGroup: res.data.list[0]
+        })
+      }
+    }
   }, []);
 
   useAsyncEffect(async () => {
+    normalState.extensionIdMap.clear();
     shallowState.extensionList = [];
     shallowState.extensionListLoading = false;
     await loadExtensionList();
-  }, [syncStoreState.selectedExtensionGroupId]);
-
-  useEffect(() => {
-    const search = new URLSearchParams(window.location.search);
-    const extensionGroupId = search.get('extension_group_id');
-    if (extensionGroupId) {
-      useExtensionStatusStore.setState({ selectedExtensionGroupId: extensionGroupId })
-    }
-  }, []);
+  }, [syncStoreState.selectedExtensionGroup]);
 
   return (
     <Layout.Sider
@@ -144,21 +182,41 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
                 description='<空>'
               />
             ) : (
-
               <Menu
-                selectedKeys={syncStoreState.selectedExtensionId ? [syncStoreState.selectedExtensionId] : []}
+                selectedKeys={syncStoreState.selectedExtension ? [String(syncStoreState.selectedExtension.extension_id)] : []}
                 className={styles.extensionGroupNavMenu}
-                items={shallowState.extensionList.map(item => ({
+                items={shallowState.extensionList.map((item): ItemType => {
+                  const widgetIcon = item.enabled === 1 ? (isNumber(item.use_version) ? 'CheckCircleOutlined' : 'IssuesCloseOutlined') : 'StopOutlined';
+                  const widgetTipText = item.enabled === 1 ? (isNumber(item.use_version) ? '已启用' : '已启用、但版本无效') : '未启用';
 
-                  label: item.extension_name,
-                  key: item.extension_id,
+                  return {
+                    label: (
+                      <div
+                        className='flex justify-between items-center'
+                      >
+                        <span>{item.extension_name}</span>
 
-                  onClick: () => {
-                    useExtensionStatusStore.setState({ selectedExtensionId: `${item.extension_id}` })
+                        <IconFont
+                          icon='StopTwoTone'
+                        />
+                      </div>
+                    ),
+                    key: item.extension_id,
+                    type: 'item',
+                    icon: (
+                      <IconFont
+                        icon={widgetIcon}
+                      />
+                    )
                   }
-                }))}
-              />
+                })}
+                onSelect={({ selectedKeys, key, keyPath }) => {
+                  const extensionId = Number(key);
+                  if (Number.isNaN(extensionId)) return;
 
+                  useExtensionStatusStore.setState({ selectedExtension: normalState.extensionIdMap.get(extensionId) ?? void 0 });
+                }}
+              />
             )}
           </div>
         </Skeleton>

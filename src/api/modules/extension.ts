@@ -104,6 +104,7 @@ export interface GetExtensionListApiResponse {
   status?: {
     is_deleted?: boolean;
   }
+  enabled: 1 | 0;
   creator_id?: null | number;
   updater_id?: null | number;
   created_time: string;
@@ -161,5 +162,41 @@ export type DeleteExtensionApi = (payload: DeleteExtensionApiPayload) => RApiPro
 export const deleteExtensionApi = asynced<DeleteExtensionApi>(async (payload) => {
   return rxApiDelete('/api/v1/rx/ext/ext', {
     data: payload
+  })
+})
+
+
+export interface GetExtensionVersionListApiPayload {
+  extension_id: number;
+  extension_uuid: string;
+
+  page?: number;
+  page_size?: number;
+}
+
+export interface GetExtensionVersionListApiResponse {
+  extension_id: number;
+  extension_uuid: string;
+  version: string;
+  description?: string;
+  script_hash?: null | string;
+  metadata: Record<string, any>;
+  status: {
+    is_deleted?: boolean;
+  }
+  creator_id?: null | number;
+  updater_id?: null | number;
+  created_time: string;
+  updated_time: string;
+}
+
+export type GetExtensionVersionListApi = (payload: GetExtensionVersionListApiPayload) => RApiPromiseLike<{
+  list: GetExtensionVersionListApiResponse[];
+  total: number;
+}, null>;
+
+export const getExtensionVersionListApi = asynced<GetExtensionVersionListApi>(async (payload) => {
+  return rxApiGet('/api/v1/rx/ext/version', {
+    params: payload
   })
 })

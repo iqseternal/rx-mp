@@ -88,3 +88,19 @@
 .rx-tag {
   margin-inline-end: unset;
 }
+
+
+.rx-menu {
+
+
+  .rx-menu-item {
+    display: flex;
+
+
+    .rx-menu-title-content {
+      width: 100%;
+
+      display: inline-block;
+    }
+  }
+}

@@ -11,7 +11,7 @@ export interface TokensStore {
 }
 
 export interface UseTokensStore<Store extends TokensStore> {
-  <T>(selector: (store: Store) => T): [{ readonly value: T }];
+  <T>(selector: (store: Store) => T): readonly [{ readonly value: T }];
 
   getState: () => TokensStore;
 

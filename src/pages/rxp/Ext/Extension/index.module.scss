@@ -1,0 +1,48 @@
+
+.extensionSwitchAppear {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+.extensionSwitchAppearActive {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.3s ease-out;
+  overflow-y: hidden;
+  height: 100%;
+}
+
+.extensionSwitchAppearDone {
+  opacity: 1;
+}
+
+.extensionSwitchEnter {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+.extensionSwitchEnterActive {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.3s ease-out;
+  overflow-y: hidden;
+}
+
+.extensionSwitchEnterDone {
+  opacity: 1;
+}
+
+.extensionSwitchExit {
+  transform: translateX(0);
+  opacity: 1;
+}
+.extensionSwitchExitActive {
+  transform: translateX(10px);
+  transition: all 0.2s ease-out;
+  opacity: 0;
+  //overflow-y: hidden;
+}
+
+.extensionSwitchExitDone {
+  opacity: 1;
+}

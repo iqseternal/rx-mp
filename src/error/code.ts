@@ -12,6 +12,7 @@ export enum Biz {
   InternalServerError = 500,
   NotImplemented = 501,
   BadGateway = 502,
+  ServiceUnavailable = 503,
 
   BearerAuthorizationInvalid = -1001,
   ParameterError = -1003,
@@ -23,12 +24,21 @@ export enum Biz {
   RefreshTokenExpired = -2006,
 
   UserNotHasAdminRole = 1001,
-  UserNotExists = 1010
+  UserNotExists = 1010,
 }
 
 export const BizMessage = {
 
-  [Biz.ParameterError]: '参数错误'
+  [Biz.MethodNotAllowed]: '方法不允许',
+
+  [Biz.InternalServerError]: '内部错误',
+  [Biz.NotImplemented]: '服务未实现',
+  [Biz.BadGateway]: '网关错误',
+  [Biz.ServiceUnavailable]: '服务不可用',
+
+
+  [Biz.ParameterError]: '参数错误',
+
 
 } as const;
 
