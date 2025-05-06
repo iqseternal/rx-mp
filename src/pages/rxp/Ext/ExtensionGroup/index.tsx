@@ -1,124 +1,32 @@
-import { useShallowReactive, useTransition } from '@/libs/hooks';
+import { useShallowReactive } from '@/libs/hooks';
 import { usePaginationAttrs, useTableAttrs } from '@/libs/hooks/useAttrs';
 import { useAsyncEffect } from 'ahooks';
 import type { TableColumnsType } from 'antd';
-import { Alert, App, Button, Card, Form, Input, InputNumber, Space, Switch, Row } from 'antd';
-import { memo, useCallback, useEffect, useRef } from 'react';
-import { editExtensionGroupApi, getExtensionGroupListApi } from '@/api/modules';
-import { GetExtensionGroupListApiResponse, deleteExtensionGroupApi } from '@/api/modules';
+import { Alert, App, Button, Card, Form, Input, InputNumber, Space } from 'antd';
+import { memo, useCallback, useRef } from 'react';
+import { getExtensionGroupListApi } from '@/api/modules';
+import { GetExtensionGroupListApiStruct } from '@/api/modules';
 import { ClearOutlined, FolderAddOutlined, SearchOutlined } from '@ant-design/icons';
 import { toNil } from '@suey/pkg-utils';
 import { toBizErrorMsg } from '@/error/code';
 import { ModalMode } from '@/constants';
 import { useNavigate } from 'react-router-dom';
-import { ExtensionGroupModal, ExtensionGroupModalInstance } from './ExtensionGroupModal';
+import { ExtensionGroupModal, ExtensionGroupModalInstance } from './mods/ExtensionGroupModal';
 import type { TableRowSelection } from 'antd/es/table/interface';
-import { useSyncNormalState } from '@/libs/hooks/useReactive';
-import { useTokensStore } from '@/stores';
+
+import { ExtensionGroupDeleteWidget } from './mods/ExtensionGroupDeleteWidget';
+import { ExtensionGroupEnabledSwitch } from './mods/ExtensionGroupEnabledSwitch';
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';
-import IconFont from '@/components/IconFont';
 import moment from 'moment';
 import RXContainer from '@/b-components/RXContainer';
 import RXUI from '@/b-components/RXUI';
-
-const ExtensionGroupDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionGroupListApiResponse; onSuccess: () => void; }) => {
-  const { message, modal } = App.useApp();
-
-  const [syncPropsState] = useSyncNormalState(() => ({
-    onSuccess: onSuccess
-  }))
-
-  const [extensionGroupDeleting, deleteExtensionGroup] = useTransition(async () => {
-    const [err, res] = await toNil(deleteExtensionGroupApi({
-      certificates: [
-        {
-          extension_group_id: row.extension_group_id,
-          extension_group_uuid: row.extension_group_uuid
-        }
-      ]
-    }));
-
-    if (err) {
-      message.error(toBizErrorMsg(err.reason, `删除扩展组 ${row.extension_group_name} 失败`));
-      return;
-    }
-
-    syncPropsState.onSuccess && syncPropsState.onSuccess();
-  }, []);
-
-  return (
-    <Widget
-      icon='DeleteOutlined'
-      className='text-red-500'
-      tipText='删除扩展组'
-      loading={extensionGroupDeleting.pending}
-      onClick={async () => {
-        modal.confirm({
-          title: `是否确认删除扩展组 ${row.extension_group_name} ?`,
-          okText: '删除',
-          cancelText: '取消',
-          okButtonProps: {
-            icon: <IconFont icon='DeleteOutlined' />,
-            type: 'primary',
-            danger: true,
-          },
-          cancelButtonProps: {
-            icon: <IconFont icon='RollbackOutlined' />,
-            type: 'default'
-          },
-          onOk: deleteExtensionGroup,
-          onCancel: () => {
-
-          }
-        })
-      }}
-    />
-  )
-})
 
 interface ExtensionGroupSearchForm {
   extension_group_id?: number;
   extension_group_name?: string;
 }
-
-const ExtensionGroupEnabledSwitch = memo(({ row, onSuccess }: { row: GetExtensionGroupListApiResponse; onSuccess: () => void; }) => {
-  const { message, modal } = App.useApp();
-
-  const [syncPropsState] = useSyncNormalState(() => ({
-    onSuccess: onSuccess
-  }))
-
-  const [extensionGroupEnabledChanging, changeExtensionGroupEnabled] = useTransition(async () => {
-    const enabled = row.enabled;
-
-    const nextEnabled = enabled === 1 ? 0 : 1;
-    const [err, res] = await toNil(editExtensionGroupApi({
-      extension_group_id: row.extension_group_id,
-      extension_group_uuid: row.extension_group_uuid,
-      enabled: nextEnabled
-    }))
-
-    if (err) {
-      message.error(toBizErrorMsg(err.reason, '扩展组切换启用状态失败'));
-      return;
-    }
-
-    syncPropsState.onSuccess && syncPropsState.onSuccess();
-  }, []);
-
-  return (
-
-    <Switch
-      checked={row.enabled === 1}
-      loading={extensionGroupEnabledChanging.pending}
-      onClick={changeExtensionGroupEnabled}
-    >
-
-    </Switch>
-  )
-})
 
 const ExtensionGroup = memo(() => {
   const navigate = useNavigate();
@@ -127,7 +35,7 @@ const ExtensionGroup = memo(() => {
 
   const { message, modal } = App.useApp();
 
-  const [shallowColumns] = useShallowReactive<TableColumnsType<GetExtensionGroupListApiResponse>>(() => ([
+  const [shallowColumns] = useShallowReactive<TableColumnsType<GetExtensionGroupListApiStruct>>(() => ([
     {
       key: 'extension_group_id',
       title: 'id',
@@ -237,7 +145,7 @@ const ExtensionGroup = memo(() => {
 
   const [searchForm] = Form.useForm<ExtensionGroupSearchForm>();
 
-  const [shallowTableAttrs] = useTableAttrs<GetExtensionGroupListApiResponse>({
+  const [shallowTableAttrs] = useTableAttrs<GetExtensionGroupListApiStruct>({
     rowKey: row => row.extension_group_id
   })
 
@@ -245,7 +153,7 @@ const ExtensionGroup = memo(() => {
     onChange: (page, pageSize) => loadData()
   });
 
-  const [shallowRowSelection] = useShallowReactive<TableRowSelection<GetExtensionGroupListApiResponse>>(() => ({
+  const [shallowRowSelection] = useShallowReactive<TableRowSelection<GetExtensionGroupListApiStruct>>(() => ({
     selectedRowKeys: [],
     onChange(selectedRowKeys, selectedRows, info) {
       shallowRowSelection.selectedRowKeys = selectedRowKeys;

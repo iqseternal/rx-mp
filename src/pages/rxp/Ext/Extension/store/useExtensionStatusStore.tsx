@@ -2,12 +2,12 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
-import type { GetExtensionGroupListApiResponse, GetExtensionListApiResponse } from '@/api/modules';
+import type { GetExtensionGroupListApiStruct, GetExtensionListApiStruct } from '@/api/modules';
 
 export interface ExtensionStatusStore {
-  selectedExtensionGroup?: GetExtensionGroupListApiResponse;
+  selectedExtensionGroup?: GetExtensionGroupListApiStruct;
 
-  selectedExtension?: GetExtensionListApiResponse;
+  selectedExtension?: GetExtensionListApiStruct;
 }
 
 export const useExtensionStatusStore = create<ExtensionStatusStore>()(

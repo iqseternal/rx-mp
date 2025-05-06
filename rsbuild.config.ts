@@ -20,7 +20,7 @@ export default defineConfig({
     alias: defineAlias(__dirname, tsconfigJson.compilerOptions.paths),
   },
   server: {
-    port: 8000,
+    port: 9000,
     proxy: defineProxy()
   },
   plugins: [

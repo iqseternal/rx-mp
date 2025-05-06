@@ -3,7 +3,8 @@ import { forwardRef, memo, useCallback, useEffect, useLayoutEffect, useMemo, use
 import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import { navCssTransitionClassNames } from './definition';
 import { useAsyncEffect, useShallowReactive, useTransition as useRXTransition } from '@/libs/hooks';
-import { getExtensionGroupListApi, getExtensionListApi, type GetExtensionGroupListApiResponse, type GetExtensionListApiPayload, type GetExtensionListApiResponse } from '@/api/modules';
+import { getExtensionGroupListApi, getExtensionListApi } from '@/api/modules';
+import type { GetExtensionListApiStruct } from '@/api/modules';
 import { isNumber, toNil, toWaitPromise } from '@suey/pkg-utils';
 import { classnames } from '@/libs/common';
 import { toBizErrorMsg } from '@/error/code';
@@ -17,7 +18,7 @@ import IconFont from '@/components/IconFont';
 import styles from './index.module.scss';
 import Widget from '@/components/Widget';
 
-const ExtensionDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionListApiResponse; onSuccess: () => void; }) => {
+const ExtensionDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionListApiStruct; onSuccess: () => void; }) => {
   const { message, modal } = App.useApp();
 
   const [extensionDeleting, deleteExtension] = useRXTransition(async () => {
@@ -70,10 +71,10 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
   const { message } = App.useApp();
 
   const [normalState] = useNormalState(() => ({
-    extensionIdMap: new Map<number, GetExtensionListApiResponse>()
+    extensionIdMap: new Map<number, GetExtensionListApiStruct>()
   }))
   const [shallowState] = useShallowReactive(() => ({
-    extensionList: [] as GetExtensionListApiResponse[],
+    extensionList: [] as GetExtensionListApiStruct[],
     extensionListLoading: false,
   }))
 

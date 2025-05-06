@@ -10,7 +10,7 @@ export interface GetExtensionGroupListApiPayload {
   page_size?: number;
 }
 
-export interface GetExtensionGroupListApiResponse {
+export interface GetExtensionGroupListApiStruct {
   extension_group_id: number;
   extension_group_uuid: string;
   extension_group_name: string;
@@ -25,10 +25,12 @@ export interface GetExtensionGroupListApiResponse {
   updated_time: string;
 }
 
-export type GetExtensionGroupListApi = (payload: GetExtensionGroupListApiPayload) => RApiPromiseLike<{
-  list: GetExtensionGroupListApiResponse[];
+export interface GetExtensionGroupListApiResponse {
+  list: GetExtensionGroupListApiStruct[];
   total: number;
-}, null>;
+}
+
+export type GetExtensionGroupListApi = (payload: GetExtensionGroupListApiPayload) => RApiPromiseLike<GetExtensionGroupListApiResponse, null>;
 
 export const getExtensionGroupListApi = asynced<GetExtensionGroupListApi>(async (payload) => {
   return rxApiGet('/api/v1/rx/ext/get_ext_group_list', {
@@ -92,7 +94,7 @@ export interface GetExtensionListApiPayload {
   page_size?: number;
 }
 
-export interface GetExtensionListApiResponse {
+export interface GetExtensionListApiStruct {
   extension_id: number;
   extension_group_id: number;
   extension_uuid: string;
@@ -111,10 +113,12 @@ export interface GetExtensionListApiResponse {
   updated_time: string;
 }
 
-export type GetExtensionListApi = (payload: GetExtensionListApiPayload) => RApiPromiseLike<{
-  list: GetExtensionListApiResponse[];
+export interface GetExtensionListApiResponse {
+  list: GetExtensionListApiStruct[];
   total: number;
-}, null>;
+}
+
+export type GetExtensionListApi = (payload: GetExtensionListApiPayload) => RApiPromiseLike<GetExtensionListApiResponse, null>;
 
 export const getExtensionListApi = asynced<GetExtensionListApi>(async (payload) => {
   return rxApiGet('/api/v1/rx/ext/get_ext_list', {
@@ -174,7 +178,7 @@ export interface GetExtensionVersionListApiPayload {
   page_size?: number;
 }
 
-export interface GetExtensionVersionListApiResponse {
+export interface GetExtensionVersionListApiStruct {
   extension_id: number;
   extension_uuid: string;
   version: string;
@@ -190,13 +194,19 @@ export interface GetExtensionVersionListApiResponse {
   updated_time: string;
 }
 
-export type GetExtensionVersionListApi = (payload: GetExtensionVersionListApiPayload) => RApiPromiseLike<{
-  list: GetExtensionVersionListApiResponse[];
+export interface GetExtensionVersionListApiResponse {
+  list: GetExtensionVersionListApiStruct[];
   total: number;
-}, null>;
+}
+
+export type GetExtensionVersionListApi = (payload: GetExtensionVersionListApiPayload) => RApiPromiseLike<GetExtensionVersionListApiResponse, null>;
 
 export const getExtensionVersionListApi = asynced<GetExtensionVersionListApi>(async (payload) => {
   return rxApiGet('/api/v1/rx/ext/version', {
     params: payload
   })
 })
+
+
+
+

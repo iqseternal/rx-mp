@@ -2,7 +2,8 @@ import { ModalMode } from '@/constants';
 import { useNormalState, useShallowReactive } from '@/libs/hooks';
 import { Alert, App, Form, Input, Modal, Space, Tooltip, Typography, type ModalProps } from 'antd';
 import { forwardRef, memo, useCallback, useEffect, useImperativeHandle } from 'react';
-import { createExtensionGroupApi, editExtensionGroupApi, type GetExtensionGroupListApiResponse } from '@/api/modules';
+import { createExtensionGroupApi, editExtensionGroupApi } from '@/api/modules';
+import type { GetExtensionGroupListApiStruct } from '@/api/modules';
 import { toBizErrorMsg } from '@/error/code';
 import { toNil } from '@suey/pkg-utils';
 import { useSyncNormalState } from '@/libs/hooks/useReactive';
@@ -16,7 +17,7 @@ export interface ExtensionGroupModalProps {
 }
 
 export interface ExtensionGroupModalInstance {
-  open: (mode?: ModalMode, initData?: GetExtensionGroupListApiResponse) => void;
+  open: (mode?: ModalMode, initData?: GetExtensionGroupListApiStruct) => void;
   close: () => void;
 }
 
@@ -45,7 +46,7 @@ export const ExtensionGroupModal = memo(forwardRef<ExtensionGroupModalInstance, 
   }))
 
   const [normalState] = useNormalState(() => ({
-    extensionGroupRecord: void 0 as (GetExtensionGroupListApiResponse | undefined)
+    extensionGroupRecord: void 0 as (GetExtensionGroupListApiStruct | undefined)
   }))
 
   const [form] = Form.useForm<ExtensionGroupModalFormRecord>();

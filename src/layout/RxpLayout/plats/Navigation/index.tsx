@@ -27,26 +27,29 @@ export const Navigation = memo(forwardRef<HTMLDivElement>((props, ref) => {
     openKeys: [] as string[]
   }))
 
-  const revertRouteMenus = useCallback((routes: RouteConfig[]) => {
-    return routes.map(route => {
-      return {
-        key: route.meta?.fullPath,
-        label: route.meta?.title || route.name,
-        icon: (
-          <div>
-            {route.meta?.icon && <IconFont icon={route.meta.icon} />}
-          </div>
-        ),
-        children: (
-          (route.children && route.children.length !== 0)
-            ? revertRouteMenus(route.children)
-            : void 0
-        )
-      }
-    })
-  }, []);
+  const menus = useMemo<MenuItemType[]>(() => {
 
-  const menus = useMemo<MenuItemType[]>(() => revertRouteMenus(rxpRoute.children), [rxpRoute]);
+    const revertRouteMenus = (routes: RouteConfig[]) => {
+      return routes.map(route => {
+        return {
+          key: route.meta?.fullPath,
+          label: route.meta?.title || route.name,
+          icon: (
+            <div>
+              {route.meta?.icon && <IconFont icon={route.meta.icon} />}
+            </div>
+          ),
+          children: (
+            (route.children && route.children.length !== 0)
+              ? revertRouteMenus(route.children)
+              : void 0
+          )
+        }
+      })
+    }
+
+    return revertRouteMenus(rxpRoute.children);
+  }, [rxpRoute]);
 
   const autoSetOpenKeys = useCallback(() => {
     if (!presentRoute.current) return;

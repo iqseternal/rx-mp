@@ -1,18 +1,17 @@
 import { metadata } from '@/libs/rxp-meta';
 import { Alert, App, Button, Card, Space, Switch, Table, Tabs, Timeline, type TableColumnsType } from 'antd';
 import { forwardRef, memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import type { ExtensionGroupModalInstance } from '../ExtensionGroup/ExtensionGroupModal';
+import type { ExtensionGroupModalInstance } from '../ExtensionGroup/mods/ExtensionGroupModal';
 import type { TableRef } from 'antd/es/table';
 import { ModalMode } from '@/constants';
 import { useNavigate } from 'react-router-dom';
 import { useAsyncEffect, useShallowReactive, useTransition } from '@/libs/hooks';
 import { usePaginationAttrs, useTableAttrs } from '@/libs/hooks/useAttrs';
 import { getExtensionListApi, getExtensionVersionListApi } from '@/api/modules';
-import type { GetExtensionListApiResponse, GetExtensionVersionListApiResponse } from '@/api/modules';
+import type { GetExtensionListApiResponse, GetExtensionVersionListApiStruct } from '@/api/modules';
 import { toNil } from '@suey/pkg-utils';
 import Icon, { ClearOutlined, ClockCircleOutlined, FolderAddOutlined, SearchOutlined } from '@ant-design/icons';
 import { toBizErrorMsg } from '@/error/code';
-import { ExtensionModal, type ExtensionModalInstance } from './ExtensionModal';
 import { useExtensionStatusStore } from './store/useExtensionStatusStore';
 import { useSyncNormalState } from '@/libs/hooks/useReactive';
 import { javascript } from '@codemirror/lang-javascript';
@@ -20,6 +19,8 @@ import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { EditorView } from '@uiw/react-codemirror';
 import { extensionSwitchCssTransitionClassNames } from './definition';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
+
+import { ExtensionModal } from './mods/ExtensionModal';
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';
@@ -41,7 +42,7 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
   }))
 
   const [shallowState] = useShallowReactive(() => ({
-    extensionVersionList: [] as GetExtensionVersionListApiResponse[],
+    extensionVersionList: [] as GetExtensionVersionListApiStruct[],
     extensionVersionListLoading: false,
   }))
 
