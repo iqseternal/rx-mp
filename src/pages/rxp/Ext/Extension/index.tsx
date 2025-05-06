@@ -13,7 +13,7 @@ import { toNil } from '@suey/pkg-utils';
 import Icon, { ClearOutlined, ClockCircleOutlined, FolderAddOutlined, SearchOutlined } from '@ant-design/icons';
 import { toBizErrorMsg } from '@/error/code';
 import { useExtensionStatusStore } from './store/useExtensionStatusStore';
-import { useSyncNormalState } from '@/libs/hooks/useReactive';
+import { useSyncState } from '@/libs/hooks/useReactive';
 import { javascript } from '@codemirror/lang-javascript';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { EditorView } from '@uiw/react-codemirror';
@@ -36,7 +36,7 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
 
   const { message, modal } = App.useApp();
 
-  const [syncStoreState] = useSyncNormalState(() => ({
+  const [syncStoreState] = useSyncState(() => ({
     selectedExtensionGroup: useExtensionStatusStore(store => store.selectedExtensionGroup),
     selectedExtension: useExtensionStatusStore(store => store.selectedExtension)
   }))
@@ -195,7 +195,7 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
 const ExtensionWrapper = memo(() => {
   const extensionContainerRef = useRef<HTMLDivElement>(null);
 
-  const [syncStoreState] = useSyncNormalState(() => ({
+  const [syncStoreState] = useSyncState(() => ({
     selectedExtensionGroup: useExtensionStatusStore(store => store.selectedExtensionGroup),
     selectedExtension: useExtensionStatusStore(store => store.selectedExtension)
   }))

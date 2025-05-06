@@ -24,7 +24,7 @@ export function useNormalState<S extends {}>(initValue: S | (() => S)) {
 /**
  * 每次组件刷新都会执行初始化函数的 state
  */
-export function useSyncNormalState<S extends {}>(initValue: () => S) {
+export function useSyncState<S extends {}>(initValue: () => S): readonly [Readonly<S>] {
   const initState = initValue();
 
   const [state] = useNormalState(() => initState);
@@ -95,7 +95,7 @@ export function useShallowReactive<S extends object>(initValue: S | (() => S)) {
 
   const isInitStateFunction = useMemo(() => (typeof initValue === 'function'), []);
 
-  const [syncNormalState] = useSyncNormalState(() => ({
+  const [syncNormalState] = useSyncState(() => ({
     initValue: initValue
   }))
 

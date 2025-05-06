@@ -5,12 +5,21 @@ import { editExtensionGroupApi, getExtensionGroupListApi } from '@/api/modules';
 import { GetExtensionGroupListApiStruct, deleteExtensionGroupApi } from '@/api/modules';
 import { toNil } from '@suey/pkg-utils';
 import { toBizErrorMsg } from '@/error/code';
-import { useSyncNormalState } from '@/libs/hooks/useReactive';
+import { useSyncState } from '@/libs/hooks/useReactive';
 
-export const ExtensionGroupEnabledSwitch = memo(({ row, onSuccess }: { row: GetExtensionGroupListApiStruct; onSuccess: () => void; }) => {
+export interface ExtensionGroupEnabledSwitchProps {
+  row: GetExtensionGroupListApiStruct;
+  /**
+   * 切换成功
+   */
+  onSuccess: () => void;
+}
+
+export const ExtensionGroupEnabledSwitch = memo<ExtensionGroupEnabledSwitchProps>((props) => {
   const { message, modal } = App.useApp();
+  const { row, onSuccess } = props;
 
-  const [syncPropsState] = useSyncNormalState(() => ({
+  const [syncPropsState] = useSyncState(() => ({
     onSuccess: onSuccess
   }))
 
@@ -18,6 +27,7 @@ export const ExtensionGroupEnabledSwitch = memo(({ row, onSuccess }: { row: GetE
     const enabled = row.enabled;
 
     const nextEnabled = enabled === 1 ? 0 : 1;
+
     const [err, res] = await toNil(editExtensionGroupApi({
       extension_group_id: row.extension_group_id,
       extension_group_uuid: row.extension_group_uuid,

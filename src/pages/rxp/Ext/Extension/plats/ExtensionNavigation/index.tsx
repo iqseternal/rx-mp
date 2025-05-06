@@ -11,14 +11,23 @@ import { toBizErrorMsg } from '@/error/code';
 import { useExtensionStatusStore } from '../../store/useExtensionStatusStore';
 import { useLocation } from 'react-router-dom';
 import { animated, useTransition } from '@react-spring/web';
-import { useNormalState, useSyncNormalState } from '@/libs/hooks/useReactive';
+import { useNormalState, useSyncState } from '@/libs/hooks/useReactive';
 import type { ItemType } from 'antd/es/menu/interface';
 
 import IconFont from '@/components/IconFont';
 import styles from './index.module.scss';
 import Widget from '@/components/Widget';
 
-const ExtensionDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionListApiStruct; onSuccess: () => void; }) => {
+interface ExtensionDeleteWidgetProps {
+  row: GetExtensionListApiStruct;
+  /**
+   * 删除成功
+   */
+  onSuccess?: () => void;
+}
+
+const ExtensionDeleteWidget = memo<ExtensionDeleteWidgetProps>((props) => {
+  const { row, onSuccess } = props;
   const { message, modal } = App.useApp();
 
   const [extensionDeleting, deleteExtension] = useRXTransition(async () => {
@@ -67,6 +76,63 @@ const ExtensionDeleteWidget = memo(({ row, onSuccess }: { row: GetExtensionListA
   )
 })
 
+interface ExtensionMenuIconProps {
+  row: GetExtensionListApiStruct;
+}
+
+const ExtensionMenuIcon = memo<ExtensionMenuIconProps>((props) => {
+  const { row } = props;
+
+  const widgetIcon = row.enabled === 1 ? (isNumber(row.use_version) ? 'CheckCircleOutlined' : 'IssuesCloseOutlined') : 'StopOutlined';
+  const widgetTipText = row.enabled === 1 ? (isNumber(row.use_version) ? '已启用' : '已启用、但版本无效') : '未启用';
+
+  return (
+    <IconFont
+      icon={widgetIcon}
+    />
+  )
+})
+
+interface ExtensionExtraProps {
+  row: GetExtensionListApiStruct;
+  className?: string;
+}
+
+const ExtensionExtra = memo<ExtensionExtraProps>((props) => {
+  const { row, className } = props;
+
+  return (
+    <div
+      className={className}
+    >
+      <IconFont
+        icon='StopTwoTone'
+      />
+    </div>
+  )
+})
+
+interface ExtensionMenuLabelProps {
+  row: GetExtensionListApiStruct;
+}
+
+const ExtensionMenuLabel = memo<ExtensionMenuLabelProps>((props) => {
+  const { row } = props;
+
+  return (
+    <div
+      className='flex justify-between items-center'
+    >
+      <span>{row.extension_name}</span>
+
+      <ExtensionExtra
+        row={row}
+        className='hidden'
+      />
+    </div>
+  )
+})
+
 export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
   const { message } = App.useApp();
 
@@ -78,7 +144,7 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
     extensionListLoading: false,
   }))
 
-  const [syncStoreState] = useSyncNormalState(() => ({
+  const [syncStoreState] = useSyncState(() => ({
     selectedExtensionGroup: useExtensionStatusStore(store => store.selectedExtensionGroup),
     selectedExtension: useExtensionStatusStore(store => store.selectedExtension)
   }))
@@ -104,7 +170,7 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
     if (extensionGroupId !== syncStoreState.selectedExtensionGroup.extension_group_id) return;
 
     shallowState.extensionList = res.data.list;
-    for (let i = 0;i < res.data.list.length;i ++) {
+    for (let i = 0; i < res.data.list.length; i++) {
       const extension = res.data.list[i];
       if (extension) {
         normalState.extensionIdMap.set(extension.extension_id, extension);
@@ -187,28 +253,12 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
                 selectedKeys={syncStoreState.selectedExtension ? [String(syncStoreState.selectedExtension.extension_id)] : []}
                 className={styles.extensionGroupNavMenu}
                 items={shallowState.extensionList.map((item): ItemType => {
-                  const widgetIcon = item.enabled === 1 ? (isNumber(item.use_version) ? 'CheckCircleOutlined' : 'IssuesCloseOutlined') : 'StopOutlined';
-                  const widgetTipText = item.enabled === 1 ? (isNumber(item.use_version) ? '已启用' : '已启用、但版本无效') : '未启用';
 
                   return {
-                    label: (
-                      <div
-                        className='flex justify-between items-center'
-                      >
-                        <span>{item.extension_name}</span>
-
-                        <IconFont
-                          icon='StopTwoTone'
-                        />
-                      </div>
-                    ),
+                    label: (<ExtensionMenuLabel row={item} />),
                     key: item.extension_id,
                     type: 'item',
-                    icon: (
-                      <IconFont
-                        icon={widgetIcon}
-                      />
-                    )
+                    icon: (<ExtensionMenuIcon row={item} />)
                   }
                 })}
                 onSelect={({ selectedKeys, key, keyPath }) => {

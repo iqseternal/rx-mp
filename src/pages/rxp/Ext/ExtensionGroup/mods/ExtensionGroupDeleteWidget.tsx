@@ -4,7 +4,7 @@ import { memo, useCallback, useEffect, useRef } from 'react';
 import { GetExtensionGroupListApiStruct, deleteExtensionGroupApi } from '@/api/modules';
 import { toNil } from '@suey/pkg-utils';
 import { toBizErrorMsg } from '@/error/code';
-import { useSyncNormalState } from '@/libs/hooks/useReactive';
+import { useSyncState } from '@/libs/hooks/useReactive';
 
 import Widget from '@/components/Widget';
 import IconFont from '@/components/IconFont';
@@ -20,7 +20,7 @@ export interface ExtensionGroupDeleteWidgetProps {
 export const ExtensionGroupDeleteWidget = memo<ExtensionGroupDeleteWidgetProps>(({ row, onSuccess }) => {
   const { message, modal } = App.useApp();
 
-  const [syncPropsState] = useSyncNormalState(() => ({
+  const [syncPropsState] = useSyncState(() => ({
     onSuccess: onSuccess
   }))
 

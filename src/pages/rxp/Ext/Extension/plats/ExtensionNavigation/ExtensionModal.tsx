@@ -6,7 +6,7 @@ import { createExtensionApi } from '@/api/modules';
 import type { GetExtensionListApiStruct } from '@/api/modules';
 import { toBizErrorMsg } from '@/error/code';
 import { toNil } from '@suey/pkg-utils';
-import { useSyncNormalState } from '@/libs/hooks/useReactive';
+import { useSyncState } from '@/libs/hooks/useReactive';
 
 import IconFont from '@/components/IconFont';
 
@@ -32,7 +32,7 @@ export const ExtensionModal = memo(forwardRef<ExtensionModalInstance, ExtensionM
 
   const { message } = App.useApp();
 
-  const [syncPropsState] = useSyncNormalState(() => ({
+  const [syncPropsState] = useSyncState(() => ({
     onSuccess: onSuccess,
     extensionGroupId: extensionGroupId
   }))
