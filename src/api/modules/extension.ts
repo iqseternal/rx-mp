@@ -202,11 +202,41 @@ export interface GetExtensionVersionListApiResponse {
 export type GetExtensionVersionListApi = (payload: GetExtensionVersionListApiPayload) => RApiPromiseLike<GetExtensionVersionListApiResponse, null>;
 
 export const getExtensionVersionListApi = asynced<GetExtensionVersionListApi>(async (payload) => {
-  return rxApiGet('/api/v1/rx/ext/version', {
+  return rxApiGet('/api/v1/rx/ext/get_ext_version_list', {
     params: payload
   })
 })
 
 
+export interface CreateExtensionVersionApiPayload {
+  extension_id: number;
+  extension_uuid: string;
+
+  script_content: string;
+  description?: string;
+}
 
 
+export interface CreateExtensionVersionApiStruct {
+  extension_version_id: number;
+  extension_id: number;
+  script_content: string;
+  version: number;
+  description?: string;
+
+  creator_id: number;
+  updater_id?: number;
+
+  created_time?: number;
+  updated_time?: number;
+}
+
+export type CreateExtensionVersionApiResponse = CreateExtensionVersionApiStruct;
+
+export type CreateExtensionVersionApi = (payload: CreateExtensionVersionApiPayload) => RApiPromiseLike<CreateExtensionVersionApiResponse, null>;
+
+export const createExtensionVersionApi = asynced<CreateExtensionVersionApi>(async (payload) => {
+  return rxApiPut('/api/v1/rx/ext/ext/version', {
+    data: payload
+  })
+})

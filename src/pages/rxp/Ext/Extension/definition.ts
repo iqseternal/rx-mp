@@ -15,3 +15,4 @@ export const extensionSwitchCssTransitionClassNames: CSSTransitionClassNames = {
   exitDone: styles.extensionSwitchExitDone
 } as const;
 
+

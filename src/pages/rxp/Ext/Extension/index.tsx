@@ -21,6 +21,8 @@ import { extensionSwitchCssTransitionClassNames } from './definition';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 
 import { ExtensionModal } from './mods/ExtensionModal';
+import type { ExtensionVersionModalInstance } from './mods/ExtensionVersionModal';
+import { ExtensionVersionModal } from './mods/ExtensionVersionModal';
 
 import Ellipsis from '@/components/Ellipsis';
 import Widget from '@/components/Widget';
@@ -34,6 +36,8 @@ import ReactCodeMirror from '@uiw/react-codemirror';
 const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
   const navigate = useNavigate();
 
+  const extensionVersionModalRef = useRef<ExtensionVersionModalInstance>(null);
+
   const { message, modal } = App.useApp();
 
   const [syncStoreState] = useSyncState(() => ({
@@ -46,7 +50,7 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
     extensionVersionListLoading: false,
   }))
 
-  useAsyncEffect(async () => {
+  const loadData = useCallback(async () => {
     if (!syncStoreState.selectedExtension) return;
 
     const extensionId = syncStoreState.selectedExtension.extension_id;
@@ -71,7 +75,9 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
 
     shallowState.extensionVersionList = res.data.list;
     shallowState.extensionVersionListLoading = false;
-  }, [syncStoreState.selectedExtension]);
+  }, []);
+
+  useAsyncEffect(loadData, [syncStoreState.selectedExtension]);
 
 
   return (
@@ -105,12 +111,8 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
 
       <Card>
         <div
-          className='w-full flex justify-between items-center'
+          className='w-full flex justify-between items-center mb-4'
         >
-          <div>
-
-          </div>
-
           <Space>
             <Button
               type='primary'
@@ -118,12 +120,15 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
                 <IconFont icon='FolderAddOutlined' />
               )}
               onClick={() => {
-
+                extensionVersionModalRef.current?.open(ModalMode.Create);
               }}
             >
-              Create
+              创建版本
             </Button>
           </Space>
+          <div>
+
+          </div>
         </div>
 
         <div
@@ -188,6 +193,13 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
           </div>
         </div>
       </Card>
+
+      <ExtensionVersionModal
+        ref={extensionVersionModalRef}
+        extensionGroup={syncStoreState.selectedExtensionGroup}
+        extension={syncStoreState.selectedExtension}
+        onSuccess={loadData}
+      />
     </div>
   )
 }))
