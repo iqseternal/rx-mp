@@ -9,6 +9,7 @@ import { useSyncState } from '@/libs/hooks/useReactive';
 
 export interface ExtensionGroupEnabledSwitchProps {
   row: GetExtensionGroupListApiStruct;
+
   /**
    * 切换成功
    */

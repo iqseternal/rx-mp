@@ -146,6 +146,7 @@ export const createExtensionApi = asynced<CreateExtensionApi>(async (payload) =>
 export interface EditExtensionApiPayload {
   extension_id: number;
   extension_uuid: string;
+  enabled?: 0 | 1;
 }
 
 export type EditExtensionApi = (payload: EditExtensionApiPayload) => RApiPromiseLike<null, null>;
@@ -183,7 +184,7 @@ export interface GetExtensionVersionListApiStruct {
   extension_uuid: string;
   version: string;
   description?: string;
-  script_hash?: null | string;
+  script_content?: string;
   metadata: Record<string, any>;
   status: {
     is_deleted?: boolean;

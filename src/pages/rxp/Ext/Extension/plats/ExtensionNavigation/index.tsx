@@ -136,17 +136,18 @@ const ExtensionMenuLabel = memo<ExtensionMenuLabelProps>((props) => {
 export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
   const { message } = App.useApp();
 
-  const [normalState] = useNormalState(() => ({
-    extensionIdMap: new Map<number, GetExtensionListApiStruct>()
-  }))
-  const [shallowState] = useShallowReactive(() => ({
-    extensionList: [] as GetExtensionListApiStruct[],
-    extensionListLoading: false,
-  }))
-
   const [syncStoreState] = useSyncState(() => ({
     selectedExtensionGroup: useExtensionStatusStore(store => store.selectedExtensionGroup),
     selectedExtension: useExtensionStatusStore(store => store.selectedExtension)
+  }))
+
+  const [normalState] = useNormalState(() => ({
+    extensionIdMap: new Map<number, GetExtensionListApiStruct>()
+  }))
+
+  const [shallowState] = useShallowReactive(() => ({
+    extensionList: [] as GetExtensionListApiStruct[],
+    extensionListLoading: false,
   }))
 
   const loadExtensionList = useCallback(async () => {
@@ -155,6 +156,7 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
 
     if (shallowState.extensionListLoading) return;
     shallowState.extensionListLoading = true;
+    useExtensionStatusStore.setState({ selectedExtensionLoading: true });
 
     const extensionGroupId = syncStoreState.selectedExtensionGroup.extension_group_id;
 
@@ -164,10 +166,11 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
       page_size: 10,
     }));
 
-    if (err) return;
-
-    if (!syncStoreState.selectedExtensionGroup) return;
-    if (extensionGroupId !== syncStoreState.selectedExtensionGroup.extension_group_id) return;
+    if (err || !syncStoreState.selectedExtensionGroup || extensionGroupId !== syncStoreState.selectedExtensionGroup.extension_group_id) {
+      shallowState.extensionListLoading = false;
+      useExtensionStatusStore.setState({ selectedExtensionLoading: false });
+      return;
+    }
 
     shallowState.extensionList = res.data.list;
     for (let i = 0; i < res.data.list.length; i++) {
@@ -184,7 +187,9 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
         })
       }
     }
+
     shallowState.extensionListLoading = false;
+    useExtensionStatusStore.setState({ selectedExtensionLoading: false });
   }, []);
 
 
@@ -195,16 +200,22 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
     if (Number.isNaN(extensionGroupId)) return;
 
     if (extensionGroupId) {
+      useExtensionStatusStore.setState({ selectedExtensionGroupLoading: true });
+
       const [err, res] = await toNil(getExtensionGroupListApi({
         extension_group_id: extensionGroupId,
         page_size: 1
       }))
 
-      if (err) return;
+      if (err) {
+        useExtensionStatusStore.setState({ selectedExtensionGroupLoading: false });
+        return;
+      }
 
       if (res.data?.list.length > 0) {
         useExtensionStatusStore.setState({
-          selectedExtensionGroup: res.data.list[0]
+          selectedExtensionGroup: res.data.list[0],
+          selectedExtensionGroupLoading: false,
         })
       }
     }

@@ -6,24 +6,21 @@ import type { GetExtensionGroupListApiStruct, GetExtensionListApiStruct } from '
 
 export interface ExtensionStatusStore {
   selectedExtensionGroup?: GetExtensionGroupListApiStruct;
+  selectedExtensionGroupLoading: boolean;
 
   selectedExtension?: GetExtensionListApiStruct;
+  selectedExtensionLoading: boolean;
 }
 
 export const useExtensionStatusStore = create<ExtensionStatusStore>()(
-  persist(
+  immer(
+    (set, get, store) => ({
 
-    immer(
-      (set, get, store) => ({
+      selectedExtensionGroupId: void 0,
+      selectedExtensionGroupLoading: false,
 
-        selectedExtensionGroupId: void 0,
-
-        selectedExtensionId: void 0
-      })
-    ),
-    {
-      name: 'extension_status_store',
-      storage: createJSONStorage(() => window.sessionStorage)
-    }
-  )
+      selectedExtensionId: void 0,
+      selectedExtensionLoading: false
+    })
+  ),
 );
