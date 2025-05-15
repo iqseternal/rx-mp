@@ -241,3 +241,25 @@ export const createExtensionVersionApi = asynced<CreateExtensionVersionApi>(asyn
     data: payload
   })
 })
+
+
+
+
+export interface ApplyExtensionVersionApiPayload {
+  extension_id: number;
+  extension_uuid: string;
+  extension_version_id: string;
+}
+
+export type ApplyExtensionVersionApiResponse = null;
+
+export type ApplyExtensionVersionApi = (payload: ApplyExtensionVersionApiPayload) => RApiPromiseLike<ApplyExtensionVersionApiResponse, null>;
+
+/**
+ * 激活使用某个 version 版本
+ */
+export const applyExtensionVersionApi = asynced<ApplyExtensionVersionApi>((payload) => {
+  return rxApiPost('/api/v1/rx/ext/apply_ext_version', {
+    data: payload
+  })
+})

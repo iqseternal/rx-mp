@@ -39,7 +39,6 @@ export const ExtensionModal = memo(forwardRef<ExtensionModalInstance, ExtensionM
 
   const [shallowAttrs] = useShallowReactive<ModalProps>(() => ({
     open: false,
-
   }))
 
   const [shallowStatus] = useShallowReactive(() => ({

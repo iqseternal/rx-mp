@@ -225,8 +225,12 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
                     <div
                       className=''
                     >
-                      <div>
-                        V{extensionVersion.version}
+                      <div className='flex justify-between items-start'>
+                        <span>V{extensionVersion.version}</span>
+                        <Widget
+                          icon='UsbOutlined'
+                          size='small'
+                        />
                       </div>
 
                       <div

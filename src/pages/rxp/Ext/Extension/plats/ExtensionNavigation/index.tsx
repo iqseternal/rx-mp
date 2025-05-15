@@ -13,6 +13,9 @@ import { useLocation } from 'react-router-dom';
 import { animated, useTransition } from '@react-spring/web';
 import { useNormalState, useSyncState } from '@/libs/hooks/useReactive';
 import type { ItemType } from 'antd/es/menu/interface';
+import { ExtensionModal } from './ExtensionModal';
+import type { ExtensionModalInstance } from './ExtensionModal';
+import { ModalMode } from '@/constants';
 
 import IconFont from '@/components/IconFont';
 import styles from './index.module.scss';
@@ -150,6 +153,8 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
     extensionListLoading: false,
   }))
 
+  const extensionModalRef = useRef<ExtensionModalInstance>(null);
+
   const loadExtensionList = useCallback(async () => {
     // 扩展组无效
     if (!syncStoreState.selectedExtensionGroup) return;
@@ -249,7 +254,13 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
           <div
             className='w-full h-11 flex-none'
           >
-
+            <Widget
+              icon='AppstoreAddOutlined'
+              tipText='新建扩展'
+              onClick={() => {
+                extensionModalRef.current?.open(ModalMode.Create);
+              }}
+            />
           </div>
 
           <div
@@ -282,6 +293,12 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
             )}
           </div>
         </Skeleton>
+
+        <ExtensionModal
+          ref={extensionModalRef}
+          extensionGroupId={syncStoreState.selectedExtensionGroup?.extension_group_id}
+          onSuccess={loadExtensionList}
+        />
       </div>
     </Layout.Sider>
   )
