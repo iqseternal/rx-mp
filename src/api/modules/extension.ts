@@ -88,6 +88,7 @@ export interface GetExtensionListApiPayload {
   extension_group_id?: number;
 
   extension_id?: number;
+  extension_uuid?: string;
   extension_name?: string;
 
   page?: number;
@@ -180,15 +181,11 @@ export interface GetExtensionVersionListApiPayload {
 }
 
 export interface GetExtensionVersionListApiStruct {
+  extension_version_id: number;
   extension_id: number;
-  extension_uuid: string;
-  version: string;
-  description?: string;
   script_content?: string;
-  metadata: Record<string, any>;
-  status: {
-    is_deleted?: boolean;
-  }
+  version?: number;
+  description?: string;
   creator_id?: null | number;
   updater_id?: null | number;
   created_time: string;
@@ -248,7 +245,7 @@ export const createExtensionVersionApi = asynced<CreateExtensionVersionApi>(asyn
 export interface ApplyExtensionVersionApiPayload {
   extension_id: number;
   extension_uuid: string;
-  extension_version_id: string;
+  extension_version_id: number;
 }
 
 export type ApplyExtensionVersionApiResponse = null;

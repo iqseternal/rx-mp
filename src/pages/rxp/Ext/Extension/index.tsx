@@ -7,12 +7,12 @@ import { ModalMode } from '@/constants';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAsyncEffect, useRefresh, useShallowReactive, useTransition } from '@/libs/hooks';
 import { usePaginationAttrs, useTableAttrs } from '@/libs/hooks/useAttrs';
-import { editExtensionApi, getExtensionListApi, getExtensionVersionListApi } from '@/api/modules';
+import { applyExtensionVersionApi, editExtensionApi, getExtensionListApi, getExtensionVersionListApi } from '@/api/modules';
 import type { GetExtensionListApiResponse, GetExtensionListApiStruct, GetExtensionVersionListApiStruct } from '@/api/modules';
 import { toNil } from '@suey/pkg-utils';
 import Icon, { ClearOutlined, ClockCircleOutlined, FolderAddOutlined, SearchOutlined } from '@ant-design/icons';
 import { toBizErrorMsg } from '@/error/code';
-import { useExtensionStatusStore } from './store/useExtensionStatusStore';
+import { updateSelectedExtensionInfo, useExtensionStatusStore } from './store/useExtensionStatusStore';
 import { useSyncState } from '@/libs/hooks/useReactive';
 import { javascript } from '@codemirror/lang-javascript';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
@@ -83,6 +83,7 @@ const ExtensionEnabledSwitch = memo<ExtensionEnabledSwitchProps>((props) => {
 
 const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
   const navigate = useNavigate();
+  const refresh = useRefresh();
 
   const extensionVersionModalRef = useRef<ExtensionVersionModalInstance>(null);
 
@@ -139,6 +140,39 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
         shallowState.selectedExtensionVersion = firstVersion;
       }
     }
+  }, []);
+
+
+  const [normalApplyExtensionVersionState] = useShallowReactive(() => ({
+    applyingMap: new Map<number, boolean>(),
+  }))
+
+  const applyExtensionVersion = useCallback(async (extensionVersion: GetExtensionVersionListApiStruct) => {
+    const applying = normalApplyExtensionVersionState.applyingMap.get(extensionVersion.extension_version_id);
+
+    if (applying) return;
+    if (!syncStoreState.selectedExtension) return;
+
+    normalApplyExtensionVersionState.applyingMap.set(extensionVersion.extension_version_id, true);
+    refresh();
+
+    const [err, res] = await toNil(applyExtensionVersionApi({
+      extension_id: syncStoreState.selectedExtension.extension_id,
+      extension_uuid: syncStoreState.selectedExtension.extension_uuid,
+      extension_version_id: extensionVersion.extension_version_id
+    }))
+
+    if (err) {
+      message.error(toBizErrorMsg(err.reason, '应用扩展版本失败'));
+      normalApplyExtensionVersionState.applyingMap.set(extensionVersion.extension_version_id, false);
+      refresh();
+      return;
+    }
+
+    await updateSelectedExtensionInfo();
+    message.success('应用扩展版本成功');
+    normalApplyExtensionVersionState.applyingMap.set(extensionVersion.extension_version_id, false);
+    refresh();
   }, []);
 
   useAsyncEffect(loadData, [syncStoreState.selectedExtension]);
@@ -217,7 +251,9 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
                 return {
                   dot: (
                     <IconFont
-                      icon='CrownOutlined'
+                      icon={(
+                        syncStoreState.selectedExtension?.use_version === version ? 'CrownOutlined' : 'BranchesOutlined'
+                      )}
                     />
                   ),
                   color: color,
@@ -228,8 +264,11 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
                       <div className='flex justify-between items-start'>
                         <span>V{extensionVersion.version}</span>
                         <Widget
-                          icon='UsbOutlined'
+                          icon='FireOutlined'
+                          tipText='应用改版本'
                           size='small'
+                          loading={normalApplyExtensionVersionState.applyingMap.get(extensionVersion.extension_version_id)}
+                          onClick={() => applyExtensionVersion(extensionVersion)}
                         />
                       </div>
 
