@@ -131,11 +131,11 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
       return;
     }
 
-    shallowState.extensionVersionList = res.data.list;
+    shallowState.extensionVersionList = res.data.data.list;
     shallowState.extensionVersionListLoading = false;
 
     if (!shallowState.selectedExtensionVersion) {
-      const firstVersion = res.data.list[0];
+      const firstVersion = res.data.data.list[0];
       if (firstVersion) {
         shallowState.selectedExtensionVersion = firstVersion;
       }

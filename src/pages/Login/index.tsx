@@ -23,8 +23,8 @@ export const Login = memo(() => {
     }
 
     useTokensStore.setTokens({
-      accessToken: res.data.tokens.access_token,
-      refreshToken: res.data.tokens.refresh_token
+      accessToken: res.data.data.tokens.access_token,
+      refreshToken: res.data.data.tokens.refresh_token
     })
 
     const [err2, res2] = await toNil(rApis.userinfoApi({}));

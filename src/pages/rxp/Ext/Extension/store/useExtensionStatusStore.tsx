@@ -55,7 +55,7 @@ export const updateSelectedExtensionInfo = (async () => {
     return;
   }
 
-  const extension = res.data.list[0];
+  const extension = res.data.data.list[0];
 
   if (!extension) {
     useExtensionStatusStore.setState({
@@ -66,7 +66,7 @@ export const updateSelectedExtensionInfo = (async () => {
   }
 
   useExtensionStatusStore.setState({
-    selectedExtension: res.data.list[0],
+    selectedExtension: res.data.data.list[0],
     selectedExtensionLoading: false
   });
 })

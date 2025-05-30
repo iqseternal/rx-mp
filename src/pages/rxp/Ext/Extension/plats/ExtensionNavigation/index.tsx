@@ -177,18 +177,18 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
       return;
     }
 
-    shallowState.extensionList = res.data.list;
-    for (let i = 0; i < res.data.list.length; i++) {
-      const extension = res.data.list[i];
+    shallowState.extensionList = res.data.data.list;
+    for (let i = 0; i < res.data.data.list.length; i++) {
+      const extension = res.data.data.list[i];
       if (extension) {
         normalState.extensionIdMap.set(extension.extension_id, extension);
       }
     }
 
     if (!syncStoreState.selectedExtension) {
-      if (res.data.list.length !== 0) {
+      if (res.data.data.list.length !== 0) {
         useExtensionStatusStore.setState({
-          selectedExtension: res.data.list[0]
+          selectedExtension: res.data.data.list[0]
         })
       }
     }
@@ -217,9 +217,9 @@ export const ExtensionNavigation = memo(forwardRef<HTMLDivElement>(() => {
         return;
       }
 
-      if (res.data?.list.length > 0) {
+      if (res.data.data?.list.length > 0) {
         useExtensionStatusStore.setState({
-          selectedExtensionGroup: res.data.list[0],
+          selectedExtensionGroup: res.data.data.list[0],
           selectedExtensionGroupLoading: false,
         })
       }

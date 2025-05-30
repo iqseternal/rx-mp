@@ -1,6 +1,7 @@
 import type { AxiosResponse } from '@suey/pkg-utils';
 import type { ComponentType } from 'react';
-import type { RXApiBasicResponse, RXApiFailResponse, RXApiSuccessResponse } from './api';
+import type { RXApiBasicResponse, RXApiFailResponse, RXApiSuccessResponse, RXApiPromiseLike } from './api';
+import type { ApiPromiseLikeTypeBuilder, PromiseResolvedType } from '@suey/pkg-utils';
 
 export interface MetadataEntries {
   'ui.layout.header.left.before': ComponentType[];
@@ -37,10 +38,10 @@ export type BusInvokerEntries = {
   /**
    * api-err 分发器
    */
-  'rx-api-err-distributor': (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<RXApiBasicResponse>;
+  'rx-api-err-distributor': (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<PromiseResolvedType<RXApiPromiseLike>>;
 
-  'rx-api-err:unauthorized-resource': (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<RXApiBasicResponse>;
-  'rx-api-err:unauthorized-credential': (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<RXApiBasicResponse>;
+  'rx-api-err:unauthorized-resource': (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<PromiseResolvedType<RXApiPromiseLike>>;
+  'rx-api-err:unauthorized-credential': (response: AxiosResponse<RXApiSuccessResponse, RXApiFailResponse>) => Promise<PromiseResolvedType<RXApiPromiseLike>>;
 
   /**
    * invoker: 获取 store access_token

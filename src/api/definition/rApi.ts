@@ -88,7 +88,7 @@ export interface RXApiFailResponse extends RXApiBasicResponse {
  * //
  * ```
  */
-export type RApiPromiseLike<Success, Fail = null> = ApiPromiseResultTypeBuilder<RXApiSuccessResponse, RXApiFailResponse, Success, Fail>;
+export type RXApiPromiseLike<Success = null, Fail = null> = ApiPromiseResultTypeBuilder<RXApiSuccessResponse, RXApiFailResponse, Success, Fail>;
 
 /**
  * 判断响应体是否是符合 RX 得 response
@@ -112,18 +112,11 @@ const rxApiRequest = createApiRequest<RXApiHConfig, RXApiSuccessResponse, RXApiF
   },
 }, {
   async onFulfilled(response) {
-    if (isRXAxiosResponse(response)) {
-      const data = response.data;
-      if (data.code === 0) return data;
+    if (!isRXAxiosResponse(response)) return response;
 
-      // 出现错误, 向 rx-api-err 分发器发送事件, 等待处理
-      const [err, resp] = await toNil(bus.invoker.invoke('rx-api-err-distributor', response));
-      if (err) return Promise.reject(err.reason);
+    if (response.data.code === 0) return response;
 
-      return resp;
-    }
-
-    return response;
+    return bus.invoker.invoke('rx-api-err-distributor', response);
   },
   onRejected(err) {
     return Promise.reject<RXApiFailResponse>({

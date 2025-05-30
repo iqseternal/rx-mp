@@ -180,8 +180,8 @@ const ExtensionGroup = memo(() => {
       return;
     }
 
-    shallowTableAttrs.dataSource = res.data.list ?? [];
-    shallowPagination.total = res.data.total ?? 0;
+    shallowTableAttrs.dataSource = res.data.data.list ?? [];
+    shallowPagination.total = res.data.data.total ?? 0;
     shallowTableAttrs.loading = false;
   }, []);
 

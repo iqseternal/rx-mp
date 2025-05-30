@@ -1,6 +1,6 @@
 import { asynced } from '@suey/pkg-utils';
 import { rxApiPost, rxApiGet, rxApiDelete, rxApiPut } from '../definition';
-import type { RApiPromiseLike } from '../definition';
+import type { RXApiPromiseLike } from '../definition';
 
 export interface GetExtensionGroupListApiPayload {
   extension_group_id?: number;
@@ -30,7 +30,7 @@ export interface GetExtensionGroupListApiResponse {
   total: number;
 }
 
-export type GetExtensionGroupListApi = (payload: GetExtensionGroupListApiPayload) => RApiPromiseLike<GetExtensionGroupListApiResponse, null>;
+export type GetExtensionGroupListApi = (payload: GetExtensionGroupListApiPayload) => RXApiPromiseLike<GetExtensionGroupListApiResponse, null>;
 
 export const getExtensionGroupListApi = asynced<GetExtensionGroupListApi>(async (payload) => {
   return rxApiGet('/api/v1/rx/ext/get_ext_group_list', {
@@ -43,7 +43,7 @@ export interface CreateExtensionGroupApiPayload {
   description?: string;
 }
 
-export type CreateExtensionGroupApi = (payload: CreateExtensionGroupApiPayload) => RApiPromiseLike<null, null>;
+export type CreateExtensionGroupApi = (payload: CreateExtensionGroupApiPayload) => RXApiPromiseLike<null, null>;
 
 export const createExtensionGroupApi = asynced<CreateExtensionGroupApi>(async (payload) => {
   return rxApiPut('/api/v1/rx/ext/ext_group', {
@@ -58,7 +58,7 @@ export interface DeleteExtensionGroupApiPayload {
   }[]
 }
 
-export type DeleteExtensionGroupApi = (payload: DeleteExtensionGroupApiPayload) => RApiPromiseLike<null>;
+export type DeleteExtensionGroupApi = (payload: DeleteExtensionGroupApiPayload) => RXApiPromiseLike<null>;
 
 export const deleteExtensionGroupApi = asynced<DeleteExtensionGroupApi>(async (payload) => {
   return rxApiDelete('/api/v1/rx/ext/ext_group', {
@@ -76,7 +76,7 @@ export interface EditExtensionGroupApiPayload {
   enabled?: 0 | 1;
 }
 
-export type EditExtensionGroupApi = (payload: EditExtensionGroupApiPayload) => RApiPromiseLike<null, null>;
+export type EditExtensionGroupApi = (payload: EditExtensionGroupApiPayload) => RXApiPromiseLike<null, null>;
 
 export const editExtensionGroupApi = asynced<EditExtensionGroupApi>(async (payload) => {
   return rxApiPost('/api/v1/rx/ext/ext_group', {
@@ -119,7 +119,7 @@ export interface GetExtensionListApiResponse {
   total: number;
 }
 
-export type GetExtensionListApi = (payload: GetExtensionListApiPayload) => RApiPromiseLike<GetExtensionListApiResponse, null>;
+export type GetExtensionListApi = (payload: GetExtensionListApiPayload) => RXApiPromiseLike<GetExtensionListApiResponse, null>;
 
 export const getExtensionListApi = asynced<GetExtensionListApi>(async (payload) => {
   return rxApiGet('/api/v1/rx/ext/get_ext_list', {
@@ -136,7 +136,7 @@ export interface CreateExtensionApiPayload {
   description?: string
 }
 
-export type CreateExtensionApi = (payload: CreateExtensionApiPayload) => RApiPromiseLike<null, null>;
+export type CreateExtensionApi = (payload: CreateExtensionApiPayload) => RXApiPromiseLike<null, null>;
 
 export const createExtensionApi = asynced<CreateExtensionApi>(async (payload) => {
   return rxApiPut('/api/v1/rx/ext/ext', {
@@ -150,7 +150,7 @@ export interface EditExtensionApiPayload {
   enabled?: 0 | 1;
 }
 
-export type EditExtensionApi = (payload: EditExtensionApiPayload) => RApiPromiseLike<null, null>;
+export type EditExtensionApi = (payload: EditExtensionApiPayload) => RXApiPromiseLike<null, null>;
 
 export const editExtensionApi = asynced<EditExtensionApi>(async (payload) => {
   return rxApiPost('/api/v1/rx/ext/ext', {
@@ -163,7 +163,7 @@ export interface DeleteExtensionApiPayload {
   extension_uuid: string;
 }
 
-export type DeleteExtensionApi = (payload: DeleteExtensionApiPayload) => RApiPromiseLike<null, null>;
+export type DeleteExtensionApi = (payload: DeleteExtensionApiPayload) => RXApiPromiseLike<null, null>;
 
 export const deleteExtensionApi = asynced<DeleteExtensionApi>(async (payload) => {
   return rxApiDelete('/api/v1/rx/ext/ext', {
@@ -197,7 +197,7 @@ export interface GetExtensionVersionListApiResponse {
   total: number;
 }
 
-export type GetExtensionVersionListApi = (payload: GetExtensionVersionListApiPayload) => RApiPromiseLike<GetExtensionVersionListApiResponse, null>;
+export type GetExtensionVersionListApi = (payload: GetExtensionVersionListApiPayload) => RXApiPromiseLike<GetExtensionVersionListApiResponse, null>;
 
 export const getExtensionVersionListApi = asynced<GetExtensionVersionListApi>(async (payload) => {
   return rxApiGet('/api/v1/rx/ext/get_ext_version_list', {
@@ -231,7 +231,7 @@ export interface CreateExtensionVersionApiStruct {
 
 export type CreateExtensionVersionApiResponse = CreateExtensionVersionApiStruct;
 
-export type CreateExtensionVersionApi = (payload: CreateExtensionVersionApiPayload) => RApiPromiseLike<CreateExtensionVersionApiResponse, null>;
+export type CreateExtensionVersionApi = (payload: CreateExtensionVersionApiPayload) => RXApiPromiseLike<CreateExtensionVersionApiResponse, null>;
 
 export const createExtensionVersionApi = asynced<CreateExtensionVersionApi>(async (payload) => {
   return rxApiPut('/api/v1/rx/ext/ext/version', {
@@ -250,7 +250,7 @@ export interface ApplyExtensionVersionApiPayload {
 
 export type ApplyExtensionVersionApiResponse = null;
 
-export type ApplyExtensionVersionApi = (payload: ApplyExtensionVersionApiPayload) => RApiPromiseLike<ApplyExtensionVersionApiResponse, null>;
+export type ApplyExtensionVersionApi = (payload: ApplyExtensionVersionApiPayload) => RXApiPromiseLike<ApplyExtensionVersionApiResponse, null>;
 
 /**
  * 激活使用某个 version 版本

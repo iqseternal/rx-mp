@@ -7,8 +7,8 @@ const proxy: ProxyConfig = {
       return pathname;
     },
     changeOrigin: true,
-    // target: 'http://rx-mp-server.oupro.cn/',
-    target: 'http://localhost:3000',
+    target: 'http://rx-mp-server.oupro.cn/',
+    // target: 'http://localhost:3000',
   }
 }
 

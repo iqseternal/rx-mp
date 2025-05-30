@@ -1,6 +1,7 @@
 
 import { loGet } from '@suey/pkg-web';
-import { rxApiPost, rxRequest, type RApiPromiseLike } from '../definition';
+import type { RXApiPromiseLike } from '../definition';
+import { rxApiPost, rxRequest } from '../definition';
 import { invoker } from '@/libs/bus';
 import { asynced } from '@suey/pkg-utils';
 
@@ -12,7 +13,7 @@ export interface RXGetAccessTokenApiResponse {
 
 }
 
-export type RxGetAccessTokenApi = (payload: RXGetAccessTokenApiPayload) => RApiPromiseLike<RXGetAccessTokenApiResponse, null>;
+export type RxGetAccessTokenApi = (payload: RXGetAccessTokenApiPayload) => RXApiPromiseLike<RXGetAccessTokenApiResponse, null>;
 
 /**
  * 获取当前用户对应得 access_token.
@@ -42,7 +43,7 @@ export interface RXUpdateAccessTokenApiResponse {
 
 }
 
-export type RxUpdateAccessTokenApi = (payload: RXUpdateAccessTokenApiPayload) => RApiPromiseLike<string, null>;
+export type RxUpdateAccessTokenApi = (payload: RXUpdateAccessTokenApiPayload) => RXApiPromiseLike<string, null>;
 
 /**
  * 更新当前用户的 access_token, 相应的, 对应的旧 token 会失效

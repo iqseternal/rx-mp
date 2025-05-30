@@ -38,7 +38,7 @@
     "@codemirror/lang-javascript": "6.2.3",
     "@codemirror/lang-json": "6.0.1",
     "@react-spring/web": "9.7.5",
-    "@suey/pkg-utils": "0.3.2",
+    "@suey/pkg-utils": "0.4.2",
     "@suey/pkg-web": "0.0.5",
     "@suey/rxp-meta": "0.0.3",
     "@uiw/codemirror-theme-vscode": "4.23.11",

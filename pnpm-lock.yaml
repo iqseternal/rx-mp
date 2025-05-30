@@ -21,8 +21,8 @@ importers:
         specifier: 9.7.5
         version: 9.7.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@suey/pkg-utils':
-        specifier: 0.3.2
-        version: 0.3.2(@angular/common@19.2.4(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))
+        specifier: 0.4.2
+        version: 0.4.2(@angular/common@19.2.4(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))
       '@suey/pkg-web':
         specifier: 0.0.5
         version: 0.0.5(typescript@5.8.3)
@@ -1643,8 +1643,8 @@ packages:
   '@sinonjs/fake-timers@8.1.0':
     resolution: {integrity: sha512-OAPJUAtgeINhh/TAlUID4QTs53Njm7xzddaVlEs/SXwgtiD1tW22zAB/W1wdqfrpmikgaWQ9Fw6Ws+hsiRm5Vg==}
 
-  '@suey/pkg-utils@0.3.2':
-    resolution: {integrity: sha512-HMmSbpM6Hm9snc5zPBjCBf81QvJ5MEXiv7F32VOuyUNuk7/E32sam0yDQY6X/fO1metNDLxkxJuuCDH4uhN6NA==}
+  '@suey/pkg-utils@0.4.2':
+    resolution: {integrity: sha512-bOl1qHsW1jUx1nSFvo77wq2+DYf1ywNgPMRXyFEGdPsFfM26Gz/WatJprZlxSL+sD67RKRp0ZGVZtTA1PCI7UA==}
 
   '@suey/pkg-web@0.0.5':
     resolution: {integrity: sha512-G+ZjXVwOFBY96W2HtNUVv+2fId77dfSz4PHHSy8pV/uw3ozGqbw2G40o0dI2Q/zisyMoQ3PUVvGMQABxCqbdWA==}
@@ -9145,7 +9145,7 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 1.8.6
 
-  '@suey/pkg-utils@0.3.2(@angular/common@19.2.4(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))':
+  '@suey/pkg-utils@0.4.2(@angular/common@19.2.4(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))(rxjs@7.8.2))(@angular/core@19.2.4(rxjs@7.8.2)(zone.js@0.15.0))':
     dependencies:
       '@types/js-cookie': 3.0.6
       '@types/jsrsasign': 10.5.15

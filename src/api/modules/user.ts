@@ -1,5 +1,5 @@
 import { rxApiPost } from '../definition';
-import type { RApiPromiseLike } from '../definition';
+import type { RXApiPromiseLike } from '../definition';
 
 // ==================================================================================
 
@@ -29,7 +29,7 @@ export interface LoginApiPayload {
   readonly password: string;
 }
 
-export type LoginApiPromise = RApiPromiseLike<LoginResponse, null>;
+export type LoginApiPromise = RXApiPromiseLike<LoginResponse, null>;
 
 /**
  * 用户登录 Api
@@ -56,7 +56,7 @@ export interface UserinfoApiPayload {
 
 }
 
-export type UserInfoApiPromise = RApiPromiseLike<UserinfoResponse, null>;
+export type UserInfoApiPromise = RXApiPromiseLike<UserinfoResponse, null>;
 
 export const userinfoApi = (payload: UserinfoApiPayload) => {
   return rxApiPost<UserinfoResponse, null>('/api/v1/user/get_user_info');
@@ -74,7 +74,7 @@ export interface RegisterApiPayload {
   readonly password: string;
 }
 
-export type RegisterApiPromise = RApiPromiseLike<RegisterResponse, null>;
+export type RegisterApiPromise = RXApiPromiseLike<RegisterResponse, null>;
 
 export const registerApi = (payload: RegisterApiPayload) => {
   return rxApiPost<RegisterResponse, null>('/api/v1/user/register', {
