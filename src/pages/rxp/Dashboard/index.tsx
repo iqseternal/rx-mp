@@ -9,7 +9,7 @@ const Dashboard = memo(() => {
   return (
     <Card>
       Dashboard
-      {/* <HomePage /> */}
+      <HomePage />
     </Card>
   )
 })

@@ -146,25 +146,11 @@ const RXPLayout = memo(() => {
 })
 
 const RXPLayoutWrapper = memo(() => {
-  useEffect(() => {
-    metadata.defineMetadata('ui.layout.header.left.content', NavigationMenuWidget);
-    metadata.defineMetadataInVector('ui.layout.header.left.after', BreadCrumbsWrapper);
-
-    metadata.defineMetadataInVector('rxp.ui.layout.vertical.nav.external', NavigationWrapper);
-
-    metadata.defineMetadataInVector('ui.layout.header.right.before', Fullscreen);
-    metadata.defineMetadata('ui.layout.header.right.content', UserAvatarWrapper);
-
-    return () => {
-      metadata.delMetadata('ui.layout.header.left.content');
-      metadata.delMetadataInVector('ui.layout.header.left.after', BreadCrumbsWrapper);
-
-      metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', NavigationWrapper);
-
-      metadata.delMetadataInVector('ui.layout.header.right.before', Fullscreen);
-      metadata.delMetadata('ui.layout.header.right.content');
-    }
-  }, []);
+  metadata.useFollowMetadata('ui.layout.header.left.content', NavigationMenuWidget);
+  metadata.useFollowMetadataInVector('ui.layout.header.left.after', BreadCrumbsWrapper);
+  metadata.useFollowMetadataInVector('rxp.ui.layout.vertical.nav.external', NavigationWrapper);
+  metadata.useFollowMetadataInVector('ui.layout.header.right.before', Fullscreen);
+  metadata.useFollowMetadata('ui.layout.header.right.content', UserAvatarWrapper);
 
   return (
     <ResourceAccessAuthGuard>

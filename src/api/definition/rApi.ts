@@ -93,14 +93,7 @@ export type RXApiPromiseLike<Success = null, Fail = null> = ApiPromiseResultType
 /**
  * 判断响应体是否是符合 RX 得 response
  */
-export const isRXAxiosResponse = (response: AxiosResponse): response is AxiosResponse<RXApiSuccessResponse, RXApiFailResponse> => {
-  if (
-    response.data &&
-    Reflect.has(response.data, 'code') &&
-    Reflect.has(response.data, 'data')
-  ) return true;
-  return false;
-}
+export const isRXAxiosResponse = (response: AxiosResponse): response is AxiosResponse<RXApiSuccessResponse, RXApiFailResponse> => response.data && Reflect.has(response.data, 'code');
 
 const rxApiConfig: RequestConfig<RXApiHConfig> = {
   timeout: 5000,
@@ -112,6 +105,7 @@ const rxApiRequest = createApiRequest<RXApiHConfig, RXApiSuccessResponse, RXApiF
   },
 }, {
   async onFulfilled(response) {
+
     if (!isRXAxiosResponse(response)) return response;
 
     if (response.data.code === 0) return response;

@@ -1,6 +1,8 @@
 import { isString, Ansi } from '@suey/pkg-utils';
 import type { RouteMeta, RouteConfig } from './declare';
 
+// import path from 'path-browserify';
+
 /**
  * 补全后的 RouteMeta
  */
@@ -30,6 +32,7 @@ const path = {
     return args.reduce((pre, cur) => path.joinTwo(pre, cur), '');
   }
 }
+
 const resolvedMap = new WeakMap<RouteConfig, boolean>();
 
 /**

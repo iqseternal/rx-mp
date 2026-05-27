@@ -19,7 +19,7 @@ import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { EditorView } from '@uiw/react-codemirror';
 import { extensionSwitchCssTransitionClassNames } from './definition';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
-
+import { StringFilters, NumberFilters } from '@suey/pkg-utils';
 import { ExtensionModal } from './mods/ExtensionModal';
 import type { ExtensionVersionModalInstance } from './mods/ExtensionVersionModal';
 import { ExtensionVersionModal } from './mods/ExtensionVersionModal';
@@ -61,13 +61,6 @@ const ExtensionEnabledSwitch = memo<ExtensionEnabledSwitchProps>((props) => {
       message.error(toBizErrorMsg(err.reason, '扩展组切换启用状态失败'));
       return;
     }
-  }, []);
-
-  useEffect(() => {
-
-
-
-
   }, []);
 
   return (
@@ -290,7 +283,7 @@ const Extension = memo(forwardRef<HTMLDivElement>((props, ref) => {
               className='w-full'
             >
               <ReactCodeMirror
-                value={shallowState.selectedExtensionVersion?.script_content}
+                value={shallowState.selectedExtensionVersion?.script_content ?? ''}
                 theme={vscodeDark}
                 className='w-full h-full'
                 basicSetup={{
@@ -325,13 +318,7 @@ const ExtensionWrapper = memo(() => {
     selectedExtension: useExtensionStatusStore(store => store.selectedExtension)
   }))
 
-  useEffect(() => {
-    metadata.defineMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionNavigationWrapper);
-
-    return () => {
-      metadata.delMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionNavigationWrapper);
-    }
-  }, []);
+  metadata.useFollowMetadataInVector('rxp.ui.layout.vertical.nav.external', ExtensionNavigationWrapper);
 
   return (
 
